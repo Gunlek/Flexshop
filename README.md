@@ -1,0 +1,52 @@
+# Workshop manager
+![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-%23969696?style=flat-square)
+![Status](https://img.shields.io/badge/status-active-%234AC41D?style=flat-square)
+[![License](https://img.shields.io/badge/License-CC%20NC%20BY%20SA-%23F37F40?style=flat-square)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## What is Workshop manager ?
+### An educative support
+Workshop manager can be used as an educative tool to allow students to be more autonomous behind their machines.
+### A tool to enhance security
+Using the app, you can have direct and quick access to useful security rules, risks and required protection equipment
+### And also more
+The app is provided as-is but you can use it as you wish !
+
+## Screenshots
+UI/UX design work is accessible [here](https://www.figma.com/file/ykqyS6IWuYLVC1BJwBoa2i/Application-ateliers?node-id=0%3A1) please, do not modify unless you know what you're doing
+
+No screenshots provided
+
+## Current tasks to be worked on
+- [ ] UI/UX design of the app
+- [ ] Basic implementation of the design using Flutter
+- [ ] Distant API schema design
+
+## Technological stack
+### Mobile app
+The mobile architecture uses the following components to work:
+- Flutter
+
+Dependencies:
+- N/C
+### Web app
+The web app uses the following components to work:
+- Node.js
+
+Dependencies:
+- Express
+
+# Authors
+- Fabien AUBRET
+    - Lead Project Manager, Developer
+    - Engineering student (Mechanical, Manufacturing and Quality Check)
+        - Arts et Métiers Engineering school
+    - Hobbyist developer (Fullstack)
+    - Contact: [fabien.aubret@gadz.org](fabien.aubret@gmail.com)
+- Grégoire NIAU
+    - Co-Project Manager, Developer
+    - Engineering student (Mechanical, Manufacturing and Quality Check)
+        - Arts et Métiers Engineering school
+    - Hobbyist developer (Python, Flutter)
+
+# License
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licence Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Ce(tte) œuvre est mise à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licence Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International</a>.
