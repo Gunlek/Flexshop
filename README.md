@@ -1,11 +1,11 @@
-# Workshop manager
+# Flexshop
 ![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-%23969696?style=flat-square)
 ![Status](https://img.shields.io/badge/status-active-%234AC41D?style=flat-square)
 [![License](https://img.shields.io/badge/License-CC%20NC%20BY%20SA-%23F37F40?style=flat-square)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-## What is Workshop manager ?
+## What is Flexshop ?
 ### An educative support
-Workshop manager can be used as an educative tool to allow students to be more autonomous behind their machines.
+Flexshop can be used as an educative tool to allow students to be more autonomous behind their machines.
 ### A tool to enhance security
 Using the app, you can have direct and quick access to useful security rules, risks and required protection equipment
 ### And also more
@@ -14,7 +14,7 @@ The app is provided as-is but you can use it as you wish !
 ## Screenshots
 UI/UX design work is accessible [here](https://www.figma.com/file/ykqyS6IWuYLVC1BJwBoa2i/Application-ateliers?node-id=0%3A1) please, do not modify unless you know what you're doing
 
-No screenshots provided
+![Workshop listing](./design/exports/export_listing_ateliers.png)  ![Machine listing](./design/exports/export_listing_machine.png)  ![Machine details](./design/exports/export_détail_machine.png)  ![Machine details](./design/exports/export_détail_machine_2.png)
 
 ## Current tasks to be worked on
 - [ ] UI/UX design of the app
