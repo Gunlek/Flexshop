@@ -17,7 +17,7 @@ class WorkshopWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: GestureDetector(
         onTap: () => {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopView(workshop: this.workshop)))
+          Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopView(workshop: workshop)))
         },      // TODO: Open workshop detail page
         child: Container(
           width: MediaQuery.of(context).size.width * widgetWidth / 100,

@@ -24,19 +24,19 @@ final milling_machine = [
   Machine(
     id: 1,
     category: 0,
-    title: "3 axes",
-    brand: "Huron",
+    title: "VF-1",
+    brand: "Haas",
     reference: "Reference",
-    image: "images/lemoine_illustration.jpg"
+    image: "images/haas_illustration.jpg"
   ),
 
   Machine(
     id: 2,
     category: 0,
-    title: "5 axes Huron",
-    brand: "Huron",
+    title: "VR-8",
+    brand: "Haas",
     reference: "Reference",
-    image: "images/lemoine_illustration.jpg"
+    image: "images/haas_illustration.jpg"
   ),
 ];
 
@@ -47,7 +47,7 @@ final turning_machine = [
     title: "Tour",
     brand: "Ernault Somua",
     reference: "Reference",
-    image: "images/lemoine_illustration.jpg"
+    image: "images/ernault_somua_illustration.jpg"
   ),
 
   Machine(
@@ -56,7 +56,7 @@ final turning_machine = [
     title: "Tour",
     brand: "Cazeneuve",
     reference: "Reference",
-    image: "images/lemoine_illustration.jpg"
+    image: "images/cazeneuve_illustration.jpg"
   ),
 ];
 
@@ -65,9 +65,18 @@ final boring_machine = [
     id: 0,
     category: 2,
     title: "Perceuse à colonne",
-    brand: "Ernault Somua",
+    brand: "Inconnue",
     reference: "Reference",
-    image: "images/lemoine_illustration.jpg"
+    image: "images/perceuse_colonne_illustration.jpg"
+  ),
+
+  Machine(
+    id: 0,
+    category: 2,
+    title: "Perceuse à colonne",
+    brand: "Inconnue",
+    reference: "Reference",
+    image: "images/perceuse_2_illustration.jpg"
   )
 ];
 

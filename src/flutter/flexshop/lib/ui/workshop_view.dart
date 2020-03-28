@@ -7,28 +7,18 @@ import 'package:flexshop/model/category.dart';
 import 'package:flexshop/model/machine.dart';
 
 class WorkshopView extends StatelessWidget {
+
   final double _spaceBetweenTwoCategory = 40;
-  final List<String> lCategory = ['Fraisage', 'Tournage', 'Perçage'];
-  final List<List<String>> lMachine = [
-    [
-      '5 axes Lemoine',
-      '4 axes',
-      'Huron',
-      'mjjk',
-      'jkjnh',
-      'jkhuhul',
-      'jklbkbhl'
-    ],
-    ['Tour Ernault Somua', 'Tour Cazeneuve'],
-    ['Perceuse à colonne']
-  ];
 
   final Workshop workshop;
+  List<Category> _categories;
 
   WorkshopView({this.workshop});
 
   @override
   Widget build(BuildContext context) {
+    _categories = categories.where((cat) => cat.workshop == workshop.id).toList();
+    
     return Scaffold(
         extendBody: true,
         bottomNavigationBar: BottomAppBar(
@@ -88,7 +78,7 @@ class WorkshopView extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             SizedBox(height: 30,),
-                            for(Category category in categories)
+                            for(Category category in _categories)
                                _buildCategory(context, category),
                             SizedBox(height: 80),
                           ],
