@@ -37,7 +37,10 @@ class WorkshopView extends StatelessWidget {
           children: <Widget>[
             Container(
               height: MediaQuery.of(context).size.height / 3,
-              child: Image.asset(workshop.image, fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
+              child: Hero(
+                tag: workshop.id.toString(),
+                child: Image.asset(workshop.image, fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
+              ),
             ),
             Container(
               height: MediaQuery.of(context).size.height / 5,

@@ -31,11 +31,14 @@ class WorkshopWidget extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * widgetWidth / 100,
                   color: Color.fromRGBO(0, 0, 0, 0.5),
                   height: widgetHeight - 50,
-                  child: Image.asset(
-                    workshop.image,
-                    fit: BoxFit.cover,
-                    color: Color.fromRGBO(0, 0, 0, 0.5),
-                    colorBlendMode: BlendMode.darken,
+                  child: Hero(
+                    tag: workshop.id.toString(),
+                    child: Image.asset(
+                      workshop.image,
+                      fit: BoxFit.cover,
+                      color: Color.fromRGBO(0, 0, 0, 0.5),
+                      colorBlendMode: BlendMode.darken,
+                    ),
                   ),
                 ),
               ),
