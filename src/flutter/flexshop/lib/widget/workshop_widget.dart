@@ -1,3 +1,4 @@
+import 'package:flexshop/ui/workshop_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flexshop/model/workshop.dart';
 
@@ -15,7 +16,9 @@ class WorkshopWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: GestureDetector(
-        onTap: () => {},      // TODO: Open workshop detail page
+        onTap: () => {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopView(workshop: this.workshop)))
+        },      // TODO: Open workshop detail page
         child: Container(
           width: MediaQuery.of(context).size.width * widgetWidth / 100,
           height: widgetHeight,
