@@ -60,6 +60,8 @@ class _WorkshopListState extends State<WorkshopList> {
                   SizedBox(height: 50),
 
                   for(final workshop in workshops) WorkshopWidget(workshop: workshop),
+
+                  SizedBox(height: 80),
                 ],
               ),
           ),
