@@ -18,13 +18,13 @@ final workshops = [
   ),
 
   Workshop(
-    id: 0,
+    id: 1,
     title: "forge",
     image: "images/ateliers.jpg"
   ),
 
   Workshop(
-    id: 0,
+    id: 2,
     title: "fonderie",
     image: "images/ateliers.jpg"
   )
