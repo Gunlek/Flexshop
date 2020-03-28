@@ -22,7 +22,7 @@ class WorkshopWidget extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width * widgetWidth / 100,
           height: widgetHeight,
-          decoration: BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1.0), borderRadius: BorderRadius.all(Radius.circular(16)), border: Border.all(width: 1, color: Color.fromRGBO(137, 137, 137, 1.0))),
+          decoration: BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1.0), borderRadius: BorderRadius.all(Radius.circular(16))),
           child: Stack(
             children: <Widget>[
               ClipRRect(

@@ -130,7 +130,7 @@ class WorkshopView extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), border: Border.all(width: 1, color: Color.fromRGBO(112, 112, 122, 1.0))),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
                     width: MediaQuery.of(context).size.width / 3,
                     child: Stack(
                       fit: StackFit.expand,
