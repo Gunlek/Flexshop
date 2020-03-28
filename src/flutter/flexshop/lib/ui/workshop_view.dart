@@ -73,7 +73,7 @@ class WorkshopView extends StatelessWidget {
                     ),
                   ),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 3 / 4,
+                  height: MediaQuery.of(context).size.height * 3 / 4+25,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)),
                     child: SingleChildScrollView(
