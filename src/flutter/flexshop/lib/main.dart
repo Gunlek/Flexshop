@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flexshop/ui/workshop_list.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flexshop/ui/workshopView.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,6 +32,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Theme.of(context).backgroundColor,
       bottomNavigationBar: BottomAppBar(
         color: Color.fromRGBO(33, 33, 33, 1.0),
@@ -42,7 +44,9 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},      // TODO: Add QR code scan
+        onPressed: () => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopView()))
+        },      // TODO: Add QR code scan
         child: FaIcon(FontAwesomeIcons.qrcode),
       ),
       body: WorkshopList(),
