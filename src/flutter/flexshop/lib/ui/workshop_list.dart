@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flexshop/model/workshop.dart';
-import 'package:flexshop/widget/WorkshopWidget.dart';
+import 'package:flexshop/widget/workshop_widget.dart';
 
 class WorkshopList extends StatefulWidget {
   @override
