@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flexshop/model/category.dart';
 import 'package:flexshop/model/machine.dart';
+import 'package:flexshop/ui/machine_view.dart';
 
 class WorkshopView extends StatelessWidget {
 
@@ -126,7 +127,7 @@ class WorkshopView extends StatelessWidget {
             itemCount: categoryMachines.length,
             itemBuilder: (BuildContext context, int i) {
               return GestureDetector(
-                onTap: () => {},     // TODO: Open machine detail
+                onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView()))},     // TODO: Open machine detail
                 child: Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Container(
