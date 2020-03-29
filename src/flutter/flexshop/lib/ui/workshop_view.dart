@@ -8,13 +8,66 @@ import 'package:flexshop/model/machine.dart';
 import 'package:flexshop/ui/machine_view.dart';
 
 class WorkshopView extends StatelessWidget {
+  final Workshop workshop;
+
+  WorkshopView({Key key, @required this.workshop}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //return buquageListPageStateful(title: this.title, eventid: this.eventid,);
+    return WorkshopViewStateful(workshop: this.workshop);
+  }
+}
+
+class WorkshopViewStateful extends StatefulWidget {
+  final Workshop workshop;
+
+  WorkshopViewStateful({Key key, @required this.workshop}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return WorkshopViewState();
+  }
+}
+
+class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerProviderStateMixin {
+//class WorkshopView extends StatelessWidget {
 
   final double _spaceBetweenTwoCategory = 40;
 
-  final Workshop workshop;
+  Workshop workshop;
   List<Category> _categories;
 
-  WorkshopView({this.workshop});
+  AnimationController _controller;
+  Animation<Offset> _offsetAnimation;
+
+  //WorkshopView({this.workshop});
+
+  @override
+  void initState() {
+    super.initState();
+    this.workshop = widget.workshop;
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 1.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.ease,
+    ));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,18 +127,21 @@ class WorkshopView extends StatelessWidget {
                   ),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 3 / 4+25,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)),
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 30.0),
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 30,),
-                            for(Category category in _categories)
-                               _buildCategory(context, category),
-                            SizedBox(height: 80),
-                          ],
+                  child: SlideTransition(
+                    position: _offsetAnimation,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 30.0),
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(height: 30,),
+                              for(Category category in _categories)
+                                 _buildCategory(context, category),
+                              SizedBox(height: 80),
+                            ],
+                          ),
                         ),
                       ),
                     ),
