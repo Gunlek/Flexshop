@@ -14,18 +14,18 @@ final workshops = [
   Workshop(
     id: 0,
     title: "usinage",
-    image: "images/ateliers.jpg"
+    image: "assets/images/ateliers.jpg"
   ),
 
   Workshop(
     id: 1,
     title: "forge",
-    image: "images/ateliers.jpg"
+    image: "assets/images/ateliers.jpg"
   ),
 
   Workshop(
     id: 2,
     title: "fonderie",
-    image: "images/ateliers.jpg"
+    image: "assets/images/ateliers.jpg"
   )
 ];

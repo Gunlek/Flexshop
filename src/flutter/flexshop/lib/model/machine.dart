@@ -18,7 +18,7 @@ final milling_machine = [
     title: "5 axes",
     brand: "Lemoine",
     reference: "Reference",
-    image: "images/lemoine_illustration.jpg"
+    image: "assets/images/lemoine_illustration.jpg"
   ),
 
   Machine(
@@ -27,7 +27,7 @@ final milling_machine = [
     title: "VF-1",
     brand: "Haas",
     reference: "Reference",
-    image: "images/haas_illustration.jpg"
+    image: "assets/images/haas_illustration.jpg"
   ),
 
   Machine(
@@ -36,7 +36,7 @@ final milling_machine = [
     title: "VR-8",
     brand: "Haas",
     reference: "Reference",
-    image: "images/haas_illustration.jpg"
+    image: "assets/images/haas_illustration.jpg"
   ),
 ];
 
@@ -47,7 +47,7 @@ final turning_machine = [
     title: "Tour",
     brand: "Ernault Somua",
     reference: "Reference",
-    image: "images/ernault_somua_illustration.jpg"
+    image: "assets/images/ernault_somua_illustration.jpg"
   ),
 
   Machine(
@@ -56,7 +56,7 @@ final turning_machine = [
     title: "Tour",
     brand: "Cazeneuve",
     reference: "Reference",
-    image: "images/cazeneuve_illustration.jpg"
+    image: "assets/images/cazeneuve_illustration.jpg"
   ),
 ];
 
@@ -67,7 +67,7 @@ final boring_machine = [
     title: "Perceuse à colonne",
     brand: "Inconnue",
     reference: "Reference",
-    image: "images/perceuse_colonne_illustration.jpg"
+    image: "assets/images/perceuse_colonne_illustration.jpg"
   ),
 
   Machine(
@@ -76,7 +76,7 @@ final boring_machine = [
     title: "Perceuse à colonne",
     brand: "Inconnue",
     reference: "Reference",
-    image: "images/perceuse_2_illustration.jpg"
+    image: "assets/images/perceuse_2_illustration.jpg"
   )
 ];
 
