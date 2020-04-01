@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flexshop/model/workshop.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -64,7 +65,6 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
 
   @override
   void dispose() {
-
     _controller.dispose();
     super.dispose();
   }
@@ -74,83 +74,108 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
     _categories = categories.where((cat) => cat.workshop == workshop.id).toList();
     
     return Scaffold(
-        extendBody: true,
-        bottomNavigationBar: BottomAppBar(
-            color: Color.fromRGBO(33, 33, 33, 1.0),
-            shape: CircularNotchedRectangle(),
-            notchMargin: 7.0,
-            child: SizedBox(
-              height: 45,
-            )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => {}, // TODO: Add QR code scan
-          child: FaIcon(FontAwesomeIcons.qrcode),
-        ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: Hero(
-                tag: workshop.id.toString(),
-                child: Image.asset(workshop.image, fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
-              ),
+      backgroundColor: Color.fromRGBO(33, 33, 33, 1.0),
+      extendBody: true,
+      bottomNavigationBar: BottomAppBar(
+          color: Color.fromRGBO(33, 33, 33, 1.0),
+          shape: CircularNotchedRectangle(),
+          notchMargin: 7.0,
+          child: SizedBox(
+            height: 45,
+          )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {}, // TODO: Add QR code scan
+        child: FaIcon(FontAwesomeIcons.qrcode),
+      ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height / 3,
+            child: Hero(
+              tag: workshop.id.toString(),
+              child: Image.asset(workshop.image, fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
             ),
-            Container(
-              height: MediaQuery.of(context).size.height / 5,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          
+          Column(
+            children: <Widget>[
+              SizedBox(height: MediaQuery.of(context).size.height / 3),
+              Container(
+                  height: 2 * MediaQuery.of(context).size.height / 3,
+                  child: FlareActor(
+                  "assets/animations/loading.flr",
+                  animation: "Loop",
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                )
+              ),
+            ],
+          ),
+
+          SlideTransition(
+            position: _offsetAnimation,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: MediaQuery.of(context).size.height / 5,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          workshop.title.toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
                   children: <Widget>[
-                    Text(
-                      workshop.title.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold
+                    SizedBox(height: MediaQuery.of(context).size.height / 5),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(238, 238, 238, 1.0),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)
+                        ),
                       ),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 3 / 4+25,
+                      child: SlideTransition(
+                        position: _offsetAnimation,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)),
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 30,),
+                                  for(Category category in _categories)
+                                    _buildCategory(context, category),
+                                  SizedBox(height: 80),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
                     ),
                   ],
                 ),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height / 5),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(238, 238, 238, 1.0),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)
-                    ),
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 3 / 4+25,
-                  child: SlideTransition(
-                    position: _offsetAnimation,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(MediaQuery.of(context).size.width / 6)),
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Column(
-                            children: <Widget>[
-                              SizedBox(height: 30,),
-                              for(Category category in _categories)
-                                 _buildCategory(context, category),
-                              SizedBox(height: 80),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ),
               ],
-            ),
-          ],
-        ));
+            )
+          ),
+        ],
+      )
+    );
   }
 
   Widget _buildCategory(BuildContext context, Category category) {

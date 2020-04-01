@@ -26,7 +26,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     this.controller.addStatusListener((status) {
       if(status == AnimationStatus.completed){
-        Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Home()));
+        Navigator.pushReplacement(context, PageRouteBuilder(
+          pageBuilder: (_, __, ___) => Home()
+          )
+        );
       }
     });
 
