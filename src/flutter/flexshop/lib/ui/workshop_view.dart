@@ -208,7 +208,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
             itemCount: categoryMachines.length,
             itemBuilder: (BuildContext context, int i) {
               return GestureDetector(
-                onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView()))},     // TODO: Open machine detail
+                onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: categoryMachines[i])))},     // TODO: Open machine detail
                 child: Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Container(

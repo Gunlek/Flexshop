@@ -1,13 +1,19 @@
+import 'package:flexshop/model/machine.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_multi_carousel/carousel.dart';
 import 'package:flexshop/model/section.dart';
 
 class MachineView extends StatelessWidget {
-  final List<Section> _sections = sections;
+  List<Section> _sections;
+
+  Machine machine;
+
+  MachineView({this.machine});
 
   @override
   Widget build(BuildContext context) {
+    this._sections = sections.where((element) => element.machine == machine.id).toList();
     return MaterialApp(
       home: Scaffold(
         body: CustomScrollView(
@@ -27,12 +33,12 @@ class MachineView extends StatelessWidget {
               backgroundColor: Color.fromRGBO(147, 49, 97, 1.0),
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text('VR-8',
+                  title: Text(this.machine.title,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
                       )),
-                  background: Image.asset("assets/images/haas_illustration.jpg",
+                  background: Image.asset(this.machine.image,
                       fit: BoxFit.cover,
                       color: Color.fromRGBO(0, 0, 0, 0.4),
                       colorBlendMode: BlendMode.darken)),

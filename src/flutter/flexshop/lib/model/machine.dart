@@ -42,7 +42,7 @@ final milling_machine = [
 
 final turning_machine = [
   Machine(
-    id: 0,
+    id: 3,
     category: 1,
     title: "Tour",
     brand: "Ernault Somua",
@@ -51,7 +51,7 @@ final turning_machine = [
   ),
 
   Machine(
-    id: 1,
+    id: 4,
     category: 1,
     title: "Tour",
     brand: "Cazeneuve",
@@ -62,7 +62,7 @@ final turning_machine = [
 
 final boring_machine = [
   Machine(
-    id: 0,
+    id: 5,
     category: 2,
     title: "Perceuse à colonne",
     brand: "Inconnue",
@@ -71,7 +71,7 @@ final boring_machine = [
   ),
 
   Machine(
-    id: 0,
+    id: 6,
     category: 2,
     title: "Perceuse à colonne",
     brand: "Inconnue",

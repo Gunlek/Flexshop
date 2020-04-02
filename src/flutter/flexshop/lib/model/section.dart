@@ -87,6 +87,6 @@ final sections = [
     machine: 0,
     type: 'imageWithTitle',
     title: 'Vitesse de coupe',
-    imageLink: 'images/tab_speed.jpg'
+    imageLink: 'assets/images/tab_speed.jpg'
   )
 ];
