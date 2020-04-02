@@ -27,13 +27,19 @@ The mobile architecture uses the following components to work:
 - Flutter
 
 Dependencies:
-- N/C
+- font_awesome_flutter (^8.8.0)
+- google_fonts (^0.3.10)
+- flutter_multi_carousel (^1.0.0)
+- flare_splash_screen (^3.0.1)
+- flare_flutter (^2.0.1)
+
 ### Web app
 The web app uses the following components to work:
 - Node.js
 
 Dependencies:
-- Express
+- express (^4.17.1)
+- mysql (^2.18.1)
 
 # Authors
 - Fabien AUBRET
