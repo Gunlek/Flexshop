@@ -6,11 +6,15 @@ class InterractivTuto extends StatelessWidget {
   final int machine;
   final int slideNumber;
 
-  InterractivTuto({Key key, @required this.machine, this.slideNumber}) : super(key: key);
+  InterractivTuto({Key key, @required this.machine, this.slideNumber})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InterractiTutoStateful(machine: this.machine, slideNumber: this.slideNumber,);
+    return InterractiTutoStateful(
+      machine: this.machine,
+      slideNumber: this.slideNumber,
+    );
   }
 }
 
@@ -18,7 +22,8 @@ class InterractiTutoStateful extends StatefulWidget {
   final int machine;
   final int slideNumber;
 
-  InterractiTutoStateful({Key key, @required this.machine, this.slideNumber}) : super(key: key);
+  InterractiTutoStateful({Key key, @required this.machine, this.slideNumber})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -41,38 +46,40 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
     //TODO : implement a request
     this.slide = Slides[this.slideIndex];
     this.numberOfSlides = Slides.length;
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: GestureDetector(
-          onPanUpdate: (details) {
-            if (details.delta.dx > 50)
-              //print("Dragging in +X direction");
-            setState(() {
-              this.slideIndex+= 1;
-              this.slide = Slides[this.slideIndex];
-            });
-            else
-              print("Dragging in -X direction");
+      onPanUpdate: (details) {
+        if (details.delta.dx > 50)
+          //print("Dragging in +X direction");
+          setState(() {
+            this.slideIndex += 1;
+            this.slide = Slides[this.slideIndex];
+          });
+        else
+          print("Dragging in -X direction");
 
-            if (details.delta.dy > 0)
-              print("Dragging in +Y direction");
-            else
-              print("Dragging in -Y direction");
-          },
-          child: Stack(children: <Widget>[
-
-      Padding(
+        if (details.delta.dy > 0)
+          print("Dragging in +Y direction");
+        else
+          print("Dragging in -Y direction");
+      },
+      child: Stack(children: <Widget>[
+        Padding(
           padding: const EdgeInsets.only(top: 40),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Text(this.slide.title, style: GoogleFonts.pacifico(
-                    textStyle: TextStyle(
-                        color: Color.fromRGBO(147, 49, 97, 1.0), fontSize: 30)),),
+                Text(
+                  this.slide.title,
+                  style: GoogleFonts.pacifico(
+                      textStyle: TextStyle(
+                          color: Color.fromRGBO(147, 49, 97, 1.0),
+                          fontSize: 30)),
+                ),
                 Container(
                   height: MediaQuery.of(context).size.height / 3,
                   child: Image.asset(
@@ -84,51 +91,52 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
                   this.slide.description,
                   style: TextStyle(fontSize: 20),
                 ),
-
               ],
             ),
           ),
-      ),
-      Positioned(
-          bottom: 20,
+        ),
+        Positioned(
+            bottom: 20,
             child: Center(
               child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _generateDots(),
-      ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _generateDots(),
+              ),
             )),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(50.0)
-                      ),
-                      child: IconButton(
-                        onPressed: (){
-                          _switchToSlide(this.slideIndex-1);
-                        },
-                        icon: Icon(Icons.chevron_left), iconSize: 40,)),
-                )),
-            Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(50.0)
-                      ),
-                      child: IconButton(
-                        onPressed: (){
-                          _switchToSlide(this.slideIndex+1);
-                        },
-                        icon: Icon(Icons.chevron_right), iconSize: 40,)),
-                )),
-    ]),
-        ));
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(50.0)),
+                  child: IconButton(
+                    onPressed: () {
+                      _switchToSlide(this.slideIndex - 1);
+                    },
+                    icon: Icon(Icons.chevron_left),
+                    iconSize: 40,
+                  )),
+            )),
+        Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(50.0)),
+                  child: IconButton(
+                    onPressed: () {
+                      _switchToSlide(this.slideIndex + 1);
+                    },
+                    icon: Icon(Icons.chevron_right),
+                    iconSize: 40,
+                  )),
+            )),
+      ]),
+    ));
   }
 
   List<Widget> _generateDots() {
@@ -161,14 +169,13 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
     );
   }
 
-  void _switchToSlide(int slideNumber){
-    if (0 <= slideNumber && slideNumber < this.numberOfSlides){
+  void _switchToSlide(int slideNumber) {
+    if (0 <= slideNumber && slideNumber < this.numberOfSlides) {
       setState(() {
         this.slideIndex = slideNumber;
         this.slide = Slides[slideNumber];
       });
     }
-
   }
 
   Widget _inactiveSlide(int index) {
