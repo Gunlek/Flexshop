@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_multi_carousel/carousel.dart';
 import 'package:flexshop/model/section.dart';
+import 'package:flexshop/ui/interractivTuto_view.dart';
 
 class MachineView extends StatelessWidget {
   final List<Section> _sections = sections;
@@ -37,7 +38,7 @@ class MachineView extends StatelessWidget {
                       color: Color.fromRGBO(0, 0, 0, 0.4),
                       colorBlendMode: BlendMode.darken)),
             ),
-            new SliverList(delegate: new SliverChildListDelegate(_buildList())),
+            new SliverList(delegate: new SliverChildListDelegate(_buildList(context))),
           ],
         ),
       ),
@@ -59,7 +60,7 @@ class MachineView extends StatelessWidget {
     return listItems;
   }*/
 
-  List<Widget> _buildList() {
+  List<Widget> _buildList(BuildContext context) {
     List<Widget> widgetList = List<Widget>();
     for (int i = 0; i < _sections.length; i++) {
       switch (_sections[i].type) {
@@ -89,7 +90,7 @@ class MachineView extends StatelessWidget {
 
         case "interractivTuto":
           {
-            widgetList.add(_buildInterractivTuto(_sections[i]));
+            widgetList.add(_buildInterractivTuto(context, _sections[i]));
           }
           break;
 
@@ -179,13 +180,16 @@ class MachineView extends StatelessWidget {
     );
   }
 
-  Widget _buildInterractivTuto(Section section){
+  Widget _buildInterractivTuto(BuildContext context, Section section){
     return RaisedButton(
       color: Color.fromRGBO(147, 49, 97, 1.0),
       shape: RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(18.0)
       ),
-      onPressed: () {},
+      onPressed: () {
+        //TODO: add parameter of the route
+        Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(slideNumber: 0, machine: section.machine,)));
+      },
       child: Text(section.title, style: TextStyle(color: Color.fromRGBO(255, 168, 14, 1.0)),),
     );
   }
