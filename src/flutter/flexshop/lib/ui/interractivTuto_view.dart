@@ -97,6 +97,7 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
         ),
         Positioned(
             bottom: 20,
+            left: MediaQuery.of(context).size.width/2 - ((this.numberOfSlides-1)*24 - 36),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
