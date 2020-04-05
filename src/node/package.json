@@ -2,10 +2,15 @@
   "name": "flexshop_webapp",
   "version": "1.0.0",
   "description": "A web-application to support the iOS / Android app",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "migrate": "node scripts/migrate.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "express": "^4.17.1",
+    "sqlite": "^3.0.6"
+  }
 }
