@@ -68,5 +68,5 @@ router.get("/get/:id", (req, res) => {
     });
 });
 
-router.
+module.exports = router;
 
