@@ -18,8 +18,6 @@ class Database {
         let req_res = Promise.all([
             db.get('SELECT * FROM workshops WHERE workshop_id = ?', [id])
         ]).then((result) => callback(result[0]));
-
-        return req_res;
     }
 
     /**
@@ -79,11 +77,101 @@ class Database {
         ]).then((result) => callback(result[0]));
     }
 
+    /**
+     * c
+     * @param {json} data Représentation JSON du workshop à ajouter
+     * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
+     */
     async addWorkshop(data, callback){
         let db = await this.dbPromise;
         if(data.hasOwnProperty('workshop_title') && data.hasOwnProperty('workshop_image'))
             Promise.all([
                 db.run('INSERT INTO workshops(workshop_title, workshop_image) VALUES(?, ?)', [data.workshop_title, data.workshop_image])
+            ]).then(() => callback(0));
+        else
+            callback(-1);
+    }
+
+    /**
+     * Récupère la liste de toutes les machines depuis la SQL
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getAllMachines(callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.all("SELECT * FROM machines")
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
+     * Récupère les données brutes d'une machine depuis 
+     * la SQL en fonction de l'id fourni
+     * @param {number} id L'id de la machine à récupérer
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getMachineById(id, callback){
+        let db = await this.dbPromise;
+        let req_res = Promise.all([
+            db.get('SELECT * FROM machines WHERE machine_id = ?', [id])
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
+     * Supprime la machine correspondante
+     * à l'id fourni de la SQL
+     * @param {number} id L'id de la machine à supprimer
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async deleteMachineById(id, callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.run('DELETE FROM machines WHERE machine_id = ?', [id])
+        ]).then(() => callback());
+    }
+
+    /**
+     * Met à jour la machine avec l'id spécifié dans la SQL
+     * @param {number} id L'id de la machine à mettre à jour
+     * @param {json} data JSon contenant les champs à mettre à jour et leurs nouvelles valeurs
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async updateMachineById(id, data, callback){
+        let db = await this.dbPromise;
+        let request = "UPDATE machines SET ";
+        let params_array = [];
+        let index = 0;
+        for(let k in data){
+            request += k;
+            request += "=?";
+
+            if(index < data.length)
+                request += ", ";
+            else
+                request += " ";
+            
+            // The lines above add "key=?, " or "key=?" to the request, depending if it's the last parameter or not
+
+            params_array.push(data[k]);
+            index ++;
+        }
+        request += "WHERE machine_id = ?"
+        params_array.push(id);
+
+        Promise.all([
+            db.run(request, params_array)
+        ]).then(() => callback());
+    }
+
+    /**
+     * Ajoute une machine à la base de donnée
+     * @param {json} data Représentation JSON de la machine à ajouter
+     * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
+     */
+    async addMachine(data, callback){
+        let db = await this.dbPromise;
+        if(data.hasOwnProperty('machine_title') && data.hasOwnProperty('machine_category') && data.hasOwnProperty('machine_brand') && data.hasOwnProperty('machine_image') && data.hasOwnProperty('machine_reference'))
+            Promise.all([
+                db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data/machine_reference])
             ]).then(() => callback(0));
         else
             callback(-1);
