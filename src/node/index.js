@@ -1,4 +1,5 @@
 let express = require('express');
+require('dotenv').config()
 
 let app = express();
 
@@ -11,4 +12,4 @@ app.use('/machines', machines_api);
 app.use('/sections', sections_api)
 app.use('/category', category_api);
 
-app.listen(8080);
+app.listen(process.env.API_PORT);
