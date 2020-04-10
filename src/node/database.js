@@ -263,6 +263,91 @@ class Database {
     }
 
     /**
+     * Récupère la liste de toutes les catégories depuis la SQL
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getAllSections(callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.all("SELECT * FROM category")
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
+     * Récupère les données brutes d'une catégorie depuis 
+     * la SQL en fonction de l'id fourni
+     * @param {number} id L'id de la catégorie à récupérer
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getSectionById(id, callback){
+        let db = await this.dbPromise;
+        let req_res = Promise.all([
+            db.get('SELECT * FROM category WHERE category_id = ?', [id])
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
+     * Supprime la catégorie correspondante
+     * à l'id fourni de la SQL
+     * @param {number} id L'id de la catégorie à supprimer
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async deleteSectionById(id, callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.run('DELETE FROM category WHERE category_id = ?', [id])
+        ]).then(() => callback());
+    }
+
+    /**
+     * Met à jour la catégorie avec l'id spécifié dans la SQL
+     * @param {number} id L'id de la catégorie à mettre à jour
+     * @param {json} data JSon contenant les champs à mettre à jour et leurs nouvelles valeurs
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async updateSectionById(id, data, callback){
+        let db = await this.dbPromise;
+        let request = "UPDATE category SET ";
+        let params_array = [];
+        let index = 0;
+        for(let k in data){
+            request += k;
+            request += "=?";
+
+            if(index < data.length)
+                request += ", ";
+            else
+                request += " ";
+            
+            // The lines above add "key=?, " or "key=?" to the request, depending if it's the last parameter or not
+
+            params_array.push(data[k]);
+            index ++;
+        }
+        request += "WHERE category_id = ?"
+        params_array.push(id);
+
+        Promise.all([
+            db.run(request, params_array)
+        ]).then(() => callback());
+    }
+
+    /**
+     * Ajoute une catégorie à la base de donnée
+     * @param {json} data Représentation JSON de la catégorie à ajouter
+     * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
+     */
+    async addSection(data, callback){
+        let db = await this.dbPromise;
+        if(data.hasOwnProperty('category_id') && data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
+            Promise.all([
+                db.run('INSERT INTO category(category_title, category_workshop) VALUES(?, ?)', [data.category_title, data.category_workshop])
+            ]).then(() => callback(0));
+        else
+            callback(-1);
+    }
+
+    /**
      * Migre les bases de données
      * /!\ Migration forcée => Effectue la migration
      * en effaçant les données !
