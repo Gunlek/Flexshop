@@ -1,4 +1,3 @@
-import 'package:flexshop/api/workshop_api.dart';
 import 'package:flexshop/ui/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
