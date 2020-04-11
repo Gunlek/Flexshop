@@ -266,7 +266,7 @@ class Database {
      * Récupère la liste de toutes les catégories depuis la SQL
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
-    async getAllSections(callback){
+    async getAllCategories(callback){
         let db = await this.dbPromise;
         Promise.all([
             db.all("SELECT * FROM category")
@@ -279,7 +279,7 @@ class Database {
      * @param {number} id L'id de la catégorie à récupérer
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
-    async getSectionById(id, callback){
+    async getCategoryById(id, callback){
         let db = await this.dbPromise;
         let req_res = Promise.all([
             db.get('SELECT * FROM category WHERE category_id = ?', [id])
@@ -292,7 +292,7 @@ class Database {
      * @param {number} id L'id de la catégorie à supprimer
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
-    async deleteSectionById(id, callback){
+    async deleteCategoryById(id, callback){
         let db = await this.dbPromise;
         Promise.all([
             db.run('DELETE FROM category WHERE category_id = ?', [id])
@@ -305,7 +305,7 @@ class Database {
      * @param {json} data JSon contenant les champs à mettre à jour et leurs nouvelles valeurs
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
-    async updateSectionById(id, data, callback){
+    async updateCategoryById(id, data, callback){
         let db = await this.dbPromise;
         let request = "UPDATE category SET ";
         let params_array = [];
@@ -337,7 +337,7 @@ class Database {
      * @param {json} data Représentation JSON de la catégorie à ajouter
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
-    async addSection(data, callback){
+    async addCategory(data, callback){
         let db = await this.dbPromise;
         if(data.hasOwnProperty('category_id') && data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
             Promise.all([
