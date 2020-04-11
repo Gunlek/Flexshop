@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,7 +15,7 @@ class WorkshopAPI {
   static getAllWorkshops({Function(int, dynamic) onDone}) async {
     var url = globalApiPrefix + localApiPrefix + "/list";
     var response = await http.get(url);
-    var decodedJson = null;
+    var decodedJson;
     if(response.statusCode == 200)
       decodedJson = json.decode(response.body);
     if(onDone != null)onDone(response.statusCode, decodedJson);
@@ -27,7 +26,7 @@ class WorkshopAPI {
   static getWorkshopById({int id, Function(int, dynamic) onDone}) async{
     var url = globalApiPrefix + localApiPrefix + "/get/" + id.toString();
     var response = await http.get(url);
-    var decodedJson = null;
+    var decodedJson;
     if(response.statusCode == 200)
       decodedJson = json.decode(response.body);
     if(onDone != null)onDone(response.statusCode, decodedJson);
