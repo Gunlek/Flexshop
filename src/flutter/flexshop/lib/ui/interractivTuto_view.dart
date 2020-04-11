@@ -44,8 +44,8 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
     this.machine = widget.machine;
     this.slideIndex = widget.slideNumber;
     //TODO : implement a request
-    this.slide = Slides[this.slideIndex];
-    this.numberOfSlides = Slides.length;
+    this.slide = slides[this.slideIndex];
+    this.numberOfSlides = slides.length;
   }
 
   @override
@@ -57,7 +57,7 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
           //print("Dragging in +X direction");
           setState(() {
             this.slideIndex += 1;
-            this.slide = Slides[this.slideIndex];
+            this.slide = slides[this.slideIndex];
           });
         else
           print("Dragging in -X direction");
@@ -174,7 +174,7 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
     if (0 <= slideNumber && slideNumber < this.numberOfSlides) {
       setState(() {
         this.slideIndex = slideNumber;
-        this.slide = Slides[slideNumber];
+        this.slide = slides[slideNumber];
       });
     }
   }

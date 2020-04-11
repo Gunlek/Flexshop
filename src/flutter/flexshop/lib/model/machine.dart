@@ -11,7 +11,7 @@ class Machine {
 
 }
 
-final milling_machine = [
+final millingMachine = [
   Machine(
     id: 0,
     category: 0,
@@ -40,7 +40,7 @@ final milling_machine = [
   ),
 ];
 
-final turning_machine = [
+final turningMachine = [
   Machine(
     id: 3,
     category: 1,
@@ -60,7 +60,7 @@ final turning_machine = [
   ),
 ];
 
-final boring_machine = [
+final boringMachine = [
   Machine(
     id: 5,
     category: 2,
@@ -80,4 +80,4 @@ final boring_machine = [
   )
 ];
 
-final machines = milling_machine + turning_machine + boring_machine;
+final machines = millingMachine + turningMachine + boringMachine;

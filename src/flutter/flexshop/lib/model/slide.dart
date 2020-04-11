@@ -13,7 +13,7 @@ class Slide {
 
 //Slide Number starts at 0!!!!
 
-final List<Slide> Slides = [
+final List<Slide> slides = [
   Slide(
     id: 0,
     slideNumber: 0,
