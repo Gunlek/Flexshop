@@ -1,8 +1,10 @@
-import 'package:flexshop/ui/home.dart';
+import 'package:flexshop/api/workshop_api.dart';
 import 'package:flexshop/ui/splashscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future main() async {
+  await DotEnv().load('.env');
   runApp(MyApp());
 }
 
