@@ -48,7 +48,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -144,7 +144,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -171,7 +171,7 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('machine_title') && data.hasOwnProperty('machine_category') && data.hasOwnProperty('machine_brand') && data.hasOwnProperty('machine_image') && data.hasOwnProperty('machine_reference'))
             Promise.all([
-                db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference])
+                db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?, ?, ?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference])
             ]).then(() => callback(0));
         else
             callback(-1);
@@ -229,7 +229,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -256,7 +256,7 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('section_machine') && data.hasOwnProperty('section_type') && data.hasOwnProperty('section_title') && data.hasOwnProperty('section_description'))
             Promise.all([
-                db.run('INSERT INTO sections(section_machine, section_type, section_title, section_description) VALUES(?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description])
+                db.run('INSERT INTO sections(section_machine, section_type, section_title, section_description) VALUES(?, ?, ?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description])
             ]).then(() => callback(0));
         else
             callback(-1);
@@ -314,7 +314,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -339,7 +339,7 @@ class Database {
      */
     async addCategory(data, callback){
         let db = await this.dbPromise;
-        if(data.hasOwnProperty('category_id') && data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
+        if(data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
             Promise.all([
                 db.run('INSERT INTO category(category_title, category_workshop) VALUES(?, ?)', [data.category_title, data.category_workshop])
             ]).then(() => callback(0));
