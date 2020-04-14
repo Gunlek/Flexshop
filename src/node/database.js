@@ -339,7 +339,7 @@ class Database {
      */
     async addCategory(data, callback){
         let db = await this.dbPromise;
-        if(data.hasOwnProperty('category_id') && data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
+        if(data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
             Promise.all([
                 db.run('INSERT INTO category(category_title, category_workshop) VALUES(?, ?)', [data.category_title, data.category_workshop])
             ]).then(() => callback(0));
