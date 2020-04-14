@@ -19,9 +19,21 @@ class CategoryAPI {
     if(onDone != null)onDone(response.statusCode, decodedJson);
   }
 
+  /// Gets the list of all categories attached to a worshop
+  /// and calls onDone when request has ended
+  static getCategoriesFromWorkshopId({int id, Function(int, dynamic) onDone}) async {
+    var url = globalApiPrefix + localApiPrefix + "/list";
+    var response = await http.get(url);
+    var decodedJson = json.decode(response.body);
+    print(decodedJson);
+    print(decodedJson[1]["category_workshop"]);
+    decodedJson = decodedJson.where((cat) => cat["category_workshop"] == id).toList();
+    if(onDone != null)onDone(response.statusCode, decodedJson);
+  }
+
   /// Gets a specific category from the provided
   /// id and calls onDone when request has ended
-  static getWorkshopById({int id, Function(int, dynamic) onDone}) async{
+  static getCategoryById({int id, Function(int, dynamic) onDone}) async{
     var url = globalApiPrefix + localApiPrefix + "/get/" + id.toString();
     var response = await http.get(url);
     var decodedJson = json.decode(response.body);
