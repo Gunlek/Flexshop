@@ -171,7 +171,7 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('machine_title') && data.hasOwnProperty('machine_category') && data.hasOwnProperty('machine_brand') && data.hasOwnProperty('machine_image') && data.hasOwnProperty('machine_reference'))
             Promise.all([
-                db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference])
+                db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?, ?, ?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference])
             ]).then(() => callback(0));
         else
             callback(-1);
@@ -256,7 +256,7 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('section_machine') && data.hasOwnProperty('section_type') && data.hasOwnProperty('section_title') && data.hasOwnProperty('section_description'))
             Promise.all([
-                db.run('INSERT INTO sections(section_machine, section_type, section_title, section_description) VALUES(?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description])
+                db.run('INSERT INTO sections(section_machine, section_type, section_title, section_description) VALUES(?, ?, ?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description])
             ]).then(() => callback(0));
         else
             callback(-1);
