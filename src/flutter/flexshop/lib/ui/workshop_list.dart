@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flexshop/model/workshop.dart';
 import 'package:flexshop/widget/workshop_widget.dart';
+import 'package:flexshop/api/workshop_api.dart';
 
 class WorkshopList extends StatefulWidget {
   @override
@@ -8,6 +9,25 @@ class WorkshopList extends StatefulWidget {
 }
 
 class _WorkshopListState extends State<WorkshopList> {
+
+  dynamic worshopsList;
+
+  @override
+  void initState() {
+    super.initState();
+    WorkshopAPI.getAllWorkshops(
+        onDone: (int status, dynamic data){
+          print(data);
+          print(status);
+          List<Workshop> workshops = List<Workshop>();
+          for (final elem in data){workshops.add(Workshop.fromMapObject(elem)); print(Workshop.fromMapObject(elem).toJson().toString());}
+          setState(() {
+            this.worshopsList = workshops;
+          });
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -59,7 +79,7 @@ class _WorkshopListState extends State<WorkshopList> {
 
                   SizedBox(height: 50),
 
-                  for(final workshop in workshops) WorkshopWidget(workshop: workshop),
+                  _buildWorkshopWidget(),
 
                   SizedBox(height: 80),
                 ],
@@ -68,7 +88,17 @@ class _WorkshopListState extends State<WorkshopList> {
         ],
       );
   }
+
+  Widget _buildWorkshopWidget(){
+    if (this.worshopsList==null) { return SizedBox.shrink();}
+    else {return Column(
+      children: <Widget>[
+        for(final workshop in this.worshopsList) WorkshopWidget(workshop: workshop),
+      ],
+    );}
+  }
 }
+
 
 class MClipper extends CustomClipper<Path> {
   

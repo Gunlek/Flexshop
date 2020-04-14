@@ -34,7 +34,7 @@ class WorkshopWidget extends StatelessWidget {
                   child: Hero(
                     tag: workshop.id.toString(),
                     child: Image.asset(
-                      workshop.image,
+                      workshop.image=="none"? "assets/images/default/default_ateliers.jpg" : workshop.image,
                       fit: BoxFit.cover,
                       color: Color.fromRGBO(0, 0, 0, 0.5),
                       colorBlendMode: BlendMode.darken,
@@ -52,7 +52,7 @@ class WorkshopWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(20),
                       child: Text(
-                        this.workshop.title.toUpperCase(),
+                        this.workshop.title,
                         style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1.0), fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).textScaleFactor * 30)
                       )
                     ),
