@@ -48,7 +48,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -144,7 +144,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -229,7 +229,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
@@ -314,7 +314,7 @@ class Database {
             request += k;
             request += "=?";
 
-            if(index < data.length)
+            if(index < Object.keys(data).length - 1)
                 request += ", ";
             else
                 request += " ";
