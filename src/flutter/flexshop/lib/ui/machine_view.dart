@@ -39,7 +39,8 @@ class MachineView extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 40,
                       )),
-                  background: Image.asset(this.machine.image,
+                  background: Image.asset(
+                      this.machine.image=="none" ? "assets/images/default/default_machine.jpg" : this.machine.image,
                       fit: BoxFit.cover,
                       color: Color.fromRGBO(0, 0, 0, 0.4),
                       colorBlendMode: BlendMode.darken)),
