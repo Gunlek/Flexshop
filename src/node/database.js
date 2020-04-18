@@ -197,8 +197,16 @@ class Database {
     async getSectionById(id, callback){
         let db = await this.dbPromise;
         let req_res = Promise.all([
-            db.get('SELECT * FROM sections WHERE section_id = ?', [id])
-        ]).then((result) => callback(result[0]));
+            db.get('SELECT * FROM sections WHERE section_id = ?', [id]),
+            db.all('SELECT * FROM parameters WHERE parameter_section = ?', [id])
+        ]).then((result) => {
+            let return_value = result[0];
+            for(let keyvalue in result[1]) {
+                let current_param = result[1][keyvalue];
+                return_value[current_param.parameter_name] = current_param.parameter_value;
+            }
+            callback(return_value)
+        });
     }
 
     /**
@@ -342,6 +350,91 @@ class Database {
         if(data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
             Promise.all([
                 db.run('INSERT INTO category(category_title, category_workshop) VALUES(?, ?)', [data.category_title, data.category_workshop])
+            ]).then(() => callback(0));
+        else
+            callback(-1);
+    }
+
+    /**
+     * Récupère la liste de toutes les catégories depuis la SQL
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getAllParameters(callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.all("SELECT * FROM parameters")
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
+     * Récupère les données brutes d'une catégorie depuis 
+     * la SQL en fonction de l'id fourni
+     * @param {number} id L'id de la catégorie à récupérer
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getParametersForSectionId(id, callback){
+        let db = await this.dbPromise;
+        let req_res = Promise.all([
+            db.get('SELECT * FROM parameters WHERE parameter_section = ?', [id])
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
+     * Supprime la catégorie correspondante
+     * à l'id fourni de la SQL
+     * @param {number} id L'id de la catégorie à supprimer
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async deleteParameterById(id, callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.run('DELETE FROM parameters WHERE parameter_id = ?', [id])
+        ]).then(() => callback());
+    }
+
+    /**
+     * Met à jour la catégorie avec l'id spécifié dans la SQL
+     * @param {number} id L'id de la catégorie à mettre à jour
+     * @param {json} data JSon contenant les champs à mettre à jour et leurs nouvelles valeurs
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async updateParametersById(id, data, callback){
+        let db = await this.dbPromise;
+        let request = "UPDATE parameters SET ";
+        let params_array = [];
+        let index = 0;
+        for(let k in data){
+            request += k;
+            request += "=?";
+
+            if(index < Object.keys(data).length - 1)
+                request += ", ";
+            else
+                request += " ";
+            
+            // The lines above add "key=?, " or "key=?" to the request, depending if it's the last parameter or not
+
+            params_array.push(data[k]);
+            index ++;
+        }
+        request += "WHERE parameter_id = ?"
+        params_array.push(id);
+
+        Promise.all([
+            db.run(request, params_array)
+        ]).then(() => callback());
+    }
+
+    /**
+     * Ajoute une catégorie à la base de donnée
+     * @param {json} data Représentation JSON de la catégorie à ajouter
+     * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
+     */
+    async addParameter(data, callback){
+        let db = await this.dbPromise;
+        if(data.hasOwnProperty('parameter_section') && data.hasOwnProperty('parameter_name') && data.hasOwnProperty('parameter_value'))
+            Promise.all([
+                db.run('INSERT INTO parameters(parameter_section, parameter_name, parameter_value) VALUES(?, ?, ?)', [data.parameter_section, data.parameter_name, data.parameter_value])
             ]).then(() => callback(0));
         else
             callback(-1);
