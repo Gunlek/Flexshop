@@ -19,7 +19,9 @@ CREATE TABLE sections (
     section_machine INT,
     section_type VARCHAR(512),
     section_title VARCHAR(512),
-    section_description TEXT
+    section_description TEXT,
+    section_video_links TEXT,
+    section_video_titles TEXT
 );
 
 CREATE TABLE category (
