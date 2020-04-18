@@ -31,14 +31,14 @@ class Section{
 final sections = [
   Section.interractivTuto(
     id: 0,
-    machine: 0,
+    machine: 1,
     type: 'interractivTuto',
     title: 'Démarrer le tuto interractif',
   ),
 
   Section.pictograms(
     id: 1,
-    machine: 0,
+    machine: 1,
     type: 'pictograms',
     pictosLinkList: [
       'assets/images/picto_gloves.png',
@@ -60,7 +60,7 @@ final sections = [
 
   Section.description(
     id: 2,
-    machine: 0,
+    machine: 1,
     type: 'description',
     title: 'Risques',
     description: """
@@ -73,7 +73,7 @@ final sections = [
 
   Section.carouselTutoVideo(
     id: 3,
-    machine: 0,
+    machine: 1,
     type: 'carouselTutoVideo',
     title: 'Tuto Vidéo',
     videoLinkList: [],
@@ -84,7 +84,7 @@ final sections = [
 
   Section.imageWithTitle(
     id: 4,
-    machine: 0,
+    machine: 1,
     type: 'imageWithTitle',
     title: 'Vitesse de coupe',
     imageLink: 'assets/images/tab_speed.jpg'

@@ -7,6 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flexshop/model/category.dart';
 import 'package:flexshop/model/machine.dart';
 import 'package:flexshop/ui/machine_view.dart';
+import 'package:flexshop/api/category_api.dart';
+import 'package:flexshop/api/machine_api.dart';
 
 class WorkshopView extends StatelessWidget {
   final Workshop workshop;
@@ -38,6 +40,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
 
   Workshop workshop;
   List<Category> _categories;
+  List<Machine> machines;
 
   AnimationController _controller;
   Animation<Offset> _offsetAnimation;
@@ -47,6 +50,28 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
   @override
   void initState() {
     super.initState();
+
+    MachineAPI.getAllMachines(
+      onDone: (int status, dynamic data){
+        List<Machine> macList = List<Machine>();
+        for (final elem in data){macList.add(Machine.fromMapObject(elem));}
+        setState(() {
+          this.machines = macList;
+        });
+      }
+    );
+
+    CategoryAPI.getCategoriesFromWorkshopId(
+      id: widget.workshop.id,
+      onDone: (int status, dynamic data){
+        List<Category> catList = List<Category>();
+        print(data);
+        for (final elem in data){catList.add(Category.fromMapObject(elem));}
+        setState(() {
+          this._categories = catList;
+        });
+      }
+    );
     this.workshop = widget.workshop;
 
     _controller = AnimationController(
@@ -71,7 +96,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
 
   @override
   Widget build(BuildContext context) {
-    _categories = categories.where((cat) => cat.workshop == workshop.id).toList();
+    //_categories = categories.where((cat) => cat.workshop == workshop.id).toList();
     
     return Scaffold(
       backgroundColor: Color.fromRGBO(33, 33, 33, 1.0),
@@ -94,7 +119,9 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
             height: MediaQuery.of(context).size.height / 3,
             child: Hero(
               tag: workshop.id.toString(),
-              child: Image.asset(workshop.image, fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
+              child: Image.asset(
+                  workshop.image=="none"? "assets/images/default/default_ateliers.jpg" : workshop.image,
+                  fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
             ),
           ),
           
@@ -158,8 +185,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
                               child: Column(
                                 children: <Widget>[
                                   SizedBox(height: 30,),
-                                  for(Category category in _categories)
-                                    _buildCategory(context, category),
+                                  _waitToBuildCategory(context),
                                   SizedBox(height: 80),
                                 ],
                               ),
@@ -176,6 +202,14 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
         ],
       )
     );
+  }
+
+  Widget _waitToBuildCategory(BuildContext context){
+    if (this._categories==null) {return CircularProgressIndicator();}
+    else{return Column(children: <Widget>[
+      for(Category category in _categories)
+        _buildCategory(context, category)
+    ],);}
   }
 
   Widget _buildCategory(BuildContext context, Category category) {
@@ -219,7 +253,9 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
                       children: <Widget>[
                         ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image.asset(categoryMachines[i].image, fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken,),
+                          child: Image.asset(
+                            categoryMachines[i].image=="none" ? "assets/images/default/default_machine.jpg" : categoryMachines[i].image,
+                            fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken,),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,

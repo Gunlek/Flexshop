@@ -1,14 +1,22 @@
 class Machine {
 
-  final int id;
-  final String title;
-  final int category;
-  final String brand;
-  final String image;
-  final String reference;
+  int id;
+  String title;
+  int category;
+  String brand;
+  String image;
+  String reference;
 
   Machine({this.id, this.title, this.category, this.brand, this.image, this.reference});
 
+  Machine.fromMapObject(Map<String, dynamic> map){
+    this.id = int.parse(map["machine_id"].toString());
+    this.title = map["machine_title"];
+    this.category = int.parse(map["machine_category"].toString());
+    this.brand = map["machine_brand"];
+    this.image = map["machine_image"];
+    this.reference = map["machine_reference"];
+  }
 }
 
 final millingMachine = [

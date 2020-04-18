@@ -39,7 +39,8 @@ class MachineView extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 40,
                       )),
-                  background: Image.asset(this.machine.image,
+                  background: Image.asset(
+                      this.machine.image=="none" ? "assets/images/default/default_machine.jpg" : this.machine.image,
                       fit: BoxFit.cover,
                       color: Color.fromRGBO(0, 0, 0, 0.4),
                       colorBlendMode: BlendMode.darken)),
@@ -50,21 +51,6 @@ class MachineView extends StatelessWidget {
       ),
     );
   }
-/*
-  List _buildList(int count) {
-    List<Widget> listItems = List();
-
-    for (int i = 0; i < count; i++) {
-      listItems.add(new Padding(padding: new EdgeInsets.all(20.0),
-          child: new Text(
-              'Item ${i.toString()}',
-              style: new TextStyle(fontSize: 25.0)
-          )
-      ));
-    }
-
-    return listItems;
-  }*/
 
   List<Widget> _buildList(BuildContext context) {
     List<Widget> widgetList = List<Widget>();
