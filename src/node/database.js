@@ -367,7 +367,7 @@ class Database {
     }
 
     /**
-     * Récupère la liste de toutes les catégories depuis la SQL
+     * Récupère la liste de tous les paramètres depuis la SQL
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllParameters(callback){
@@ -378,9 +378,9 @@ class Database {
     }
 
     /**
-     * Récupère les données brutes d'une catégorie depuis 
+     * Récupère les données brutes d'un paramèrte depuis 
      * la SQL en fonction de l'id fourni
-     * @param {number} id L'id de la catégorie à récupérer
+     * @param {number} id L'id du paramètre à récupérer
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getParametersForSectionId(id, callback){
@@ -391,9 +391,9 @@ class Database {
     }
 
     /**
-     * Supprime la catégorie correspondante
+     * Supprime le paramètre correspondant
      * à l'id fourni de la SQL
-     * @param {number} id L'id de la catégorie à supprimer
+     * @param {number} id L'id du paramètre à supprimer
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteParameterById(id, callback){
@@ -404,8 +404,8 @@ class Database {
     }
 
     /**
-     * Met à jour la catégorie avec l'id spécifié dans la SQL
-     * @param {number} id L'id de la catégorie à mettre à jour
+     * Met à jour le paramètre avec l'id spécifié dans la SQL
+     * @param {number} id L'id du paramètre à mettre à jour
      * @param {json} data JSon contenant les champs à mettre à jour et leurs nouvelles valeurs
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
@@ -437,8 +437,8 @@ class Database {
     }
 
     /**
-     * Ajoute une catégorie à la base de donnée
-     * @param {json} data Représentation JSON de la catégorie à ajouter
+     * Ajoute un paramètre à la base de donnée
+     * @param {json} data Représentation JSON du paramètre à ajouter
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addParameter(data, callback){
