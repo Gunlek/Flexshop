@@ -17,7 +17,7 @@ CREATE TABLE machines (
 CREATE TABLE sections (
     section_id INTEGER PRIMARY KEY,
     section_machine INT,
-    section_type VARCHAR(512),
+    section_type VARCHAR(512)
 );
 
 CREATE TABLE category (
