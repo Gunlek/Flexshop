@@ -186,13 +186,7 @@ class Database {
         Promise.all([
             db.all("SELECT * FROM sections")
         ]).then((result) => {
-            let return_value = result[0];       
-            for(let section in return_value){
-                let section_details = return_value[section];
-                section_details['section_video_links'] = section_details['section_video_links'].split(';');
-                section_details['section_video_titles'] = section_details['section_video_titles'].split(';');
-                return_value[section] = section_details
-            }
+            let return_value = result[0];
             callback(return_value);
         });
     }
@@ -214,8 +208,6 @@ class Database {
                 let current_param = result[1][keyvalue];
                 return_value[current_param.parameter_name] = current_param.parameter_value;
             }
-            return_value['section_video_links'] = return_value['section_video_links'].split(';');
-            return_value['section_video_titles'] = return_value['section_video_titles'].split(';');
             callback(return_value)
         });
     }
@@ -273,9 +265,9 @@ class Database {
      */
     async addSection(data, callback){
         let db = await this.dbPromise;
-        if(data.hasOwnProperty('section_machine') && data.hasOwnProperty('section_type') && data.hasOwnProperty('section_title') && data.hasOwnProperty('section_description') && data.hasOwnProperty('section_video_links') && data.hasOwnProperty('section_video_titles'))
+        if(data.hasOwnProperty('section_machine') && data.hasOwnProperty('section_type'))
             Promise.all([
-                db.run('INSERT INTO sections(section_machine, section_type, section_title, section_description, section_video_links, section_video_titles) VALUES(?, ?, ?, ?, ?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description, data.section_video_links, data.section_video_titles])
+                db.run('INSERT INTO sections(section_machine, section_type) VALUES(?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description, data.section_video_links, data.section_video_titles])
             ]).then(() => callback(0));
         else
             callback(-1);
