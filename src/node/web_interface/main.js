@@ -19,6 +19,10 @@ router.get('/machines', (req, res) => {
     res.render('machines.html.twig');
 });
 
+router.get('/sections', (req, res) => {
+    res.render('sections.html.twig');
+});
+
 router.get('/credits', (req, res) => {
     res.render('credits.html.twig');
 });
