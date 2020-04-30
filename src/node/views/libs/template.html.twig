@@ -13,13 +13,15 @@
                 <h2 class="brand-name">Flexshop</h2>
                 <hr>
                 <ul>
-                    <a href="#"><li>Ateliers</li></a>
-                    <a href="#"><li>Catégories</li></a>
-                    <a href="#"><li>Machines</li></a>
+                    {% block links %}
+                        <a href="#"><li>Ateliers</li></a>
+                        <a href="#"><li>Catégories</li></a>
+                        <a href="#"><li>Machines</li></a>
+                    {% endblock %}
                 </ul>
 
                 <div class="bottom">
-                    <a href="#">Crédits</a>
+                    <a href="/credits">Crédits</a>
                 </div>
             </nav>
         </header>

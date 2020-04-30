@@ -1,0 +1,39 @@
+{% extends 'libs/template.html.twig' %}
+
+{% block links %}
+    <a href="/workshops"><li>Ateliers</li></a>
+    <a href="/categories"><li>Catégories</li></a>
+    <a href="/machines"><li>Machines</li></a>
+{% endblock %}
+
+{% block content %}
+<h1>Crédits</h1>
+<p>Sur une idée originale de Adrien Van Corp, projet porté et développé par Fabien AUBRET et Grégoire NIAU</p>
+<h3>Contacts</h3>
+<ul>
+    <li>Fabien AUBRET
+        <ul>
+            <li>Responsable de projet, Développeur</li>
+            <li>Etudiant ingénieur (Mécanique, Fabrication, Industrialisation)</li>
+            <li>Arts et Métiers ParisTech - Promotion Li218</li>
+            <li>Développeur amateur (FullStack)</li>
+            <li>Contact: <a href="fabien.aubret@gadz.org">fabien.aubret@gadz.org</a></li>
+        </ul>
+    </li>
+
+    <li>Grégoire NIAU
+        <ul>
+            <li>Co-Leader projet, Développeur</li>
+            <li>Etudiant ingénieur (Mécanique, Fabrication, Industrialisation)</li>
+            <li>Arts et Métiers ParisTech - Promotion Li218</li>
+            <li>Développeur amateur (Python, Flutter, Web)</li>
+            <li>Contact: <a href="gregoire.niau@gadz.org">gregoire.niau@gadz.org</a></li>
+        </ul>
+    </li>
+</ul>
+<p>Avec la participation bienveillante et le conseil éclairé de Jérôme Gavois et Adrien Van Corp</p>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/home.js"></script>
+{% endblock %}
