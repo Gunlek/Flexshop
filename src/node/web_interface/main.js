@@ -5,8 +5,6 @@ let urlencoded = bodyParser.urlencoded({extended: true});
 let database = require('../database');
 let db = new database().getInstance();
 
-let Workshop = require('./models/workshop.js');
-
 router.get('/', (req, res) => {res.redirect('/workshops')});
 
 router.get('/workshops', (req, res) => {
