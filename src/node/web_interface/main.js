@@ -27,4 +27,8 @@ router.get('/credits', (req, res) => {
     res.render('credits.html.twig');
 });
 
+router.get('/parameters', (req, res) => {
+    res.render('parameters.html.twig');
+});
+
 module.exports = router;
