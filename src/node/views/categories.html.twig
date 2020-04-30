@@ -7,9 +7,44 @@
 {% endblock %}
 
 {% block content %}
-<h1>Phy'ss à 58</h1>
+<div id="workshops">
+    <h1>Gestion des catégories</h1>
+    <h3 style="padding-left: 30px;">Ajout d'une catégorie</h3>
+    <div class="row">
+        <div class="col-5">
+            <input type="text" class="container-fluid form-control" v-model="new_category_title" placeholder="Nom de la nouvelle catégorie..."/>
+        </div>
+        <div class="col-5">
+            <select v-model="new_category_workshop" class="form-control container-fluid">
+                <option disabled value="">Choisissez un atelier</option>
+                <option v-for="workshop in workshop_list" v-bind:value="workshop.workshop_id">${workshop.workshop_title}</option>
+            </select>
+        </div>
+        <div class="col-2">
+            <button type="button" @click="add_new_category()" class="btn btn-outline-primary container-fluid">Ajouter</button>
+        </div>
+    </div>
+    <br/><br/>
+    <h3 style="padding-left: 30px;">Listing des catégories</h3>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Atelier</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tr v-for="category in category_list" :key="category.category_id">
+            <td>#${ category.category_id }</td>
+            <td>${ category.category_title }</td>
+            <td>${ getCategoryWorkshopTitle(category.category_workshop) }</td>
+            <td><button type="button" class="btn btn-danger" @click="del_category(category.category_id)"><i class="fas fa-trash"></i></button></td>
+        </tr>
+    </table>
+</div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="/js/home.js"></script>
+    <script src="/js/categories_interface.js"></script>
 {% endblock %}
