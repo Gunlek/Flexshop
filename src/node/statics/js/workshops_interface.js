@@ -9,7 +9,7 @@ let app = new Vue({
     methods: {
         get_workshop_list: function(){
             let super_this = this;
-            let url = 'http://localhost/workshops/list';
+            let url = '/workshops/list';
             let httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function(data){
                 if(httpRequest.readyState === 4){
@@ -24,7 +24,7 @@ let app = new Vue({
         add_new_workshop: function(){
             if(this.new_workshop_name != null && this.new_workshop_image != null){
                 let super_this = this;
-                let url = 'http://localhost/workshops/add';
+                let url = '/workshops/add';
                 let params = "workshop_title="+this.new_workshop_name.toString()+"&workshop_image="+this.new_workshop_image.toString();
 
                 let httpRequest = new XMLHttpRequest();
@@ -44,7 +44,7 @@ let app = new Vue({
             }
         },
         del_workshop: function(id){let super_this = this;
-            let url = 'http://localhost/workshops/delete/'+id.toString();
+            let url = '/workshops/delete/'+id.toString();
 
             let httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function(data){
