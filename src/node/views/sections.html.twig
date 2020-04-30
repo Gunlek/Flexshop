@@ -26,7 +26,7 @@
         </div>
     </div>
     <br/><br/>
-    <h3 style="padding-left: 30px;">Listing des ateliers</h3>
+    <h3 style="padding-left: 30px;">Listing des sections</h3>
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -38,7 +38,7 @@
         </thead>
         <tr v-for="section in section_list" :key="section.section_id">
             <td>#${ section.section_id }</td>
-            <td>${ section.section_machine }</td>
+            <td>${ getSectionMachineName(section.section_machine) }</td>
             <td>${ section.section_type }</td>
             <td><button type="button" class="btn btn-danger" @click="del_section(section.section_id)"><i class="fas fa-trash"></i></button></td>
         </tr>

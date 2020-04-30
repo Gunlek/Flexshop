@@ -76,6 +76,13 @@ let app = new Vue({
             };
             httpRequest.open('DELETE', url);
             httpRequest.send();
+        },
+        getSectionMachineName: function(section_machine){
+            for(let k=0; k < this.machine_list.length; k++){
+                if(parseInt(this.machine_list[k].machine_id) == parseInt(section_machine)){
+                    return this.machine_list[k].machine_title + " " + this.machine_list[k].machine_brand + " " + this.machine_list[k].machine_reference
+                }
+            }
         }
     },
     mounted: function(){
