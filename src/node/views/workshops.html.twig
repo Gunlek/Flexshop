@@ -1,0 +1,47 @@
+{% extends 'libs/template.html.twig' %}
+
+{% block links %}
+    <a href="/workshops"><li class="active">Ateliers</li></a>
+    <a href="/categories"><li>Catégories</li></a>
+    <a href="/machines"><li>Machines</li></a>
+{% endblock %}
+
+{% block content %}
+<div id="workshops">
+    <h1>Gestion des ateliers</h1>
+    <h3 style="padding-left: 30px;">Ajout d'un atelier</h3>
+    <div class="row">
+        <div class="col-5">
+            <input type="text" class="container-fluid form-control" v-model="new_workshop_name" placeholder="Nom du nouvel atelier..."/>
+        </div>
+        <div class="col-5">
+            <input type="text" class="container-fluid form-control" v-model="new_workshop_image" placeholder="Image du nouvel atelier..."/>
+        </div>
+        <div class="col-2">
+            <button type="button" @click="add_new_workshop()" class="btn btn-outline-primary container-fluid">Ajouter</button>
+        </div>
+    </div>
+    <br/><br/>
+    <h3 style="padding-left: 30px;">Listing des ateliers</h3>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tr v-for="workshop in workshop_list" :key="workshop.workshop_id">
+            <td>#${ workshop.workshop_id }</td>
+            <td>${ workshop.workshop_title }</td>
+            <td>${ workshop.workshop_image }</td>
+            <td><button type="button" class="btn btn-danger" @click="del_workshop(workshop.workshop_id)"><i class="fas fa-trash"></i></button></td>
+        </tr>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/workshops_interface.js"></script>
+{% endblock %}
