@@ -39,7 +39,7 @@ class MachineView extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 40,
                       )),
-                  background: Image.asset(
+                  background: Image.network(
                       this.machine.image=="none" ? "assets/images/default/default_machine.jpg" : this.machine.image,
                       fit: BoxFit.cover,
                       color: Color.fromRGBO(0, 0, 0, 0.4),
@@ -167,7 +167,7 @@ class MachineView extends StatelessWidget {
           fontSize: 30
       ))),
       children: <Widget>[
-        Image.asset(section.imageLink, fit: BoxFit.cover)
+        Image.network(section.imageLink, fit: BoxFit.cover)
       ],
     );
   }

@@ -25,8 +25,6 @@ class CategoryAPI {
     var url = globalApiPrefix + localApiPrefix + "/list";
     var response = await http.get(url);
     var decodedJson = json.decode(response.body);
-    print(decodedJson);
-    print(decodedJson[1]["category_workshop"]);
     decodedJson = decodedJson.where((cat) => cat["category_workshop"] == id).toList();
     if(onDone != null)onDone(response.statusCode, decodedJson);
   }

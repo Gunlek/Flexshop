@@ -33,7 +33,7 @@ class WorkshopWidget extends StatelessWidget {
                   height: widgetHeight - 50,
                   child: Hero(
                     tag: workshop.id.toString(),
-                    child: Image.asset(
+                    child: Image.network(
                       workshop.image=="none"? "assets/images/default/default_ateliers.jpg" : workshop.image,
                       fit: BoxFit.cover,
                       color: Color.fromRGBO(0, 0, 0, 0.5),

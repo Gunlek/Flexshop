@@ -119,7 +119,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
             height: MediaQuery.of(context).size.height / 3,
             child: Hero(
               tag: workshop.id.toString(),
-              child: Image.asset(
+              child: Image.network(
                   workshop.image=="none"? "assets/images/default/default_ateliers.jpg" : workshop.image,
                   fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
             ),
@@ -253,7 +253,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
                       children: <Widget>[
                         ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image.asset(
+                          child: Image.network(
                             categoryMachines[i].image=="none" ? "assets/images/default/default_machine.jpg" : categoryMachines[i].image,
                             fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken,),
                         ),
