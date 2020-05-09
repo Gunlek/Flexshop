@@ -52,7 +52,7 @@
         <tr v-for="machine in machine_list" :key="machine.machine_id">
             <td>#${ machine.machine_id }</td>
             <td>${ machine.machine_title }</td>
-            <td>${ getMachineCategoryName(machine.machine_id) }</td>
+            <td>${ getMachineCategoryName(machine.machine_category) }</td>
             <td>${ machine.machine_brand }</td>
             <td>${ machine.machine_reference }</td>
             <td>${ machine.machine_image }</td>
