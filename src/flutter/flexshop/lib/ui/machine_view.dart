@@ -16,6 +16,7 @@ class MachineView extends StatelessWidget {
   Widget build(BuildContext context) {
     this._sections = sections.where((element) => element.machine == machine.id).toList();
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: CustomScrollView(
           slivers: <Widget>[
