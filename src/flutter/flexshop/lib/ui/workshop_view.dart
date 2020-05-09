@@ -117,6 +117,7 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
         children: <Widget>[
           Container(
             height: MediaQuery.of(context).size.height / 3,
+            width: double.infinity,
             child: Hero(
               tag: workshop.id.toString(),
               child: Image.network(
