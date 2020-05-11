@@ -65,7 +65,6 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
       id: widget.workshop.id,
       onDone: (int status, dynamic data){
         List<Category> catList = List<Category>();
-        print(data);
         for (final elem in data){catList.add(Category.fromMapObject(elem));}
         setState(() {
           this._categories = catList;

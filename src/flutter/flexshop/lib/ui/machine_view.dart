@@ -1,3 +1,4 @@
+import 'package:flexshop/api/section_api.dart';
 import 'package:flexshop/model/machine.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,19 +6,54 @@ import 'package:flutter_multi_carousel/carousel.dart';
 import 'package:flexshop/model/section.dart';
 import 'package:flexshop/ui/interractivTuto_view.dart';
 
-class MachineView extends StatelessWidget {
-  List<Section> _sections;
+class MachineView extends StatefulWidget {
+  List<Section> _sections = [];
 
   Machine machine;
 
-  MachineView({this.machine});
+  MachineView({this.machine}){
+    this._sections = [];
+  }
+
+  @override
+  _MachineViewState createState() => _MachineViewState(machine: this.machine);
+}
+
+class _MachineViewState extends State<MachineView> {
+
+  List<Section> _sections = [];
+
+  Machine machine;
+
+  _MachineViewState({this.machine});
+
+  @override
+  void initState() {
+    super.initState();
+    SectionAPI.getSectionForMachineId(
+      id: widget.machine.id,
+      onDone: (data) {
+        List<Section> currentSections = [];
+        for(var section in data){
+          currentSections.add(Section.fromMapObject(section));
+          setState(() {
+            this._sections = currentSections;
+            print(currentSections);
+          });
+        }
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    this._sections = sections.where((element) => element.machine == machine.id).toList();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        /* body: Column(children: <Widget>[
+          for(var k=0;k<this._sections.length;k++)
+              Text("test")
+        ],) */
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
@@ -56,7 +92,7 @@ class MachineView extends StatelessWidget {
   List<Widget> _buildList(BuildContext context) {
     List<Widget> widgetList = List<Widget>();
     for (int i = 0; i < _sections.length; i++) {
-      switch (_sections[i].type) {
+      switch (_sections[i].type.toLowerCase()) {
         case "pictograms":
           {
             widgetList.add(_buildPictos(_sections[i]));
@@ -69,19 +105,19 @@ class MachineView extends StatelessWidget {
           }
           break;
 
-        case "carouselTutoVideo":
+        case "carouseltutovideo":
           {
             widgetList.add(_buildTutoVideo(_sections[i]));
           }
           break;
 
-        case "imageWithTitle":
+        case "imagewithtitle":
           {
             widgetList.add(_buildImageWithTitle(_sections[i]));
           }
           break;
 
-        case "interractivTuto":
+        case "interactivtuto":
           {
             widgetList.add(_buildInterractivTuto(context, _sections[i]));
           }
@@ -99,6 +135,7 @@ class MachineView extends StatelessWidget {
   }
 
   Widget _buildPictos(Section section) {
+    print(section.pictosLinkList);
     return Container(
       height: 50,
       child: ListView.builder(

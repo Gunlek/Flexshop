@@ -3,32 +3,56 @@ class Section{
   int id;
   int machine;
   String type;
-  String title;
+  List pictosLinkList;
   String description;
-  List<String> pictosLinkList;
+  String title;
+  List videoLinkList;
+  List videoTitleList;
   String imageLink;
-  List<String> videoLinkList;
-  List<String> videoTitleList;
 
   // Default constructor of a section : empty
-  Section({this.machine, this.type});
+  Section({this.id, this.machine, this.type});
 
-  // An expansion tile with a description in the tile expanded
-  Section.description({this.id, this.machine, this.type, this.title, this.description});
-
-  // Pictograms of security : gloves, helmet, danger, ....
-  // Take a list's link of picto image
+  Section.tutoSection({this.id, this.machine, this.type, this.title});
   Section.pictograms({this.id, this.machine, this.type, this.pictosLinkList});
-
+  Section.description({this.id, this.machine, this.type, this.title, this.description});
   Section.carouselTutoVideo({this.id, this.machine, this.type, this.title, this.videoLinkList, this.videoTitleList});
-
   Section.imageWithTitle({this.id, this.machine, this.type, this.title, this.imageLink});
 
-  Section.interractivTuto({this.id, this.machine, this.type, this.title});
+  Section.fromMapObject(Map<String, dynamic> map){
+    this.id = int.parse(map["section_id"].toString());
+    this.machine = int.parse(map["section_machine"].toString());
+    this.type = map["section_type"].toString();
+    switch(this.type.toLowerCase()){
+      case 'interactivtuto':
+        this.title = map['section_title'];
+      break;
+
+      case 'pictograms':
+        this.pictosLinkList = map['section_pictosLinkList'];
+      break;
+
+      case 'description':
+        this.title = map['section_title'];
+        this.description = map['section_description'];
+      break;
+
+      case 'carouseltutovideo':
+        this.title = map['section_title'];
+        this.videoLinkList = map['section_videoLinkList'];
+        this.videoTitleList = map['section_videoTitleList'];
+      break;
+
+      case 'imagewithtitle':
+        this.title = map['section_title'];
+        this.imageLink = map['section_imageLink'];
+      break;
+    }
+  }
 
 }
 
-final sections = [
+/* final sections = [
   Section.interractivTuto(
     id: 0,
     machine: 1,
@@ -89,4 +113,4 @@ final sections = [
     title: 'Vitesse de coupe',
     imageLink: 'assets/images/tab_speed.jpg'
   )
-];
+]; */
