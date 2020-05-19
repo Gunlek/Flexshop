@@ -209,6 +209,17 @@ footer {
     transition: 0.2s background-color;
 }
 
+.btn-outline-red {
+    border: 2px solid #c0392b;
+    color: #c0392b;
+}
+
+.btn-outline-red:hover {
+    background-color: #c0392b;
+    color: #fff;
+    transition: 0.2s all;
+}
+
 .btn-outline-green {
     border: 2px solid #27ae60;
     transition: 0.2s all;
@@ -267,11 +278,23 @@ footer {
 }
 
 .col-1 {
-    width: 8.3333333333%
+    width: 8.3333333333%;
+}
+
+.col-2 {
+    width: 16.666666666%;
+}
+
+.col-4 {
+    width: 33.333333333%;
 }
 
 .col-6 {
     width: 50%;
+}
+
+.col-9 {
+    width: 75%;
 }
 
 .col-11 {
