@@ -231,6 +231,10 @@ footer {
     transition: 0.2s all;
 }
 
+.del-btn {
+    display: none;
+}
+
 /*
  * Align classes
  */
