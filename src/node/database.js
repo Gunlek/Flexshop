@@ -364,7 +364,7 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
             Promise.all([
-                db.get('SELECT MAX(category_sort_index) AS max FROM categories')
+                db.get('SELECT MAX(category_sort_index) AS max FROM category')
             ]).then((result) => {
                 Promise.all([
                     db.run('INSERT INTO category(category_title, category_workshop, category_sort_index) VALUES(?, ?, ?)', [data.category_title, data.category_workshop, parseInt(result[0].max)+1])
@@ -470,11 +470,7 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewWorkshop(workshop_data, callback=()=>{}){
-        let data_arr = {
-            "workshop_title": workshop_data.workshop_title,
-            "workshop_image": workshop_data.workshop_image
-        };
-        this.addWorkshop(data_arr, callback);
+        this.addWorkshop(workshop_data, callback);
     }
 
     /**
@@ -484,11 +480,7 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewCategory(category_data, callback=()=>{}){
-        let data_arr = {
-            "category_title": category_data.category_title,
-            "category_workshop": category_data.category_workshop
-        };
-        this.addCategory(data_arr, callback);
+        this.addCategory(category_data, callback);
     }
 
     /**
@@ -498,14 +490,7 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewMachine(machine_data, callback=()=>{}){
-        let data_arr = {
-            "machine_title": machine_data.machine_title,
-            "machine_category": machine_data.machine_category,
-            "machine_brand": machine_data.machine_brand,
-            "machine_image": machine_data.machine_image,
-            "machine_reference": machine_data.machine_reference
-        };
-        this.addMachine(data_arr, callback);
+        this.addMachine(machine_data, callback);
     }
 
     /**
@@ -515,11 +500,7 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewSection(section_data, callback=()=>{}){
-        let data_arr = {
-            "section_machine": section_data.section_machine,
-            "section_type": section_data.section_type
-        };
-        this.addSection(data_arr, callback);
+        this.addSection(section_data, callback);
     }
 
     /**
