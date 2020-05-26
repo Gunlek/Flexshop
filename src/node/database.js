@@ -73,7 +73,7 @@ class Database {
     async getAllWorkshops(callback){
         let db = await this.dbPromise;
         Promise.all([
-            db.all("SELECT * FROM workshops")
+            db.all("SELECT * FROM workshops ORDER BY workshop_sort_index")
         ]).then((result) => callback(result[0]));
     }
 
@@ -86,8 +86,12 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('workshop_title') && data.hasOwnProperty('workshop_image'))
             Promise.all([
-                db.run('INSERT INTO workshops(workshop_title, workshop_image) VALUES(?, ?)', [data.workshop_title, data.workshop_image])
-            ]).then(() => callback(0));
+                db.get('SELECT MAX(workshop_sort_index) AS max FROM workshops')
+            ]).then((result) => {
+                Promise.all([
+                    db.run('INSERT INTO workshops(workshop_title, workshop_image, workshop_sort_index) VALUES(?, ?, ?)', [data.workshop_title, data.workshop_image, parseInt(result[0].max)+1])
+                ]).then(() => callback(0));
+            })
         else
             callback(-1);
     }
@@ -99,7 +103,7 @@ class Database {
     async getAllMachines(callback){
         let db = await this.dbPromise;
         Promise.all([
-            db.all("SELECT * FROM machines")
+            db.all("SELECT * FROM machines ORDER BY machine_sort_index")
         ]).then((result) => callback(result[0]));
     }
 
@@ -171,8 +175,12 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('machine_title') && data.hasOwnProperty('machine_category') && data.hasOwnProperty('machine_brand') && data.hasOwnProperty('machine_image') && data.hasOwnProperty('machine_reference'))
             Promise.all([
-                db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?, ?, ?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference])
-            ]).then(() => callback(0));
+                db.get('SELECT MAX(machine_sort_index) AS max FROM machines')
+            ]).then((result) => {
+                Promise.all([
+                    db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference, machine_sort_index) VALUES(?, ?, ?, ?, ?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference, parseInt(result[0].max)+1])
+                ]).then(() => callback(0));
+            });
         else
             callback(-1);
     }
@@ -184,7 +192,7 @@ class Database {
     async getAllSections(callback){
         let db = await this.dbPromise;
         Promise.all([
-            db.all("SELECT * FROM sections")
+            db.all("SELECT * FROM sections ORDER BY section_sort_index")
         ]).then((result) => {
             let return_value = result[0];
             callback(return_value);
@@ -267,8 +275,12 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('section_machine') && data.hasOwnProperty('section_type'))
             Promise.all([
-                db.run('INSERT INTO sections(section_machine, section_type) VALUES(?, ?)', [data.section_machine, data.section_type, data.section_title, data.section_description, data.section_video_links, data.section_video_titles])
-            ]).then(() => callback(0));
+                db.get('SELECT MAX(section_sort_index) AS max FROM sections')
+            ]).then((result) => {
+                Promise.all([
+                    db.run('INSERT INTO sections(section_machine, section_type, section_sort_index) VALUES(?, ?, ?)', [data.section_machine, data.section_type, parseInt(result[0].max)+1])
+                ]).then(() => callback(0));
+            });
         else
             callback(-1);
     }
@@ -280,7 +292,7 @@ class Database {
     async getAllCategories(callback){
         let db = await this.dbPromise;
         Promise.all([
-            db.all("SELECT * FROM category")
+            db.all("SELECT * FROM category ORDER BY category_sort_index")
         ]).then((result) => callback(result[0]));
     }
 
@@ -352,8 +364,12 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop'))
             Promise.all([
-                db.run('INSERT INTO category(category_title, category_workshop) VALUES(?, ?)', [data.category_title, data.category_workshop])
-            ]).then(() => callback(0));
+                db.get('SELECT MAX(category_sort_index) AS max FROM categories')
+            ]).then((result) => {
+                Promise.all([
+                    db.run('INSERT INTO category(category_title, category_workshop, category_sort_index) VALUES(?, ?, ?)', [data.category_title, data.category_workshop, parseInt(result[0].max)+1])
+                ]).then(() => callback(0));
+            });
         else
             callback(-1);
     }
@@ -365,7 +381,7 @@ class Database {
     async getAllParameters(callback){
         let db = await this.dbPromise;
         Promise.all([
-            db.all("SELECT * FROM parameters")
+            db.all("SELECT * FROM parameters ORDER BY parameter_sort_index")
         ]).then((result) => callback(result[0]));
     }
 
@@ -437,8 +453,12 @@ class Database {
         let db = await this.dbPromise;
         if(data.hasOwnProperty('parameter_section') && data.hasOwnProperty('parameter_name') && data.hasOwnProperty('parameter_value'))
             Promise.all([
-                db.run('INSERT INTO parameters(parameter_section, parameter_name, parameter_value) VALUES(?, ?, ?)', [data.parameter_section, data.parameter_name, data.parameter_value])
-            ]).then(() => callback(0));
+                db.get('SELECT MAX(parameter_sort_index) AS max FROM parameters')
+            ]).then((result) => {
+                Promise.all([
+                    db.run('INSERT INTO parameters(parameter_section, parameter_name, parameter_value, parameter_sort_index) VALUES(?, ?, ?, ?)', [data.parameter_section, data.parameter_name, data.parameter_value, parseInt(result[0].max)+1])
+                ]).then(() => callback(0));
+            });
         else
             callback(-1);
     }
@@ -450,14 +470,11 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewWorkshop(workshop_data, callback=()=>{}){
-        let db = await this.dbPromise;
         let data_arr = [
             workshop_data.workshop_title,
             workshop_data.workshop_image
         ];
-        Promise.all([
-            db.run('INSERT INTO workshops(workshop_title, workshop_image) VALUES(?, ?)', data_arr)
-        ]).then(() => callback());
+        this.addWorkshop(data_arr, callback);
     }
 
     /**
@@ -467,14 +484,11 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewCategory(category_data, callback=()=>{}){
-        let db = await this.dbPromise;
         let data_arr = [
             category_data.category_title,
             category_data.category_workshop
         ];
-        Promise.all([
-            db.run('INSERT INTO category(category_title, category_workshop) VALUES(?, ?)', data_arr)
-        ]).then(() => callback());
+        this.addCategory(data_arr, callback);
     }
 
     /**
@@ -484,7 +498,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewMachine(machine_data, callback=()=>{}){
-        let db = await this.dbPromise;
         let data_arr = [
             machine_data.machine_title,
             machine_data.machine_category,
@@ -492,9 +505,7 @@ class Database {
             machine_data.machine_image,
             machine_data.machine_reference
         ];
-        Promise.all([
-            db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?, ?, ?, ?)', data_arr)
-        ]).then(() => callback());
+        this.addMachine(data_arr, callback);
     }
 
     /**
@@ -504,14 +515,11 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewSection(section_data, callback=()=>{}){
-        let db = await this.dbPromise;
         let data_arr = [
             section_data.section_machine,
             section_data.section_type
         ];
-        Promise.all([
-            db.run('INSERT INTO sections(section_machine, section_type) VALUES(?, ?)', data_arr)
-        ]).then(() => callback());
+        this.addSection(data_arr, callback);
     }
 
     /**
