@@ -54,6 +54,51 @@ let app = new Vue({
     },
 
     methods: {
+        move_section_in_machine: function(evt){
+            if(evt.hasOwnProperty('moved')){
+                let dragged_el = evt.moved.oldIndex;
+                let new_index = evt.moved.newIndex;
+                let machine_id = evt.moved.element.section_machine;
+                this.exchange_index(machine_id, dragged_el, new_index);
+            }
+        },
+        exchange_index: function(machine, old_index, new_index){
+            let current_machine = null;
+            for(let k=0;k<this.machine_list.length;k++){
+                if(this.machine_list[k].machine_id == machine){
+                    current_machine = this.machine_list[k];
+                    break;
+                }
+            }
+            let sections = current_machine.sections;
+            let old_el_id = sections[old_index].section_id;
+            let new_el_id = sections[new_index].section_id;
+            this.move_section_to_index(old_el_id, old_index);
+            this.move_section_to_index(new_el_id, new_index);
+            this.get_section_list();
+        },
+        move_section_to_index(section_id, new_index){
+            console.log(section_id);
+            console.log(new_index);
+            console.log(" ");
+            let url = '/sections/update/'+section_id.toString();
+            let params = "section_sort_index="+new_index.toString();
+
+            let httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function(data){
+                if(httpRequest.readyState === 4){
+                    if(httpRequest.status >= 200 && httpRequest.status <= 300){
+                        // Success
+                    }
+                }
+            };
+            httpRequest.open('PUT', url);
+            httpRequest.setRequestHeader(
+                "Content-Type",
+                "application/x-www-form-urlencoded",
+            );
+            httpRequest.send(params);
+        },
         get_category_list: function(){
             let super_this = this;
             let url = '/category/list';
