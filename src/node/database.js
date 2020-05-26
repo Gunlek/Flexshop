@@ -470,10 +470,10 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewWorkshop(workshop_data, callback=()=>{}){
-        let data_arr = [
-            workshop_data.workshop_title,
-            workshop_data.workshop_image
-        ];
+        let data_arr = {
+            "workshop_title": workshop_data.workshop_title,
+            "workshop_image": workshop_data.workshop_image
+        };
         this.addWorkshop(data_arr, callback);
     }
 
@@ -484,10 +484,10 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewCategory(category_data, callback=()=>{}){
-        let data_arr = [
-            category_data.category_title,
-            category_data.category_workshop
-        ];
+        let data_arr = {
+            "category_title": category_data.category_title,
+            "category_workshop": category_data.category_workshop
+        };
         this.addCategory(data_arr, callback);
     }
 
@@ -498,13 +498,13 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewMachine(machine_data, callback=()=>{}){
-        let data_arr = [
-            machine_data.machine_title,
-            machine_data.machine_category,
-            machine_data.machine_brand,
-            machine_data.machine_image,
-            machine_data.machine_reference
-        ];
+        let data_arr = {
+            "machine_title": machine_data.machine_title,
+            "machine_category": machine_data.machine_category,
+            "machine_brand": machine_data.machine_brand,
+            "machine_image": machine_data.machine_image,
+            "machine_reference": machine_data.machine_reference
+        };
         this.addMachine(data_arr, callback);
     }
 
@@ -515,10 +515,10 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewSection(section_data, callback=()=>{}){
-        let data_arr = [
-            section_data.section_machine,
-            section_data.section_type
-        ];
+        let data_arr = {
+            "section_machine": section_data.section_machine,
+            "section_type": section_data.section_type
+        };
         this.addSection(data_arr, callback);
     }
 

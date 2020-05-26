@@ -70,7 +70,7 @@ router.post('/import-json', upload.single('import_file'), async (req, res) => {
                         "workshop_title": json_data[key][k].workshop_title,
                         "workshop_image": json_data[key][k].workshop_image
                     }
-                    db.createNewWorkshop(insert_data);
+                    db.createNewWorkshop(insert_data, ()=>{});
                 }
                 break;
 
@@ -80,7 +80,7 @@ router.post('/import-json', upload.single('import_file'), async (req, res) => {
                         "category_title": json_data[key][k].category_title,
                         "category_workshop": json_data[key][k].category_workshop
                     }
-                    db.createNewCategory(insert_data);
+                    db.createNewCategory(insert_data, ()=>{});
                 }
                 break;
             
@@ -93,7 +93,7 @@ router.post('/import-json', upload.single('import_file'), async (req, res) => {
                         "machine_image": json_data[key][k].machine_image,
                         "machine_reference": json_data[key][k].machine_reference
                     }
-                    db.createNewMachine(insert_data);
+                    db.createNewMachine(insert_data, ()=>{});
                 }
                 break;
             
@@ -103,7 +103,7 @@ router.post('/import-json', upload.single('import_file'), async (req, res) => {
                         "section_machine": json_data[key][k].section_machine,
                         "section_type": json_data[key][k].section_type
                     }
-                    db.createNewSection(insert_data);
+                    db.createNewSection(insert_data, ()=>{});
                 }
                 break;
 
@@ -114,13 +114,13 @@ router.post('/import-json', upload.single('import_file'), async (req, res) => {
                         "parameter_name": json_data[key][k].parameter_name,
                         "parameter_value": json_data[key][k].parameter_value
                     }
-                    db.addParameter(insert_data);
+                    db.addParameter(insert_data, ()=>{});
                 }
                 break;
         }
     }
     fs.unlinkSync(uploaded);
-    res.redirect('/parameters');
+    res.redirect('/');
 });
 
 module.exports = router;
