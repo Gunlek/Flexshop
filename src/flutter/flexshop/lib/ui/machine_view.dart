@@ -34,13 +34,11 @@ class _MachineViewState extends State<MachineView> {
       id: widget.machine.id,
       onDone: (data) {
         List<Section> currentSections = [];
-        for(var section in data){
+        for(var section in data)
           currentSections.add(Section.fromMapObject(section));
-          setState(() {
-            this._sections = currentSections;
-            print(currentSections);
-          });
-        }
+        setState(() {
+          this._sections = currentSections;
+        });
       }
     );
   }
@@ -50,10 +48,6 @@ class _MachineViewState extends State<MachineView> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        /* body: Column(children: <Widget>[
-          for(var k=0;k<this._sections.length;k++)
-              Text("test")
-        ],) */
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
@@ -76,11 +70,8 @@ class _MachineViewState extends State<MachineView> {
                         color: Colors.white,
                         fontSize: 40,
                       )),
-                  background: Image.network(
-                      this.machine.image=="none" ? "assets/images/default/default_machine.jpg" : this.machine.image,
-                      fit: BoxFit.cover,
-                      color: Color.fromRGBO(0, 0, 0, 0.4),
-                      colorBlendMode: BlendMode.darken)),
+                  background: getSliverBackground(),
+              ),
             ),
             new SliverList(delegate: new SliverChildListDelegate(_buildList(context))),
           ],
@@ -91,51 +82,54 @@ class _MachineViewState extends State<MachineView> {
 
   List<Widget> _buildList(BuildContext context) {
     List<Widget> widgetList = List<Widget>();
-    for (int i = 0; i < _sections.length; i++) {
-      switch (_sections[i].type.toLowerCase()) {
-        case "pictograms":
-          {
-            widgetList.add(_buildPictos(_sections[i]));
-          }
-          break;
+    if(this._sections.length < 1)
+      return [CircularProgressIndicator()]; // FIXME: Wrong proportions
+    else {
+      for (int i = 0; i < _sections.length; i++) {
+        switch (_sections[i].type.toLowerCase()) {
+          case "pictograms":
+            {
+              widgetList.add(_buildPictos(_sections[i]));
+            }
+            break;
 
-        case "description":
-          {
-            widgetList.add(_buildDescriptionTile(_sections[i]));
-          }
-          break;
+          case "description":
+            {
+              widgetList.add(_buildDescriptionTile(_sections[i]));
+            }
+            break;
 
-        case "carouseltutovideo":
-          {
-            widgetList.add(_buildTutoVideo(_sections[i]));
-          }
-          break;
+          case "carouseltutovideo":
+            {
+              widgetList.add(_buildTutoVideo(_sections[i]));
+            }
+            break;
 
-        case "imagewithtitle":
-          {
-            widgetList.add(_buildImageWithTitle(_sections[i]));
-          }
-          break;
+          case "imagewithtitle":
+            {
+              widgetList.add(_buildImageWithTitle(_sections[i]));
+            }
+            break;
 
-        case "interactivtuto":
-          {
-            widgetList.add(_buildInterractivTuto(context, _sections[i]));
-          }
-          break;
+          case "interactivtuto":
+            {
+              widgetList.add(_buildInterractivTuto(context, _sections[i]));
+            }
+            break;
 
-        default:
-          {
-            print("This type of section is an invalid value: ");
-            print(_sections[i].type);
-          }
-          break;
+          default:
+            {
+              print("This type of section is an invalid value: ");
+              print(_sections[i].type);
+            }
+            break;
+        }
       }
+      return widgetList;
     }
-    return widgetList;
   }
 
   Widget _buildPictos(Section section) {
-    print(section.pictosLinkList);
     return Container(
       height: 50,
       child: ListView.builder(
@@ -154,14 +148,14 @@ class _MachineViewState extends State<MachineView> {
   Widget _buildDescriptionTile(Section section) {
     return ExpansionTile(
       title: Text(
-        section.title,
+        section.title == null ? "" : section.title,
         style: GoogleFonts.pacifico(
             textStyle: TextStyle(
                 color: Color.fromRGBO(147, 49, 97, 1.0), fontSize: 30)),
       ),
       children: <Widget>[
         Text(
-          section.description,
+          section.description == null ? "" : section.description,
           style: GoogleFonts.montserrat(),
         ),
       ],
@@ -170,10 +164,13 @@ class _MachineViewState extends State<MachineView> {
 
   Widget _buildTutoVideo(Section section){ //carouselTutoVideo
     return ExpansionTile(
-      title: Text(section.title, style: GoogleFonts.pacifico(textStyle: TextStyle(
+      title: Text(
+        section.title == null ? "" : section.title, 
+        style: GoogleFonts.pacifico(textStyle: TextStyle(
           color: Color.fromRGBO(147, 49, 97, 1.0),
           fontSize: 30
-      ))),
+        )
+      )),
       children: <Widget>[
         Carousel(
             height: 350.0,
@@ -200,12 +197,14 @@ class _MachineViewState extends State<MachineView> {
 
   Widget _buildImageWithTitle(Section section){
     return             ExpansionTile(
-      title: Text(section.title, style: GoogleFonts.pacifico(textStyle: TextStyle(
+      title: Text(
+        section.title == null ? "" : section.title, 
+        style: GoogleFonts.pacifico(textStyle: TextStyle(
           color: Color.fromRGBO(147, 49, 97, 1.0),
           fontSize: 30
       ))),
       children: <Widget>[
-        Image.network(section.imageLink, fit: BoxFit.cover)
+        isAssetImage(section.imageLink)
       ],
     );
   }
@@ -220,7 +219,35 @@ class _MachineViewState extends State<MachineView> {
         //TODO: add parameter of the route
         Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(slideNumber: 0, machine: section.machine,)));
       },
-      child: Text(section.title, style: TextStyle(color: Color.fromRGBO(255, 168, 14, 1.0)),),
+      child: Text(
+        section.title == null ? "" : section.title, 
+        style: TextStyle(color: Color.fromRGBO(255, 168, 14, 1.0))
+      ),
     );
+  }
+
+  getSliverBackground() {
+    if(this.machine.image != "none"){
+      return Image.network(this.machine.image,
+        fit: BoxFit.cover,
+        color: Color.fromRGBO(0, 0, 0, 0.4),
+        colorBlendMode: BlendMode.darken
+      );
+    }
+    else
+      return Image.asset("assets/images/default/default_machine.jpg",
+        fit: BoxFit.cover,
+        color: Color.fromRGBO(0, 0, 0, 0.4),
+        colorBlendMode: BlendMode.darken
+      );
+  }
+
+  isAssetImage(image){
+    if(image!=null){
+      if(image.startsWith("assets"))
+        return Image.asset(image, fit: BoxFit.cover);
+      else
+        return Image.network(image, fit: BoxFit.cover);
+    }
   }
 }
