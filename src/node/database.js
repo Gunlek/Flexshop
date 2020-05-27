@@ -463,14 +463,22 @@ class Database {
             callback(-1);
     }
 
-    /**
+        /**
      * Créé une nouvelle entrée workshop dans la base
      * de données en fonction du json fourni
      * @param {json} workshop_data Tableau json représentant le workshop à créer
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewWorkshop(workshop_data, callback=()=>{}){
-        this.addWorkshop(workshop_data, callback);
+        let db = await this.dbPromise;
+        let data_arr = [
+            workshop_data.workshop_id,
+            workshop_data.workshop_title,
+            workshop_data.workshop_image
+        ];
+        Promise.all([
+            db.run('INSERT INTO workshops(workshop_id, workshop_title, workshop_image) VALUES(?, ?, ?)', data_arr)
+        ]).then(() => callback());
     }
 
     /**
@@ -480,7 +488,15 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewCategory(category_data, callback=()=>{}){
-        this.addCategory(category_data, callback);
+        let db = await this.dbPromise;
+        let data_arr = [
+            category_data.category_id,
+            category_data.category_title,
+            category_data.category_workshop
+        ];
+        Promise.all([
+            db.run('INSERT INTO category(category_id, category_title, category_workshop) VALUES(?, ?, ?)', data_arr)
+        ]).then(() => callback());
     }
 
     /**
@@ -490,7 +506,18 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewMachine(machine_data, callback=()=>{}){
-        this.addMachine(machine_data, callback);
+        let db = await this.dbPromise;
+        let data_arr = [
+            machine_data.machine_id,
+            machine_data.machine_title,
+            machine_data.machine_category,
+            machine_data.machine_brand,
+            machine_data.machine_image,
+            machine_data.machine_reference
+        ];
+        Promise.all([
+            db.run('INSERT INTO machines(machine_id, machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?, ?, ?, ?, ?)', data_arr)
+        ]).then(() => callback());
     }
 
     /**
@@ -500,7 +527,15 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewSection(section_data, callback=()=>{}){
-        this.addSection(section_data, callback);
+        let db = await this.dbPromise;
+        let data_arr = [
+            section_data.section_id,
+            section_data.section_machine,
+            section_data.section_type
+        ];
+        Promise.all([
+            db.run('INSERT INTO sections(section_id, section_machine, section_type) VALUES(?, ?, ?)', data_arr)
+        ]).then(() => callback());
     }
 
     /**
