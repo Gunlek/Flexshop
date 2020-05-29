@@ -471,14 +471,19 @@ class Database {
      */
     async createNewWorkshop(workshop_data, callback=()=>{}){
         let db = await this.dbPromise;
-        let data_arr = [
-            workshop_data.workshop_id,
-            workshop_data.workshop_title,
-            workshop_data.workshop_image
-        ];
+        let data_arr = [];
+        let update_str = "";
+        let values_str = "";
+        for(let key in workshop_data){
+            data_arr.push(workshop_data[key]);
+            update_str += key.toString() + ", ";
+            values_str += "?" + ", ";
+        }
+        update_str = update_str.substring(0, update_str.length-2);
+        values_str = values_str.substring(0, values_str.length-2);
         Promise.all([
-            db.run('INSERT INTO workshops(workshop_id, workshop_title, workshop_image) VALUES(?, ?, ?)', data_arr)
-        ]).then(() => callback());
+            db.run('INSERT INTO workshops('+update_str+') VALUES('+values_str+')', data_arr)
+        ]).then(()=>callback());
     }
 
     /**
@@ -489,14 +494,19 @@ class Database {
      */
     async createNewCategory(category_data, callback=()=>{}){
         let db = await this.dbPromise;
-        let data_arr = [
-            category_data.category_id,
-            category_data.category_title,
-            category_data.category_workshop
-        ];
+        let data_arr = [];
+        let update_str = "";
+        let values_str = "";
+        for(let key in category_data){
+            data_arr.push(category_data[key]);
+            update_str += key.toString() + ", ";
+            values_str += "?" + ", ";
+        }
+        update_str = update_str.substring(0, update_str.length-2);
+        values_str = values_str.substring(0, values_str.length-2);
         Promise.all([
-            db.run('INSERT INTO category(category_id, category_title, category_workshop) VALUES(?, ?, ?)', data_arr)
-        ]).then(() => callback());
+            db.run('INSERT INTO category('+update_str+') VALUES('+values_str+')', data_arr)
+        ]).then(()=>callback());
     }
 
     /**
@@ -507,17 +517,19 @@ class Database {
      */
     async createNewMachine(machine_data, callback=()=>{}){
         let db = await this.dbPromise;
-        let data_arr = [
-            machine_data.machine_id,
-            machine_data.machine_title,
-            machine_data.machine_category,
-            machine_data.machine_brand,
-            machine_data.machine_image,
-            machine_data.machine_reference
-        ];
+        let data_arr = [];
+        let update_str = "";
+        let values_str = "";
+        for(let key in machine_data){
+            data_arr.push(machine_data[key]);
+            update_str += key.toString() + ", ";
+            values_str += "?" + ", ";
+        }
+        update_str = update_str.substring(0, update_str.length-2);
+        values_str = values_str.substring(0, values_str.length-2);
         Promise.all([
-            db.run('INSERT INTO machines(machine_id, machine_title, machine_category, machine_brand, machine_image, machine_reference) VALUES(?, ?, ?, ?, ?, ?)', data_arr)
-        ]).then(() => callback());
+            db.run('INSERT INTO machines('+update_str+') VALUES('+values_str+')', data_arr)
+        ]).then(()=>callback());
     }
 
     /**
@@ -528,14 +540,19 @@ class Database {
      */
     async createNewSection(section_data, callback=()=>{}){
         let db = await this.dbPromise;
-        let data_arr = [
-            section_data.section_id,
-            section_data.section_machine,
-            section_data.section_type
-        ];
+        let data_arr = [];
+        let update_str = "";
+        let values_str = "";
+        for(let key in section_data){
+            data_arr.push(section_data[key]);
+            update_str += key.toString() + ", ";
+            values_str += "?" + ", ";
+        }
+        update_str = update_str.substring(0, update_str.length-2);
+        values_str = values_str.substring(0, values_str.length-2);
         Promise.all([
-            db.run('INSERT INTO sections(section_id, section_machine, section_type) VALUES(?, ?, ?)', data_arr)
-        ]).then(() => callback());
+            db.run('INSERT INTO sections('+update_str+') VALUES('+values_str+')', data_arr),
+        ]).then(()=>callback());
     }
 
     /**
