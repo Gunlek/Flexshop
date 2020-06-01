@@ -49,6 +49,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/placeholders/
+    - assets/images/pictograms/
     - assets/animations/
     - assets/tuto/
     - .env

@@ -140,7 +140,7 @@ class _MachineViewState extends State<MachineView> {
             return Container(
                 height: 50,
                 width: 50,
-                child: Image.asset(section.pictosLinkList[i]));
+                child: Image.asset("assets/images/pictograms/"+section.pictosLinkList[i]));
           }),
     );
   }
