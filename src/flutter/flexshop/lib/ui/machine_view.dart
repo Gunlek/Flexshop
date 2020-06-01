@@ -227,15 +227,16 @@ class _MachineViewState extends State<MachineView> {
   }
 
   getSliverBackground() {
-    if(this.machine.image != "none"){
-      return Image.network(this.machine.image,
+    if(this.machine.image.startsWith("htt")){
+      return Image.network(
+        this.machine.image,
         fit: BoxFit.cover,
         color: Color.fromRGBO(0, 0, 0, 0.4),
         colorBlendMode: BlendMode.darken
       );
     }
     else
-      return Image.asset("assets/images/default/default_machine.jpg",
+      return Image.asset("assets/images/placeholders/machines.jpg",
         fit: BoxFit.cover,
         color: Color.fromRGBO(0, 0, 0, 0.4),
         colorBlendMode: BlendMode.darken

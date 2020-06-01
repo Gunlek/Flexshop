@@ -17,8 +17,6 @@ class _WorkshopListState extends State<WorkshopList> {
     super.initState();
     WorkshopAPI.getAllWorkshops(
         onDone: (int status, dynamic data){
-          print(data);
-          print(status);
           List<Workshop> workshops = List<Workshop>();
           for (final elem in data){workshops.add(Workshop.fromMapObject(elem)); print(Workshop.fromMapObject(elem).toJson().toString());}
           setState(() {
