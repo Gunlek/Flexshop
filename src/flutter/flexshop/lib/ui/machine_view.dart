@@ -7,13 +7,9 @@ import 'package:flexshop/model/section.dart';
 import 'package:flexshop/ui/interractivTuto_view.dart';
 
 class MachineView extends StatefulWidget {
-  List<Section> _sections = [];
-
   Machine machine;
 
-  MachineView({this.machine}){
-    this._sections = [];
-  }
+  MachineView({this.machine});
 
   @override
   _MachineViewState createState() => _MachineViewState(machine: this.machine);
@@ -30,6 +26,7 @@ class _MachineViewState extends State<MachineView> {
   @override
   void initState() {
     super.initState();
+    this._sections = List();
     SectionAPI.getSectionForMachineId(
       id: widget.machine.id,
       onDone: (data) {
