@@ -52,6 +52,9 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
   void initState() {
     super.initState();
 
+    this.machines = List();
+    this._categories = List();
+
     MachineAPI.getAllMachines(
       onDone: (int status, dynamic data){
         List<Machine> macList = List<Machine>();
