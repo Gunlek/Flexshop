@@ -80,7 +80,12 @@ class _MachineViewState extends State<MachineView> {
   List<Widget> _buildList(BuildContext context) {
     List<Widget> widgetList = List<Widget>();
     if(this._sections.length < 1)
-      return [CircularProgressIndicator()]; // FIXME: Wrong proportions
+      return [
+        AspectRatio(
+          aspectRatio: 1,
+          child: CircularProgressIndicator()
+        )
+      ];
     else {
       for (int i = 0; i < _sections.length; i++) {
         switch (_sections[i].type.toLowerCase()) {
