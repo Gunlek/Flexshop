@@ -1,8 +1,10 @@
 let sqlite = require('sqlite');
+let sqlite3 = require('sqlite3');
 let Promise = require('bluebird').Promise;
 let fs = require('fs');
 
 
-Promise.resolve()
-    .then(() => sqlite.open('./database/database.sqlite', { Promise }))
-    .then(db => db.migrate({ force: 'last' }));
+sqlite.open({
+    filename: './database/database.sqlite',
+    driver: sqlite3.Database
+}).then(db => db.migrate({ force: 'last' }));
