@@ -74,4 +74,20 @@ router.get("/get/:id", (req, res) => {
     });
 });
 
+/**
+ * Récupère toutes les slides d'une machine
+ * dont l'id est fourni
+ * fourni
+ * @param {number} id L'id de la slide à récupérer 
+ * @return {http/json} Un document Json qui décrit la slide demandée
+ */
+router.get("/get/machine/:id", (req, res) => {
+    db.getMachineSlides(req.params.id, (result) => {
+        if(result != undefined)
+            res.json(result);
+        else
+            res.sendStatus(204)
+    });
+});
+
 module.exports = router;

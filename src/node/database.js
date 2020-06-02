@@ -534,6 +534,17 @@ class Database {
     }
 
     /**
+     * Récupère la liste de toutes les slides depuis la SQL
+     * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
+     */
+    async getMachineSlides(id, callback){
+        let db = await this.dbPromise;
+        Promise.all([
+            db.all("SELECT * FROM slides WHERE slide_machine=?", [id])
+        ]).then((result) => callback(result[0]));
+    }
+
+    /**
      * c
      * @param {json} data Représentation JSON de la slide à ajouter
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti

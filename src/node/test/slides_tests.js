@@ -72,6 +72,25 @@ exports.runSlidesTests = function(){
             });
         });
 
+        describe('/get/machine/:id endpoint', function(){
+            it('should return all slides for the provided machine id', function(done){
+                chai.request(app)
+                    .get('/slides/get/machine/1')
+                    .end((err, res) => {
+                        res.status.should.not.equal(204);
+                        res.body.should.not.equal(null);
+                        res.body.length.should.equal(1);
+                        res.body[0]['slide_number'].should.equal(1);
+                        res.body[0]['slide_machine'].should.equal(1);
+                        res.body[0]['slide_title'].should.equal("test_title");
+                        res.body[0]['slide_image'].should.equal("test_image");
+                        res.body[0]['slide_description'].should.equal("test_description");
+
+                        done();
+                    });
+            });
+        });
+
         describe('/update/:id endpoint', function(){
             it('should update the corresponding slide', function(done){
                 let slide_data = {
