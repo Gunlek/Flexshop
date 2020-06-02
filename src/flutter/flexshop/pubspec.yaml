@@ -48,7 +48,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/default/
+    - assets/images/placeholders/
+    - assets/images/pictograms/
     - assets/animations/
     - assets/tuto/
     - .env

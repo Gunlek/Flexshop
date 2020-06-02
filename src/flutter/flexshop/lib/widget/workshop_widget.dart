@@ -33,12 +33,10 @@ class WorkshopWidget extends StatelessWidget {
                   height: widgetHeight - 50,
                   child: Hero(
                     tag: workshop.id.toString(),
-                    child: Image.network(
-                      workshop.image=="none"? "assets/images/default/default_ateliers.jpg" : workshop.image,
-                      fit: BoxFit.cover,
-                      color: Color.fromRGBO(0, 0, 0, 0.5),
-                      colorBlendMode: BlendMode.darken,
-                    ),
+                    child: isNetworkImageAvailable(
+                      image: workshop.image,
+                      placeholder: "assets/images/placeholders/workshops.jpg"
+                    )
                   ),
                 ),
               ),
@@ -64,5 +62,18 @@ class WorkshopWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget isNetworkImageAvailable({String image, String placeholder}) {
+    if(!image.startsWith("http"))
+      return Image.asset(
+        placeholder,
+        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
+      );
+    else
+      return Image.network(
+        workshop.image,
+        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
+      );
   }
 }

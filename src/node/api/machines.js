@@ -5,6 +5,8 @@ let urlencoded = bodyParser.urlencoded({extended: true});
 let database = require('../database');
 let db = new database().getInstance();
 
+let deletes = require('./deletes');
+
 /**
  * Ajoute une machine à la base de données
  * @param {json} data Un tableau Json décrivant la machine à ajouter
@@ -47,9 +49,7 @@ router.put("/update/:id", urlencoded, (req, res) => {
  * @param {number} id L'id de la machine à supprimer
  */
 router.delete("/delete/:id", (req, res) => {
-    db.deleteMachineById(req.params.id, (result) => {
-        res.sendStatus(200);
-    });
+    deletes.deleteMachine(req, res, db);
 });
 
 /**

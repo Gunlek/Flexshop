@@ -12,12 +12,12 @@ router.use(function timeLog(req, res, next) {
 });
 
 /**
- * Ajoute une section à la base de données
- * @param {json} data Un tableau Json décrivant la section à ajouter
+ * Ajoute une slide à la base de données
+ * @param {json} data Un tableau Json décrivant la slide à ajouter
  */
 router.post("/add", urlencoded, (req, res) => {
     let data = req.body;
-    db.addSection(data, (err_code) => {
+    db.addSlide(data, (err_code) => {
         if(err_code == 0)
             res.sendStatus(201);
         else
@@ -26,45 +26,47 @@ router.post("/add", urlencoded, (req, res) => {
 });
 
 /**
- * Récupère la liste de toutes les sections
+ * Récupère la liste de toutes les slides
  * depuis la base de donnée
- * @return {http/json} Un document Json qui décrit toutes les sections trouvées
+ * @return {http/json} Un document Json qui décrit toutes les slides trouvées
  */
 router.get('/list', (req, res) => {
-    db.getAllSections((result) => {
+    db.getAllSlides((result) => {
         res.json(result);
     });
 });
 
 /**
- * Met à jour la section décrit par l'id
+ * Met à jour la slide décrite par l'id
  * @param {json} data Un tableau Json décrivant les modifications à effectuer
  */
 router.put("/update/:id", urlencoded, (req, res) => {
     let data = req.body;
-    db.updateSectionById(req.params.id, data, () => {
+    db.updateSlideById(req.params.id, data, () => {
         res.sendStatus(200);
     });
 });
 
 /**
- * Supprime la section correspondante à
+ * Supprime la slide correspondante à
  * l'id fourni
- * @param {number} id L'id de la section à supprimer
+ * @param {number} id L'id de la slide à supprimer
  */
 router.delete("/delete/:id", (req, res) => {
-    deletes.deleteSection(req, res, db);
+    db.deleteSlideById(req.params.id, () => {
+        res.sendStatus(200);
+    });
 });
 
 /**
- * Récupère les données d'une section depuis
+ * Récupère les données d'une slide depuis
  * la base de donnée en fonction de l'id
  * fourni
- * @param {number} id L'id de la section à récupérer 
- * @return {http/json} Un document Json qui décrit la section demandée
+ * @param {number} id L'id de la slide à récupérer 
+ * @return {http/json} Un document Json qui décrit la slide demandée
  */
 router.get("/get/:id", (req, res) => {
-    db.getSectionById(req.params.id, (result) => {
+    db.getSlideById(req.params.id, (result) => {
         if(result != undefined)
             res.json(result);
         else

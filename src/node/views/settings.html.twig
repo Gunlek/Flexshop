@@ -2,30 +2,31 @@
 
 {% block links %}
     <a href="/workshops"><li>Ateliers</li></a>
-    <a href="/categories"><li>Catégories</li></a>
     <a href="/machines"><li>Machines</li></a>
-    <a href="/sections"><li>Sections</li></a>
-    <a href="/parameters"><li>Paramètres</li></a>
 {% endblock %}
 
 {% block content %}
-<h1>Options suplémentaires</h1>
-<h3>Importation / Exportation des bases de données</h3>
-<div class="row">
-    <div class="col-4">
-        <a href="/export-json" class="btn btn-primary container-fluid">Exporter</a>
-    </div>
-    <div class="col-8">
-        <form action="/import-json" method="POST" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-6">
-                    <center><input type="file" accept=".json" name="import_file" /></center>
+<div style="padding-left: 15px;">
+    <h1>Options suplémentaires</h1><br/>
+    <h3>Importation / Exportation des bases de données</h3>
+    <div class="row">
+        <div class="col-4">
+            <a href="/export-json" class="btn btn-blue content-fluid">
+                <center>Exporter</center>
+            </a>
+        </div>
+        <div class="col-8">
+            <form action="/import-json" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-6">
+                        <center><input type="file" accept=".json" name="import_file" /></center>
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="btn btn-blue content-fluid" value="Importer" />
+                    </div>
                 </div>
-                <div class="col-6">
-                    <input type="submit" class="btn btn-primary container-fluid" value="Importer" />
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

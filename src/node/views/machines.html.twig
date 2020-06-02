@@ -2,66 +2,108 @@
 
 {% block links %}
     <a href="/workshops"><li>Ateliers</li></a>
-    <a href="/categories"><li>Catégories</li></a>
     <a href="/machines"><li class="active">Machines</li></a>
-    <a href="/sections"><li>Sections</li></a>
-    <a href="/parameters"><li>Paramètres</li></a>
 {% endblock %}
 
 {% block content %}
 <div id="workshops">
-    <h1>Gestion des machines</h1>
-    <h3 style="padding-left: 30px;">Ajout d'une machine</h3>
-    <div class="row">
-        <div class="col-2">
-            <input type="text" class="container-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
+    <div class="horizontal-table">
+        <div class="row">
+            <div class="col-4"><h1 class="table-title">Gestion des machines</h1></div>
+            <div class="col-2" style="position: relative;">
+                <button type="button" id="enableDelete" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
+            </div>
+            <div class="col-2" style="position: relative;">
+                <button type="button" id="enableAdd" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
+            </div>
+            <div class="col-4"></div>
         </div>
-        <div class="col-2">
-            <select v-model="new_machine_category" class="form-control container-fluid">
+        <div v-for="machine in full_machines" :key="machine.machine_id" class="table-card">
+            <div class="align-parent" style="width: 100%">
+                <h4 class="card-title">${machine.machine_title}</h4>
+                <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button>
+            </div>
+            <p>${machine.machine_reference} - ${machine.machine_brand}</p>
+            <draggable :list="machine.sections" @change="move_section_in_machine">
+                <div class="card align-parent" v-for="section in machine.sections" :key="section.section_id">
+                    <div class="card-header align-parent">
+                        <strong class="card-title">${section.section_type}</strong>
+                        <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_section(section.section_id)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="align-parent" style="margin: 5px 10px;word-wrap:normal;" v-for="parameter in section.parameters" :key="parameter.parameter_id">
+                        <div class="row">
+                            <div class="col-11">
+                                <strong>${parameter.parameter_name}:</strong> ${parameter.parameter_value}
+                            </div>
+
+                            <div class="col-1">
+                                <button type="button" class="btn btn-outline-red btn-xs align-right del-btn" @click="del_parameter(parameter.parameter_id)"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>            
+                    </div>
+                    <div class="add-section">
+                        <div class="row">
+                            <div class="col-6" style="padding: 0 5px;">
+                                <input type="text" class="form-control content-fluid" v-model="new_parameter_name" placeholder="Nom du paramètre..."/>
+                            </div>
+                            <div class="col-6" style="padding: 0 5px;">
+                                <input type="text" class="form-control content-fluid" v-model="new_parameter_value" placeholder="Valeur du paramètre..."/>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-green content-fluid" @click="add_new_parameter(section.section_id)">Ajouter le paramètre</button>
+                    </div>
+                </div>
+            </draggable>
+
+            <div class="card align-parent add-section">
+                <div class="card-header align-parent">
+                    <strong class="card-title">Ajouter une section</strong>
+                </div>
+                <input type="text" class="form-control content-fluid" v-model="new_section_type" placeholder="Type de section..." />
+                <button type="button" @click="add_new_section(machine.machine_id)" class="content-fluid btn btn-outline-green">Créer</button>
+            </div>
+        </div>
+
+        <div class="table-card add-section" id="add_machine">
+            <h4>Créer une nouvelle machine</h4>
+            <input class="content-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
+            <select v-model="new_machine_category" class="form-control content-fluid">
                 <option disabled value="">Choisissez une catégorie</option>
                 <option v-for="category in category_list" v-bind:value="category.category_id">${category.category_title}</option>
             </select>
-        </div>
-        <div class="col-2">
-            <input type="text" class="container-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
-        </div>
-        <div class="col-2">
-            <input type="text" class="container-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
-        </div>
-        <div class="col-2">
-            <input type="text" class="container-fluid form-control" v-model="new_machine_image" placeholder="Image de la nouvelle machine..."/>
-        </div>
-        <div class="col-2">
-            <button type="button" @click="add_new_machine()" class="btn btn-outline-primary container-fluid">Ajouter</button>
+            <input class="content-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
+            <input class="content-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
+            <input class="content-fluid form-control" v-model="new_machine_image" placeholder="Image de la nouvelle machine..."/>
+            <button type="button" @click="add_new_machine()" class="content-fluid btn btn-outline-green">Créer</button>
         </div>
     </div>
-    <br/><br/>
-    <h3 style="padding-left: 30px;">Listing des machines</h3>
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th>#</th>
-                <th>Nom</th>
-                <th>Catégorie</th>
-                <th>Marque</th>
-                <th>Référence</th>
-                <th>Image</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tr v-for="machine in machine_list" :key="machine.machine_id">
-            <td>#${ machine.machine_id }</td>
-            <td>${ machine.machine_title }</td>
-            <td>${ getMachineCategoryName(machine.machine_category) }</td>
-            <td>${ machine.machine_brand }</td>
-            <td>${ machine.machine_reference }</td>
-            <td>${ machine.machine_image }</td>
-            <td><button type="button" class="btn btn-danger" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button></td>
-        </tr>
-    </table>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="/js/machines_interface.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+    <script src="/js/machines.js"></script>
+    <script>
+        $(document).ready(function(){
+            let delEnabled=false;
+            $('#enableDelete').click(function(e){
+                e.preventDefault();
+                if(delEnabled)
+                    $('.del-btn').fadeOut(function(){delEnabled=!delEnabled;});
+                else
+                    $('.del-btn').fadeIn(function(){delEnabled=!delEnabled;});
+            });
+
+            let addEnabled = true;
+            $('#enableAdd').click(function(e){
+                e.preventDefault();
+                if(addEnabled)
+                    $('.add-section').slideUp(function(){addEnabled=false;});
+                else
+                    $('.add-section').slideDown(function(){addEnabled=true;});
+            });
+        });
+    </script>
 {% endblock %}

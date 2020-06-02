@@ -5,6 +5,8 @@ let urlencoded = bodyParser.urlencoded({extended: true});
 let database = require('../database');
 let db = new database().getInstance();
 
+let deletes = require('./deletes');
+
 router.use(function timeLog(req, res, next) {
   next();
 });
@@ -51,9 +53,7 @@ router.put("/update/:id", urlencoded, (req, res) => {
  * @param {number} id L'id du workshop à supprimer
  */
 router.delete("/delete/:id", (req, res) => {
-    db.deleteWorkshopById(req.params.id, (result) => {
-        res.sendStatus(200);
-    });
+    deletes.deleteWorkshop(req, res, db);
 });
 
 /**
