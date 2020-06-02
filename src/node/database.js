@@ -25,11 +25,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getWorkshopById(id, callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.get('SELECT * FROM workshops WHERE workshop_id = ?', [id]);
+        let result = await this.db.get('SELECT * FROM workshops WHERE workshop_id = ?', [id]);
         callback(result);
-        this.close();
     }
 
     /**
@@ -39,11 +36,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteWorkshopById(id, callback){
-        await this.open();
-        let db = this.db;
-        await db.run('DELETE FROM workshops WHERE workshop_id = ?', [id]);
+        await this.db.run('DELETE FROM workshops WHERE workshop_id = ?', [id]);
         callback();
-        this.close();
     }
 
     /**
@@ -53,8 +47,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async updateWorkshopById(id, data, callback){
-        await this.open();
-        let db = this.db;
         let request = "UPDATE workshops SET ";
         let params_array = [];
         let index = 0;
@@ -75,9 +67,8 @@ class Database {
         request += "WHERE workshop_id = ?"
         params_array.push(id);
 
-        await db.run(request, params_array)
+        await this.db.run(request, params_array)
         callback();
-        this.close();
     }
 
     /**
@@ -85,11 +76,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllWorkshops(callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM workshops ORDER BY workshop_sort_index")
+        let result = await this.db.all("SELECT * FROM workshops ORDER BY workshop_sort_index")
         callback(result);
-        this.close();
     }
 
     /**
@@ -98,18 +86,14 @@ class Database {
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addWorkshop(data, callback){
-        await this.open();
-        let db = this.db;
         if(data.hasOwnProperty('workshop_title') && data.hasOwnProperty('workshop_image'))
         {
-            let result = await db.get('SELECT MAX(workshop_sort_index) AS max FROM workshops');
-            await db.run('INSERT INTO workshops(workshop_title, workshop_image, workshop_sort_index) VALUES(?, ?, ?)', [data.workshop_title, data.workshop_image, parseInt(result.max)+1])
+            let result = await this.db.get('SELECT MAX(workshop_sort_index) AS max FROM workshops');
+            await this.db.run('INSERT INTO workshops(workshop_title, workshop_image, workshop_sort_index) VALUES(?, ?, ?)', [data.workshop_title, data.workshop_image, parseInt(result.max)+1])
             callback(0);
-            this.close();
         }
         else {
             callback(-1);
-            this.close();
         }
     }
 
@@ -118,11 +102,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllMachines(callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM machines ORDER BY machine_sort_index");
+        let result = await this.db.all("SELECT * FROM machines ORDER BY machine_sort_index");
         callback(result);
-        this.close();
     }
 
     /**
@@ -132,11 +113,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getMachineById(id, callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.get('SELECT * FROM machines WHERE machine_id = ?', [id]);
+        let result = await this.db.get('SELECT * FROM machines WHERE machine_id = ?', [id]);
         callback(result);
-        this.close();
     }
 
     /**
@@ -146,11 +124,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteMachineById(id, callback){
-        await this.open();
-        let db = this.db;
-        await db.run('DELETE FROM machines WHERE machine_id = ?', [id]);
+        await this.db.run('DELETE FROM machines WHERE machine_id = ?', [id]);
         callback();
-        this.close();
     }
 
     /**
@@ -160,8 +135,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async updateMachineById(id, data, callback){
-        await this.open();
-        let db = this.db;
         let request = "UPDATE machines SET ";
         let params_array = [];
         let index = 0;
@@ -182,9 +155,8 @@ class Database {
         request += "WHERE machine_id = ?"
         params_array.push(id);
 
-        await db.run(request, params_array);
+        await this.db.run(request, params_array);
         callback();
-        this.close();
     }
 
     /**
@@ -193,18 +165,14 @@ class Database {
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addMachine(data, callback){
-        await this.open();
-        let db = this.db;
         if(data.hasOwnProperty('machine_title') && data.hasOwnProperty('machine_category') && data.hasOwnProperty('machine_brand') && data.hasOwnProperty('machine_image') && data.hasOwnProperty('machine_reference'))
         {
-            let result = await db.get('SELECT MAX(machine_sort_index) AS max FROM machines');
-            db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference, machine_sort_index) VALUES(?, ?, ?, ?, ?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference, parseInt(result.max)+1])
+            let result = await this.db.get('SELECT MAX(machine_sort_index) AS max FROM machines');
+            this.db.run('INSERT INTO machines(machine_title, machine_category, machine_brand, machine_image, machine_reference, machine_sort_index) VALUES(?, ?, ?, ?, ?, ?)', [data.machine_title, data.machine_category, data.machine_brand, data.machine_image, data.machine_reference, parseInt(result.max)+1])
             callback(0);
-            this.close();
         }
         else {
             callback(-1);
-            this.close();
         }
     }
 
@@ -213,12 +181,9 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllSections(callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM sections ORDER BY section_sort_index");
+        let result = await this.db.all("SELECT * FROM sections ORDER BY section_sort_index");
         let return_value = result;
         callback(return_value);
-        this.close();
     }
 
     /**
@@ -228,17 +193,14 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getSectionById(id, callback){
-        await this.open();
-        let db = this.db;
-        let sections = await db.get('SELECT * FROM sections WHERE section_id = ?', [id]);
-        let parameters = db.all('SELECT * FROM parameters WHERE parameter_section = ?', [id]);
+        let sections = await this.db.get('SELECT * FROM sections WHERE section_id = ?', [id]);
+        let parameters = this.db.all('SELECT * FROM parameters WHERE parameter_section = ?', [id]);
         let return_value = sections;
         for(let keyvalue in parameters) {
             let current_param = parameters[keyvalue];
             return_value[current_param.parameter_name] = current_param.parameter_value;
         }
         callback(return_value);
-        this.close();
     }
 
     /**
@@ -248,11 +210,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteSectionById(id, callback){
-        await this.open();
-        let db = this.db;
-        await db.run('DELETE FROM sections WHERE section_id = ?', [id])
+        await this.db.run('DELETE FROM sections WHERE section_id = ?', [id])
         callback();
-        this.close();
     }
 
     /**
@@ -262,8 +221,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async updateSectionById(id, data, callback){
-        await this.open();
-        let db = this.db;
         let request = "UPDATE sections SET ";
         let params_array = [];
         let index = 0;
@@ -284,9 +241,8 @@ class Database {
         request += "WHERE section_id = ?"
         params_array.push(id);
 
-        await db.run(request, params_array)
+        await this.db.run(request, params_array)
         callback();
-        this.close();
     }
 
     /**
@@ -295,18 +251,14 @@ class Database {
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addSection(data, callback){
-        await this.open();
-        let db = this.db;
         if(data.hasOwnProperty('section_machine') && data.hasOwnProperty('section_type'))
         {
-            let result = await db.get('SELECT MAX(section_sort_index) AS max FROM sections');
-            await db.run('INSERT INTO sections(section_machine, section_type, section_sort_index) VALUES(?, ?, ?)', [data.section_machine, data.section_type, parseInt(result.max)+1])
+            let result = await this.db.get('SELECT MAX(section_sort_index) AS max FROM sections');
+            await this.db.run('INSERT INTO sections(section_machine, section_type, section_sort_index) VALUES(?, ?, ?)', [data.section_machine, data.section_type, parseInt(result.max)+1])
             callback(0);
-            this.close();
         }
         else {
             callback(-1);
-            this.close();
         }
     }
 
@@ -315,11 +267,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllCategories(callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM category ORDER BY category_sort_index")
+        let result = await this.db.all("SELECT * FROM category ORDER BY category_sort_index")
         callback(result);
-        this.close();
     }
 
     /**
@@ -329,11 +278,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getCategoryById(id, callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.get('SELECT * FROM category WHERE category_id = ?', [id])
+        let result = await this.db.get('SELECT * FROM category WHERE category_id = ?', [id])
         callback(result);
-        this.close();
     }
 
     /**
@@ -343,11 +289,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteCategoryById(id, callback){
-        await this.open();
-        let db = this.db;
-        await db.run('DELETE FROM category WHERE category_id = ?', [id])
+        await this.db.run('DELETE FROM category WHERE category_id = ?', [id])
         callback();
-        this.close();
     }
 
     /**
@@ -357,8 +300,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async updateCategoryById(id, data, callback){
-        await this.open();
-        let db = this.db;
         let request = "UPDATE category SET ";
         let params_array = [];
         let index = 0;
@@ -379,9 +320,8 @@ class Database {
         request += "WHERE category_id = ?"
         params_array.push(id);
 
-        await db.run(request, params_array)
+        await this.db.run(request, params_array)
         callback();
-        this.close();
     }
 
     /**
@@ -390,17 +330,13 @@ class Database {
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addCategory(data, callback){
-        await this.open();
-        let db = this.db;
         if(data.hasOwnProperty('category_title') && data.hasOwnProperty('category_workshop')){
-            let result = await db.get('SELECT MAX(category_sort_index) AS max FROM category');
-            db.run('INSERT INTO category(category_title, category_workshop, category_sort_index) VALUES(?, ?, ?)', [data.category_title, data.category_workshop, parseInt(result.max)+1])
+            let result = await this.db.get('SELECT MAX(category_sort_index) AS max FROM category');
+            this.db.run('INSERT INTO category(category_title, category_workshop, category_sort_index) VALUES(?, ?, ?)', [data.category_title, data.category_workshop, parseInt(result.max)+1])
             callback(0);
-            this.close();
         }
         else {
             callback(-1);
-            this.close();
         }
     }
 
@@ -409,11 +345,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllParameters(callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM parameters ORDER BY parameter_sort_index");
+        let result = await this.db.all("SELECT * FROM parameters ORDER BY parameter_sort_index");
         callback(result);
-        this.close();
     }
 
     /**
@@ -423,11 +356,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getParametersForSectionId(id, callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.get('SELECT * FROM parameters WHERE parameter_section = ?', [id]);
+        let result = await this.db.get('SELECT * FROM parameters WHERE parameter_section = ?', [id]);
         callback(result);
-        this.close();
     }
 
     /**
@@ -437,11 +367,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteParameterById(id, callback){
-        await this.open();
-        let db = this.db;
-        await db.run('DELETE FROM parameters WHERE parameter_id = ?', [id]);
+        await this.db.run('DELETE FROM parameters WHERE parameter_id = ?', [id]);
         callback();
-        this.close();
     }
 
     /**
@@ -451,8 +378,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async updateParametersById(id, data, callback){
-        await this.open();
-        let db = this.db;
         let request = "UPDATE parameters SET ";
         let params_array = [];
         let index = 0;
@@ -473,9 +398,8 @@ class Database {
         request += "WHERE parameter_id = ?"
         params_array.push(id);
 
-        await db.run(request, params_array);
+        await this.db.run(request, params_array);
         callback();
-        this.close();
     }
 
     /**
@@ -484,18 +408,14 @@ class Database {
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addParameter(data, callback){
-        await this.open();
-        let db = this.db;
         if(data.hasOwnProperty('parameter_section') && data.hasOwnProperty('parameter_name') && data.hasOwnProperty('parameter_value'))
         {
-            let result = await db.get('SELECT MAX(parameter_sort_index) AS max FROM parameters');
-            await db.run('INSERT INTO parameters(parameter_section, parameter_name, parameter_value, parameter_sort_index) VALUES(?, ?, ?, ?)', [data.parameter_section, data.parameter_name, data.parameter_value, parseInt(result.max)+1])
+            let result = await this.db.get('SELECT MAX(parameter_sort_index) AS max FROM parameters');
+            await this.db.run('INSERT INTO parameters(parameter_section, parameter_name, parameter_value, parameter_sort_index) VALUES(?, ?, ?, ?)', [data.parameter_section, data.parameter_name, data.parameter_value, parseInt(result.max)+1])
             callback(0);
-            this.close();
         }
         else {
             callback(-1);
-            this.close();
         }
     }
 
@@ -506,11 +426,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getSlideById(id, callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.get('SELECT * FROM slides WHERE slide_id = ?', [id])
+        let result = await this.db.get('SELECT * FROM slides WHERE slide_id = ?', [id])
         callback(result);
-        this.close();
     }
 
     /**
@@ -520,11 +437,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async deleteSlideById(id, callback){
-        await this.open();
-        let db = this.db;
-        await db.run('DELETE FROM slides WHERE slide_id = ?', [id])
+        await this.db.run('DELETE FROM slides WHERE slide_id = ?', [id])
         callback();
-        this.close();
     }
 
     /**
@@ -534,8 +448,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async updateSlideById(id, data, callback){
-        await this.open();
-        let db = this.db;
         let request = "UPDATE slides SET ";
         let params_array = [];
         let index = 0;
@@ -556,9 +468,8 @@ class Database {
         request += "WHERE slide_id = ?"
         params_array.push(id);
 
-        await db.run(request, params_array)
+        await this.db.run(request, params_array)
         callback();
-        this.close();
     }
 
     /**
@@ -566,11 +477,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getAllSlides(callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM slides");
+        let result = await this.db.all("SELECT * FROM slides");
         callback(result);
-        this.close();
     }
 
     /**
@@ -578,11 +486,8 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête SQL a abouti
      */
     async getMachineSlides(id, callback){
-        await this.open();
-        let db = this.db;
-        let result = await db.all("SELECT * FROM slides WHERE slide_machine=?", [id]);
+        let result = await this.db.all("SELECT * FROM slides WHERE slide_machine=?", [id]);
         callback(result);
-        this.close();
     }
 
     /**
@@ -591,17 +496,13 @@ class Database {
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
     async addSlide(data, callback){
-        await this.open();
-        let db = this.db;
         if(data.hasOwnProperty('slide_number') && data.hasOwnProperty('slide_machine') && data.hasOwnProperty('slide_title') && data.hasOwnProperty('slide_image') && data.hasOwnProperty('slide_description'))
         {
-            await db.run('INSERT INTO slides(slide_number, slide_machine, slide_title, slide_image, slide_description) VALUES(?, ?, ?, ?, ?)', [data.slide_number, data.slide_machine, data.slide_title, data.slide_image, data.slide_description]);
+            await this.db.run('INSERT INTO slides(slide_number, slide_machine, slide_title, slide_image, slide_description) VALUES(?, ?, ?, ?, ?)', [data.slide_number, data.slide_machine, data.slide_title, data.slide_image, data.slide_description]);
             callback(0);
-            this.close();
         }
         else {
             callback(-1);
-            this.close();
         }
     }
 
@@ -612,8 +513,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewWorkshop(workshop_data, callback=()=>{}){
-        await this.open();
-        let db = this.db;
         let data_arr = [];
         let update_str = "";
         let values_str = "";
@@ -624,9 +523,8 @@ class Database {
         }
         update_str = update_str.substring(0, update_str.length-2);
         values_str = values_str.substring(0, values_str.length-2);
-        await db.run('INSERT INTO workshops('+update_str+') VALUES('+values_str+')', data_arr);
+        await this.db.run('INSERT INTO workshops('+update_str+') VALUES('+values_str+')', data_arr);
         callback();
-        this.close();
     }
 
     /**
@@ -636,8 +534,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewCategory(category_data, callback=()=>{}){
-        await this.open();
-        let db = this.db;
         let data_arr = [];
         let update_str = "";
         let values_str = "";
@@ -648,9 +544,8 @@ class Database {
         }
         update_str = update_str.substring(0, update_str.length-2);
         values_str = values_str.substring(0, values_str.length-2);
-        await db.run('INSERT INTO category('+update_str+') VALUES('+values_str+')', data_arr);
+        await this.db.run('INSERT INTO category('+update_str+') VALUES('+values_str+')', data_arr);
         callback();
-        this.close();
     }
 
     /**
@@ -660,8 +555,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewMachine(machine_data, callback=()=>{}){
-        await this.open();
-        let db = this.db;
         let data_arr = [];
         let update_str = "";
         let values_str = "";
@@ -672,9 +565,8 @@ class Database {
         }
         update_str = update_str.substring(0, update_str.length-2);
         values_str = values_str.substring(0, values_str.length-2);
-        await db.run('INSERT INTO machines('+update_str+') VALUES('+values_str+')', data_arr);
+        await this.db.run('INSERT INTO machines('+update_str+') VALUES('+values_str+')', data_arr);
         callback();
-        this.close();
     }
 
     /**
@@ -684,8 +576,6 @@ class Database {
      * @param {function} callback La fonction callback à appeler quand la requête a abouti
      */
     async createNewSection(section_data, callback=()=>{}){
-        await this.open();
-        let db = this.db;
         let data_arr = [];
         let update_str = "";
         let values_str = "";
@@ -696,9 +586,8 @@ class Database {
         }
         update_str = update_str.substring(0, update_str.length-2);
         values_str = values_str.substring(0, values_str.length-2);
-        await db.run('INSERT INTO sections('+update_str+') VALUES('+values_str+')', data_arr);
+        await this.db.run('INSERT INTO sections('+update_str+') VALUES('+values_str+')', data_arr);
         callback();
-        this.close();
     }
 
     /**
