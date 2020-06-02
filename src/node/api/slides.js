@@ -53,7 +53,7 @@ router.put("/update/:id", urlencoded, (req, res) => {
  * @param {number} id L'id de la slide à supprimer
  */
 router.delete("/delete/:id", (req, res) => {
-    db.deleteSlideById(req.params.id, data, () => {
+    db.deleteSlideById(req.params.id, () => {
         res.sendStatus(200);
     });
 });
