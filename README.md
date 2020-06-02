@@ -17,9 +17,11 @@ UI/UX design work is accessible [here](https://www.figma.com/file/ykqyS6IWuYLVC1
 ![Workshop listing](./design/exports/export_listing_ateliers.png)  ![Machine listing](./design/exports/export_listing_machine.png)  ![Machine details](./design/exports/export_détail_machine.png)  ![Machine details](./design/exports/export_détail_machine_2.png)
 
 ## Current tasks to be worked on
-- [ ] UI/UX design of the app
-- [ ] Basic implementation of the design using Flutter
-- [ ] Distant API schema design
+- [x] UI/UX design of the app
+- [x] Basic implementation of the design using Flutter
+- [x] Distant API schema design
+- [ ] QR Code implementation in Flutter
+- [ ] Slide interface on webapp
 
 ## Technological stack
 ### Mobile app
@@ -39,7 +41,12 @@ The web app uses the following components to work:
 
 Dependencies:
 - express (^4.17.1)
-- mysql (^2.18.1)
+- sqlite (^^3.0.6)
+- bluebird (^3.7.2)
+- dotenv (^8.2.0)
+- multer (^1.4.2)
+- twig (^1.15.1)
+
 
 # Authors
 - Fabien AUBRET
