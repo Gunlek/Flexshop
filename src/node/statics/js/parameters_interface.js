@@ -9,6 +9,23 @@ let app = new Vue({
         new_parameter_name: null,
         new_parameter_value: null
     },
+    computed: {
+        sections_with_parameters: function(){
+            let section_with_parameters = this.section_list;
+            for(let k=0; k<section_with_parameters.length; k++){
+                let parameter_list = [];
+                let cur_section = section_with_parameters[k];
+                for(let k=0; k<this.parameter_list.length; k++){
+                    if(cur_section.section_id == this.parameter_list[k].parameter_section)
+                        parameter_list.push(this.parameter_list[k]);
+                }
+                section_with_parameters[k]['parameters'] = parameter_list;
+            }
+
+            return section_with_parameters;
+        }
+    },
+
     methods: {
         get_machine_list: function(){
             let super_this = this;

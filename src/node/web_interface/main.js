@@ -25,16 +25,8 @@ router.get('/machines', (req, res) => {
     res.render('machines.html.twig');
 });
 
-router.get('/sections', (req, res) => {
-    res.render('sections.html.twig');
-});
-
 router.get('/credits', (req, res) => {
     res.render('credits.html.twig');
-});
-
-router.get('/parameters', (req, res) => {
-    res.render('parameters.html.twig');
 });
 
 router.get('/settings', (req, res) => {
@@ -74,61 +66,57 @@ router.post('/import-json', upload.single('import_file'), async (req, res) => {
         switch(key){
             case 'workshops':
                 for(let k=0; k < json_data[key].length; k++){
-                    let insert_data = {
-                        "workshop_title": json_data[key][k].workshop_title,
-                        "workshop_image": json_data[key][k].workshop_image
+                    let insert_data = {};
+                    for(let subkey in json_data[key][k]){
+                        insert_data[subkey] = json_data[key][k][subkey];
                     }
-                    db.createNewWorkshop(insert_data);
+                    db.createNewWorkshop(insert_data, ()=>{});
                 }
                 break;
 
             case 'categories':
                 for(let k=0; k < json_data[key].length; k++){
-                    let insert_data = {
-                        "category_title": json_data[key][k].category_title,
-                        "category_workshop": json_data[key][k].category_workshop
+                    let insert_data = {};
+                    for(let subkey in json_data[key][k]){
+                        insert_data[subkey] = json_data[key][k][subkey];
                     }
-                    db.createNewCategory(insert_data);
+                    db.createNewCategory(insert_data, ()=>{});
                 }
                 break;
             
             case 'machines':
                 for(let k=0; k < json_data[key].length; k++){
-                    let insert_data = {
-                        "machine_title": json_data[key][k].machine_title,
-                        "machine_category": json_data[key][k].machine_category,
-                        "machine_brand": json_data[key][k].machine_brand,
-                        "machine_image": json_data[key][k].machine_image,
-                        "machine_reference": json_data[key][k].machine_reference
+                    let insert_data = {};
+                    for(let subkey in json_data[key][k]){
+                        insert_data[subkey] = json_data[key][k][subkey];
                     }
-                    db.createNewMachine(insert_data);
+                    db.createNewMachine(insert_data, ()=>{});
                 }
                 break;
             
             case 'sections':
                 for(let k=0; k < json_data[key].length; k++){
-                    let insert_data = {
-                        "section_machine": json_data[key][k].section_machine,
-                        "section_type": json_data[key][k].section_type
+                    let insert_data = {};
+                    for(let subkey in json_data[key][k]){
+                        insert_data[subkey] = json_data[key][k][subkey];
                     }
-                    db.createNewSection(insert_data);
+                    db.createNewSection(insert_data, ()=>{});
                 }
                 break;
 
             case 'parameters':
                 for(let k=0; k < json_data[key].length; k++){
-                    let insert_data = {
-                        "parameter_section": json_data[key][k].parameter_section,
-                        "parameter_name": json_data[key][k].parameter_name,
-                        "parameter_value": json_data[key][k].parameter_value
+                    let insert_data = {};
+                    for(let subkey in json_data[key][k]){
+                        insert_data[subkey] = json_data[key][k][subkey];
                     }
-                    db.addParameter(insert_data);
+                    db.addParameter(insert_data, ()=>{});
                 }
                 break;
         }
     }
     fs.unlinkSync(uploaded);
-    res.redirect('/parameters');
+    res.redirect('/');
 });
 
 module.exports = router;

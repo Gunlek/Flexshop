@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flexshop/model/workshop.dart';
+import 'package:flexshop/widget/machine_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flexshop/model/category.dart';
@@ -50,6 +51,9 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
   @override
   void initState() {
     super.initState();
+
+    this.machines = List();
+    this._categories = List();
 
     MachineAPI.getAllMachines(
       onDone: (int status, dynamic data){
@@ -119,9 +123,10 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
             width: double.infinity,
             child: Hero(
               tag: workshop.id.toString(),
-              child: Image.network(
-                  workshop.image=="none"? "assets/images/default/default_ateliers.jpg" : workshop.image,
-                  fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken)
+              child: isNetworkImageAvailable(
+                image: workshop.image,
+                placeholder: "assets/images/placeholders/workshops.jpg"
+              )
             ),
           ),
           
@@ -241,41 +246,25 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
             scrollDirection: Axis.horizontal,
             itemCount: categoryMachines.length,
             itemBuilder: (BuildContext context, int i) {
-              return GestureDetector(
-                onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: categoryMachines[i])))},     // TODO: Open machine detail
-                child: Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    width: MediaQuery.of(context).size.width / 3,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image.network(
-                            categoryMachines[i].image=="none" ? "assets/images/default/default_machine.jpg" : categoryMachines[i].image,
-                            fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken,),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(categoryMachines[i].title, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).textScaleFactor * 20)),
-                            Text(categoryMachines[i].brand, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).textScaleFactor * 20)),
-                            Text(categoryMachines[i].reference, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).textScaleFactor * 20)),
-                          ],
-                        )
-                      ],
-                    )
-                  ),
-                )
-              );
+              return MachineWidget(categoryMachines[i]);
             }
           ),
         ),
         SizedBox(height: _spaceBetweenTwoCategory),
       ],
     );
+  }
+
+  Widget isNetworkImageAvailable({String image, String placeholder}) {
+    if(!image.startsWith("http"))
+      return Image.asset(
+        placeholder,
+        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
+      );
+    else
+      return Image.network(
+        image,
+        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
+      );
   }
 }
