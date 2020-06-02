@@ -78,7 +78,7 @@ class Database {
     }
 
     /**
-     * c
+     * Ajoute un workshop à la base de donnée
      * @param {json} data Représentation JSON du workshop à ajouter
      * @param {function} callback La fonction callbacak à appeler quand la requête SQL a abouti
      */
