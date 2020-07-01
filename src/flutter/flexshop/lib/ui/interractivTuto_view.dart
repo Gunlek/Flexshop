@@ -54,7 +54,7 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
 
   Future<void> _getDataFromAPI() async {
     await SlideAPI.getSlidesByMachineId(
-        id: 1,
+        id: this.machine,
         onDone: (int status, dynamic data){
           List<Slide> slideL = List<Slide>();
           print(data);
