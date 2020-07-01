@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flexshop/model/slide.dart';
+import 'package:flexshop/api/slide_api.dart';
 
 class InterractivTuto extends StatelessWidget {
   final int machine;
@@ -37,107 +38,136 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
   int slideIndex;
   int machine;
   Slide slide;
+  List<Slide> slideList;
 
   @override
   void initState() {
     super.initState();
     this.machine = widget.machine;
     this.slideIndex = widget.slideNumber;
+
+    _getDataFromAPI();
     //TODO : implement a request
-    this.slide = slides[this.slideIndex];
-    this.numberOfSlides = slides.length;
+    //this.slide = slides[this.slideIndex];
+    //this.numberOfSlides = slides.length;
+  }
+
+  Future<void> _getDataFromAPI() async {
+    await SlideAPI.getSlidesByMachineId(
+        id: 1,
+        onDone: (int status, dynamic data){
+          List<Slide> slideL = List<Slide>();
+          print(data);
+          print(Slide.fromMapObject(data[0]));
+          for (final elem in data){slideL.add(Slide.fromMapObject(elem));}
+          setState(() {
+            this.slideList = slideL;
+          });
+        }
+    );
+    setState(() {
+      this.slide = this.slideList[this.slideIndex];
+      this.numberOfSlides = this.slideList.length;
+    });
+  }
+
+  Widget buildBody(BuildContext context) {
+    return Scaffold(
+        body: GestureDetector(
+          onPanUpdate: (details) {
+            if (details.delta.dx > 50)
+              //print("Dragging in +X direction");
+              setState(() {
+                this.slideIndex += 1;
+                this.slide = this.slideList[this.slideIndex];
+              });
+            else
+              print("Dragging in -X direction");
+
+            if (details.delta.dy > 0)
+              print("Dragging in +Y direction");
+            else
+              print("Dragging in -Y direction");
+          },
+          child: Stack(children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      this.slide.title,
+                      style: GoogleFonts.pacifico(
+                          textStyle: TextStyle(
+                              color: Color.fromRGBO(147, 49, 97, 1.0),
+                              fontSize: 30)),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: Image.asset(
+                        this.slide.image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Text(
+                      this.slide.description,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+                bottom: 20,
+                left: MediaQuery.of(context).size.width/2 - ((this.numberOfSlides-1)*24 - 36),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _generateDots(),
+                  ),
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(50.0)),
+                      child: IconButton(
+                        onPressed: () {
+                          _switchToSlide(this.slideIndex - 1);
+                        },
+                        icon: Icon(Icons.chevron_left),
+                        iconSize: 40,
+                      )),
+                )),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(50.0)),
+                      child: IconButton(
+                        onPressed: () {
+                          _switchToSlide(this.slideIndex + 1);
+                        },
+                        icon: Icon(Icons.chevron_right),
+                        iconSize: 40,
+                      )),
+                )),
+          ]),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: GestureDetector(
-      onPanUpdate: (details) {
-        if (details.delta.dx > 50)
-          //print("Dragging in +X direction");
-          setState(() {
-            this.slideIndex += 1;
-            this.slide = slides[this.slideIndex];
-          });
-        else
-          print("Dragging in -X direction");
 
-        if (details.delta.dy > 0)
-          print("Dragging in +Y direction");
-        else
-          print("Dragging in -Y direction");
-      },
-      child: Stack(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 40),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Text(
-                  this.slide.title,
-                  style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(
-                          color: Color.fromRGBO(147, 49, 97, 1.0),
-                          fontSize: 30)),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 3,
-                  child: Image.asset(
-                    this.slide.image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Text(
-                  this.slide.description,
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-            bottom: 20,
-            left: MediaQuery.of(context).size.width/2 - ((this.numberOfSlides-1)*24 - 36),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _generateDots(),
-              ),
-            )),
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(50.0)),
-                  child: IconButton(
-                    onPressed: () {
-                      _switchToSlide(this.slideIndex - 1);
-                    },
-                    icon: Icon(Icons.chevron_left),
-                    iconSize: 40,
-                  )),
-            )),
-        Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(50.0)),
-                  child: IconButton(
-                    onPressed: () {
-                      _switchToSlide(this.slideIndex + 1);
-                    },
-                    icon: Icon(Icons.chevron_right),
-                    iconSize: 40,
-                  )),
-            )),
-      ]),
-    ));
+    if (this.slideList==null) {
+      return Center(child: CircularProgressIndicator());}
+    else {return buildBody(context);}
   }
 
   List<Widget> _generateDots() {
@@ -174,7 +204,7 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
     if (0 <= slideNumber && slideNumber < this.numberOfSlides) {
       setState(() {
         this.slideIndex = slideNumber;
-        this.slide = slides[slideNumber];
+        this.slide = this.slideList[slideNumber];
       });
     }
   }
