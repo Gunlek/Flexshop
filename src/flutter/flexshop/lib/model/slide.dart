@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class Slide {
 
   double id;
@@ -9,6 +11,19 @@ class Slide {
 
   Slide({this.id, this.slideNumber, this.machine, this.title, this.image, this.description});
 
+  Slide.fromMapObject(Map<String, dynamic> map){
+    this.id = double.parse(map["slide_id"].toString());
+    this.slideNumber = map["slide_number"];
+    this.machine = map["slide_machine"];
+    this.title = map["slide_title"];
+    this.image = map["slide_image"];
+    this.description = map["slide_description"];
+  }
+
+  @override
+  String toString(){
+    return this.id.toString() + ' ' +this.slideNumber.toString() + ' ' + this.title.toString();
+  }
 }
 
 //Slide Number starts at 0!!!!
