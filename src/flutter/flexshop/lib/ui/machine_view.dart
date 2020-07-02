@@ -16,9 +16,10 @@ class MachineView extends StatefulWidget {
 }
 
 class _MachineViewState extends State<MachineView> {
-
+  final double _leftAndRightPadding = 16.0;
+  final double _bottomPadding = 12.0;
+  final double _topPadding = 6.0;
   List<Section> _sections = [];
-
   Machine machine;
 
   _MachineViewState({this.machine});
@@ -133,7 +134,8 @@ class _MachineViewState extends State<MachineView> {
 
   Widget _buildPictos(Section section) {
     return Container(
-      height: 50,
+      padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, top: _topPadding),
+      height: 50 + _topPadding,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
@@ -156,9 +158,12 @@ class _MachineViewState extends State<MachineView> {
                 color: Color.fromRGBO(147, 49, 97, 1.0), fontSize: 30)),
       ),
       children: <Widget>[
-        Text(
-          section.description == null ? "" : section.description,
-          style: GoogleFonts.montserrat(),
+        Padding(
+          padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, bottom: _bottomPadding),
+          child: Text(
+            section.description == null ? "" : section.description,
+            style: GoogleFonts.montserrat(),
+          ),
         ),
       ],
     );
@@ -206,24 +211,30 @@ class _MachineViewState extends State<MachineView> {
           fontSize: 30
       ))),
       children: <Widget>[
-        isAssetImage(section.imageLink)
+        Padding(
+          padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, bottom: _bottomPadding),
+          child: isAssetImage(section.imageLink),
+        )
       ],
     );
   }
 
   Widget _buildInterractivTuto(BuildContext context, Section section){
-    return RaisedButton(
-      color: Color.fromRGBO(147, 49, 97, 1.0),
-      shape: RoundedRectangleBorder(
-          borderRadius: new BorderRadius.circular(18.0)
-      ),
-      onPressed: () {
-        //TODO: add parameter of the route
-        Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(slideNumber: 0, machine: section.machine,)));
-      },
-      child: Text(
-        section.title == null ? "" : section.title, 
-        style: TextStyle(color: Color.fromRGBO(255, 168, 14, 1.0))
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: _leftAndRightPadding),
+      child: RaisedButton(
+        color: Color.fromRGBO(147, 49, 97, 1.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(18.0)
+        ),
+        onPressed: () {
+          //TODO: add parameter of the route
+          Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(slideNumber: 0, machine: section.machine,)));
+        },
+        child: Text(
+          section.title == null ? "" : section.title,
+          style: TextStyle(color: Color.fromRGBO(255, 168, 14, 1.0))
+        ),
       ),
     );
   }
