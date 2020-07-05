@@ -63,11 +63,13 @@ class _MachineViewState extends State<MachineView> {
               backgroundColor: Color.fromRGBO(147, 49, 97, 1.0),
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text(this.machine.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                      )),
+                  title: SafeArea(
+                    child: Text(this.machine.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                        )),
+                  ),
                   background: getSliverBackground(),
               ),
             ),
