@@ -10,6 +10,9 @@ import 'package:flexshop/model/machine.dart';
 import 'package:flexshop/ui/machine_view.dart';
 import 'package:flexshop/api/category_api.dart';
 import 'package:flexshop/api/machine_api.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'dart:async';
+import 'dart:convert';
 
 class WorkshopView extends StatelessWidget {
   final Workshop workshop;
@@ -97,6 +100,16 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
     super.dispose();
   }
 
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666", "Cancel", true, ScanMode.BARCODE);
+    print(barcodeScanRes);
+    Map machineMap = json.decode(barcodeScanRes);
+    Machine machine = Machine.fromMapObject(machineMap);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: machine)));
+  }
+
   @override
   Widget build(BuildContext context) {
     //_categories = categories.where((cat) => cat.workshop == workshop.id).toList();
@@ -113,7 +126,9 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {}, // TODO: Add QR code scan
+        onPressed: () => {
+          scanBarcodeNormal()
+        },
         child: FaIcon(FontAwesomeIcons.qrcode),
       ),
       body: Stack(
