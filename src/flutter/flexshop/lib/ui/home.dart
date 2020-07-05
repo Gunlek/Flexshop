@@ -1,6 +1,12 @@
 import 'package:flexshop/ui/workshop_list.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:flexshop/model/machine.dart';
+import 'package:flexshop/ui/machine_view.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -33,6 +39,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     this.controller.dispose();
     super.dispose();
   }
+
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666", "Cancel", true, ScanMode.BARCODE);
+    print(barcodeScanRes);
+    Map machineMap = json.decode(barcodeScanRes);
+    Machine machine = Machine.fromMapObject(machineMap);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: machine)));
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -54,7 +70,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       floatingActionButton: FadeTransition(
         opacity: this.animation,
         child: FloatingActionButton(
-          onPressed: () => {},      // TODO: Add QR code scan
+          onPressed: () => {
+            scanBarcodeNormal()
+          },      // TODO: Add QR code scan
           child: FaIcon(FontAwesomeIcons.qrcode),
         ),
       ),
