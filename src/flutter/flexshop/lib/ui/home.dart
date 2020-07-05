@@ -72,7 +72,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: FloatingActionButton(
           onPressed: () => {
             scanBarcodeNormal()
-          },      // TODO: Add QR code scan
+          },
           child: FaIcon(FontAwesomeIcons.qrcode),
         ),
       ),
