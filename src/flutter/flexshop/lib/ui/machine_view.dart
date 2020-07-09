@@ -244,7 +244,7 @@ class _MachineViewState extends State<MachineView> {
         },
         child: Text(
           section.title == null ? "" : section.title,
-          style: TextStyle(color: Color.fromRGBO(255, 168, 14, 1.0))
+          style: TextStyle(color: Colors.white)
         ),
       ),
     );
