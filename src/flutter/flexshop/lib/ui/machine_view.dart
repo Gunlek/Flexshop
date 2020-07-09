@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_multi_carousel/carousel.dart';
 import 'package:flexshop/model/section.dart';
 import 'package:flexshop/ui/interractivTuto_view.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
 
 class MachineView extends StatefulWidget {
   Machine machine;
@@ -198,7 +200,16 @@ class _MachineViewState extends State<MachineView> {
                 7,
                     (i) => Center(
                   child:
-                  Container(color: Colors.red.withOpacity((i + 1) / 7)),
+                  RaisedButton(
+                    onPressed: () async {
+                      const url = 'https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+                      if (await canLaunch(url)) {
+                      await launch(url);
+                      } else {
+                      throw 'Could not launch $url';
+                      }
+                    },
+                  ),
                 ))),
       ],
     );
