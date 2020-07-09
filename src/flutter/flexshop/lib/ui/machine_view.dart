@@ -8,6 +8,7 @@ import 'package:flexshop/ui/interractivTuto_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flexshop/widget/zoomable_image_widget.dart';
 
 class MachineView extends StatefulWidget {
   Machine machine;
@@ -271,9 +272,15 @@ class _MachineViewState extends State<MachineView> {
       if(image.startsWith("assets"))
         return Image.asset(image, fit: BoxFit.cover);
       else
-        return Container(
-            height: 300,
-            child: PhotoView(imageProvider: CachedNetworkImageProvider(image)));
+        return GestureDetector(
+          onTap: () {
+            print(image);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ZoomableImage(image: image,)));
+          },
+          child: Container(
+              height: 300,
+              child: Image(image: CachedNetworkImageProvider(image))),
+        );
     }
   }
 }
