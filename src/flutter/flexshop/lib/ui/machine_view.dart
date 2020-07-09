@@ -187,30 +187,26 @@ class _MachineViewState extends State<MachineView> {
         Carousel(
             height: 350.0,
             width: 350,
-            initialPage: 3,
+            initialPage: 1,
             allowWrap: false,
             type: Types.slideSwiper,
-            onCarouselTap: (i) {
-              print("onTap $i");
+            onCarouselTap: (i) async {
+              String url = section.videoLinkList[i];
+              if (await canLaunch(url)) {
+              await launch(url);
+              } else {
+              throw 'Could not launch $url';
+              }
             },
             indicatorType: IndicatorTypes.bar,
             arrowColor: Colors.black,
             axis: Axis.horizontal,
             showArrow: true,
             children: List.generate(
-                7,
+                section.videoLinkList.length,
                     (i) => Center(
                   child:
-                  RaisedButton(
-                    onPressed: () async {
-                      const url = 'https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
-                      if (await canLaunch(url)) {
-                      await launch(url);
-                      } else {
-                      throw 'Could not launch $url';
-                      }
-                    },
-                  ),
+                  Text(section.videoTitleList[i]),
                 ))),
       ],
     );
