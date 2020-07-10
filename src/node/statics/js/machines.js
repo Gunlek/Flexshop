@@ -138,15 +138,14 @@ let app = new Vue({
             httpRequest.send();
         },
         get_section_list: function(cb){
-            let super_this = this;
             let url = '/sections/list';
             let httpRequest = new XMLHttpRequest();
-            httpRequest.onreadystatechange = function(data){
+            httpRequest.onreadystatechange = (data) => {
                 if(httpRequest.readyState === 4){
                     if(httpRequest.status >= 200 && httpRequest.status <= 300){
-                        super_this.section_list = JSON.parse(httpRequest.responseText);
-                        Object.keys(super_this.section_list).forEach(key => {
-                            super_this.section_list[key]["section_display_name"] = super_this.json_sections_data[super_this.section_list[key]["section_type"]]["display_name"];
+                        this.section_list = JSON.parse(httpRequest.responseText);
+                        Object.keys(this.section_list).forEach(key => {
+                            this.section_list[key]["section_display_name"] = this.json_sections_data[this.section_list[key]["section_type"]]["display_name"];
                         });
                         cb();
                     }
