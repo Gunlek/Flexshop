@@ -1,29 +1,36 @@
+// Copyright 2017 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:flexshop/model/slide.dart';
 import 'package:flexshop/api/slide_api.dart';
+import 'package:flexshop/widget/zoomable_image_widget.dart';
+
 
 class InterractivTuto extends StatelessWidget {
   final int machine;
-  final int slideNumber;
+  final String machineName;
 
-  InterractivTuto({Key key, @required this.machine, this.slideNumber})
+  InterractivTuto({Key key, @required this.machine, this.machineName})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InterractiTutoStateful(
       machine: this.machine,
-      slideNumber: this.slideNumber,
+      machineName: this.machineName,
     );
   }
 }
 
 class InterractiTutoStateful extends StatefulWidget {
   final int machine;
-  final int slideNumber;
+  final String machineName;
 
-  InterractiTutoStateful({Key key, @required this.machine, this.slideNumber})
+  InterractiTutoStateful({Key key, @required this.machine, this.machineName})
       : super(key: key);
 
   @override
@@ -32,138 +39,47 @@ class InterractiTutoStateful extends StatefulWidget {
   }
 }
 
-class InterractiTutoState extends State<InterractiTutoStateful> {
-  //int numberOfDots = 4;
-  int numberOfSlides;
-  int slideIndex;
-  int machine;
-  Slide slide;
+class InterractiTutoState extends State<InterractiTutoStateful> with SingleTickerProviderStateMixin {
+
+  String machineName; //useless
+  int machineId;
+  Slide slide; //to delete
   List<Slide> slideList;
+  TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    this.machine = widget.machine;
-    this.slideIndex = widget.slideNumber;
-
+    this.machineId = widget.machine;
+    this.machineName = widget.machineName;
     _getDataFromAPI();
-    //TODO : implement a request
-    //this.slide = slides[this.slideIndex];
-    //this.numberOfSlides = slides.length;
   }
 
   Future<void> _getDataFromAPI() async {
     await SlideAPI.getSlidesByMachineId(
-        id: this.machine,
+        id: this.machineId,
         onDone: (int status, dynamic data) {
           List<Slide> slideL = List<Slide>();
-          print(data);
-          print(Slide.fromMapObject(data[0]));
           for (final elem in data) {
             slideL.add(Slide.fromMapObject(elem));
           }
           setState(() {
             this.slideList = slideL;
+            _tabController = TabController(vsync: this, length: this.slideList.length);
           });
         });
-    setState(() {
-      this.slide = this.slideList[this.slideIndex];
-      this.numberOfSlides = this.slideList.length;
-    });
   }
 
-  Widget buildBody(BuildContext context) {
-    return Scaffold(
-        body: GestureDetector(
-      onPanUpdate: (details) {
-        if (details.delta.dx > 50)
-          //print("Dragging in +X direction");
-          setState(() {
-            this.slideIndex += 1;
-            this.slide = this.slideList[this.slideIndex];
-          });
-        else
-          print("Dragging in -X direction");
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
-        if (details.delta.dy > 0)
-          print("Dragging in +Y direction");
-        else
-          print("Dragging in -Y direction");
-      },
-      child: Stack(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 40),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Text(
-                  this.slide.title,
-                  style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(
-                          color: Color.fromRGBO(147, 49, 97, 1.0),
-                          fontSize: 30)),
-                ),
-                Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: isNetworkImageAvailable(
-                        image: this.slide.image,
-                        placeholder:
-                            "assets/images/placeholders/workshops.jpg")),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    this.slide.description,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-            bottom: 20,
-            left: MediaQuery.of(context).size.width / 2 -
-                ((this.numberOfSlides - 1) * 24 - 36),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _generateDots(),
-              ),
-            )),
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(50.0)),
-                  child: IconButton(
-                    onPressed: () {
-                      _switchToSlide(this.slideIndex - 1);
-                    },
-                    icon: Icon(Icons.chevron_left),
-                    iconSize: 40,
-                  )),
-            )),
-        Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(50.0)),
-                  child: IconButton(
-                    onPressed: () {
-                      _switchToSlide(this.slideIndex + 1);
-                    },
-                    icon: Icon(Icons.chevron_right),
-                    iconSize: 40,
-                  )),
-            )),
-      ]),
-    ));
+  void _nextPage(int delta) {
+    final int newIndex = _tabController.index + delta;
+    if (newIndex < 0 || newIndex >= _tabController.length) return;
+    _tabController.animateTo(newIndex);
   }
 
   @override
@@ -175,76 +91,102 @@ class InterractiTutoState extends State<InterractiTutoStateful> {
     }
   }
 
-  List<Widget> _generateDots() {
-    List<Widget> dots = [];
-    for (int i = 0; i < numberOfSlides; i++) {
-      dots.add(i == slideIndex ? _activeSlide(i) : _inactiveSlide(i));
-    }
-
-    return dots;
-  }
-
-  Widget _activeSlide(int index) {
-    return GestureDetector(
-      onTap: () {
-        print('Tapped');
-      },
-      child: new Container(
-        child: Padding(
-          padding: EdgeInsets.only(left: 8.0, right: 8.0),
-          child: Container(
-            width: 20.0,
-            height: 20.0,
-            decoration: BoxDecoration(
-              color: Colors.orangeAccent.withOpacity(.3),
-              borderRadius: BorderRadius.circular(50.0),
+  @override
+  Widget buildBody(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color.fromRGBO(147, 49, 97, 1.0),
+          title: Center(child: Text(this.machineName)),
+          leading: IconButton(
+            tooltip: 'Previous choice',
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              _nextPage(-1);
+            },
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.arrow_forward),
+              tooltip: 'Next choice',
+              onPressed: () {
+                _nextPage(1);
+              },
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48.0),
+            child: Theme(
+              data: Theme.of(context).copyWith(accentColor: Colors.white),
+              child: Container(
+                height: 48.0,
+                alignment: Alignment.center,
+                child: TabPageSelector(controller: _tabController),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _switchToSlide(int slideNumber) {
-    if (0 <= slideNumber && slideNumber < this.numberOfSlides) {
-      setState(() {
-        this.slideIndex = slideNumber;
-        this.slide = this.slideList[slideNumber];
-      });
-    }
-  }
-
-  Widget _inactiveSlide(int index) {
-    return GestureDetector(
-      onTap: () {
-        print(index);
-        _switchToSlide(index);
-      },
-      child: new Container(
-        child: Padding(
-          padding: EdgeInsets.only(left: 5.0, right: 5.0),
-          child: Container(
-            width: 14.0,
-            height: 14.0,
-            decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(50.0)),
-          ),
+        body: TabBarView(
+          controller: _tabController,
+          children: this.slideList.map((Slide slide) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SlideCard(slide: slide),
+            );
+          }).toList(),
         ),
       ),
     );
   }
+}
 
-  Widget isNetworkImageAvailable({String image, String placeholder}) {
+
+class SlideCard extends StatelessWidget {
+  const SlideCard({Key key, this.slide}) : super(key: key);
+
+  final Slide slide;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Text(
+            this.slide.title,
+            style: GoogleFonts.pacifico(
+                textStyle: TextStyle(
+                    color: Color.fromRGBO(147, 49, 97, 1.0),
+                    fontSize: 30)),
+          ),
+          isNetworkImageAvailable(
+              context: context,
+              image: this.slide.image,
+              placeholder:
+              "assets/images/placeholders/workshops.jpg"),
+          SizedBox(height: 20.0,),
+          Text(
+            this.slide.description,
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget isNetworkImageAvailable({BuildContext context, String image, String placeholder}) {
     if (!image.startsWith("http"))
       return Image.asset(placeholder,
           fit: BoxFit.fitWidth,
           color: Color.fromRGBO(0, 0, 0, 0.5),
           colorBlendMode: BlendMode.darken);
     else
-      return Image.network(image,
-          fit: BoxFit.fitWidth,
-          color: Color.fromRGBO(0, 0, 0, 0.5),
-          colorBlendMode: BlendMode.darken);
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ZoomableImage(image: image,)));
+        },
+        child: Image.network(image,
+            fit: BoxFit.fitWidth,),
+      );
   }
 }
+
