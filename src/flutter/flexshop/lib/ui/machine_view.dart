@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_multi_carousel/carousel.dart';
 import 'package:flexshop/model/section.dart';
 import 'package:flexshop/ui/interractivTuto_view.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MachineView extends StatefulWidget {
   Machine machine;
@@ -184,21 +187,26 @@ class _MachineViewState extends State<MachineView> {
         Carousel(
             height: 350.0,
             width: 350,
-            initialPage: 3,
+            initialPage: 1,
             allowWrap: false,
             type: Types.slideSwiper,
-            onCarouselTap: (i) {
-              print("onTap $i");
+            onCarouselTap: (i) async {
+              String url = section.videoLinkList[i];
+              if (await canLaunch(url)) {
+              await launch(url);
+              } else {
+              throw 'Could not launch $url';
+              }
             },
             indicatorType: IndicatorTypes.bar,
             arrowColor: Colors.black,
             axis: Axis.horizontal,
             showArrow: true,
             children: List.generate(
-                7,
+                section.videoLinkList.length,
                     (i) => Center(
                   child:
-                  Container(color: Colors.red.withOpacity((i + 1) / 7)),
+                  Text(section.videoTitleList[i]),
                 ))),
       ],
     );
@@ -263,7 +271,9 @@ class _MachineViewState extends State<MachineView> {
       if(image.startsWith("assets"))
         return Image.asset(image, fit: BoxFit.cover);
       else
-        return Image.network(image, fit: BoxFit.cover);
+        return Container(
+            height: 300,
+            child: PhotoView(imageProvider: CachedNetworkImageProvider(image)));
     }
   }
 }
