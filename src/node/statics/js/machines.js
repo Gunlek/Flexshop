@@ -36,13 +36,15 @@ let app = new Vue({
                 let cur_section_type = cur_section.section_type;
                 for(let k=0; k<this.parameter_list.length; k++){
                     if(cur_section.section_id == this.parameter_list[k].parameter_section){
-                        Object.keys(this.json_sections_data[cur_section_type]["parameters"]).forEach(key => {
-                            let arr = this.json_sections_data[cur_section_type]["parameters"];
-                            if(arr[key].name == this.parameter_list[k]["parameter_name"]){
-                                this.parameter_list[k]["parameter_display_name"] = arr[key]["display_name"];
-                            }
-                        });
-                        parameter_list.push(this.parameter_list[k]);
+                        if(this.json_sections_data.hasOwnProperty(cur_section_type)){
+                            Object.keys(this.json_sections_data[cur_section_type]["parameters"]).forEach(key => {
+                                let arr = this.json_sections_data[cur_section_type]["parameters"];
+                                if(arr[key].name == this.parameter_list[k]["parameter_name"]){
+                                    this.parameter_list[k]["parameter_display_name"] = arr[key]["display_name"];
+                                }
+                            });
+                            parameter_list.push(this.parameter_list[k]);
+                        }
                     }
                 }
                 section_with_parameters[k]['parameters'] = parameter_list;
@@ -145,7 +147,8 @@ let app = new Vue({
                     if(httpRequest.status >= 200 && httpRequest.status <= 300){
                         this.section_list = JSON.parse(httpRequest.responseText);
                         Object.keys(this.section_list).forEach(key => {
-                            this.section_list[key]["section_display_name"] = this.json_sections_data[this.section_list[key]["section_type"]]["display_name"];
+                            if(this.json_sections_data.hasOwnProperty(this.section_list[key]["section_type"]))
+                                this.section_list[key]["section_display_name"] = this.json_sections_data[this.section_list[key]["section_type"]]["display_name"];
                         });
                         cb();
                     }
