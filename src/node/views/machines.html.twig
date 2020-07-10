@@ -27,13 +27,13 @@
             <draggable :list="machine.sections" @change="move_section_in_machine">
                 <div class="card align-parent" v-for="section in machine.sections" :key="section.section_id">
                     <div class="card-header align-parent">
-                        <strong class="card-title">${section.section_type}</strong>
+                        <strong class="card-title">${section.section_display_name}</strong>
                         <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_section(section.section_id)"><i class="fas fa-trash"></i></button>
                     </div>
                     <div class="align-parent" style="margin: 5px 10px;word-wrap:normal;" v-for="parameter in section.parameters" :key="parameter.parameter_id">
                         <div class="row">
                             <div class="col-11">
-                                <strong>${parameter.parameter_name}:</strong> ${parameter.parameter_value}
+                                <strong>${parameter.parameter_display_name}:</strong> ${parameter.parameter_value}
                             </div>
 
                             <div class="col-1">
@@ -41,7 +41,7 @@
                             </div>
                         </div>            
                     </div>
-                    <div class="add-section">
+                    <!-- <div class="add-section">
                         <div class="row">
                             <div class="col-6" style="padding: 0 5px;">
                                 <input type="text" class="form-control content-fluid" v-model="new_parameter_name" placeholder="Nom du paramètre..."/>
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-outline-green content-fluid" @click="add_new_parameter(section.section_id)">Ajouter le paramètre</button>
-                    </div>
+                    </div> -->
                 </div>
             </draggable>
 
@@ -59,7 +59,10 @@
                 <div class="card-header align-parent">
                     <strong class="card-title">Ajouter une section</strong>
                 </div>
-                <input type="text" class="form-control content-fluid" v-model="new_section_type" placeholder="Type de section..." />
+                <select class="form-control content-fluid" v-model="new_section_type">
+                    <option v-for="section_entry in json_sections_data" v-bind:value="section_entry.name">${section_entry.display_name}</option>
+                </select>
+                <!-- <input type="text" class="form-control content-fluid" v-model="new_section_type" placeholder="Type de section..." /> -->
                 <button type="button" @click="add_new_section(machine.machine_id)" class="content-fluid btn btn-outline-green">Créer</button>
             </div>
         </div>

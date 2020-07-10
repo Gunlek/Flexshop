@@ -1,0 +1,72 @@
+{
+    "pictograms": {
+        "name": "pictograms",
+        "display_name": "Pictogrames",
+        "parameters": [
+            {
+                "name": "section_pictosLinkList",
+                "display_name": "Liste des pictogrames"
+            }
+        ]
+    },
+
+    "interactivTuto": {
+        "name": "interactivTuto",
+        "display_name": "Tutoriel interactif",
+        "parameters": [
+            {
+                "name": "section_title",
+                "display_name": "Titre de la section"
+            }
+        ]
+    },
+
+    "description": {
+        "name": "description",
+        "display_name": "Description",
+        "parameters": [
+            {
+                "name": "section_title",
+                "display_name": "Titre de la section"
+            },
+            {
+                "name": "section_description",
+                "display_name": "Description"
+            }
+        ]
+    },
+
+    "carouselTutoVideo": {
+        "name": "carouselTutoVideo",
+        "display_name": "Carroussel",
+        "parameters": [
+            {
+                "name": "section_title",
+                "display_name": "Titre de la section"
+            },
+            {
+                "name": "section_videoLinkList",
+                "display_name": "Liste des liens"
+            },
+            {
+                "name": "section_videoTitleList",
+                "display_name": "Liste des titres"
+            }
+        ]
+    },
+
+    "imageWithTitle": {
+        "name": "imageWithTitle",
+        "display_name": "Image avec titre",
+        "parameters": [
+            {
+                "name": "section_title",
+                "display_name": "Titre de la section"
+            },
+            {
+                "name": "section_imageLink",
+                "display_name": "Lien vers l'image"
+            }
+        ]
+    }
+}
