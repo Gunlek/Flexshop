@@ -22,8 +22,10 @@ let app = new Vue({
         /**
          * Section variables
          */
-        new_section_type: null,
+        new_section_type: "description",
         new_section_machine: "",
+
+        json_sections_data: null,
     },
     computed: {
         full_machines: function(){
@@ -31,9 +33,17 @@ let app = new Vue({
             for(let k=0; k<section_with_parameters.length; k++){
                 let parameter_list = [];
                 let cur_section = section_with_parameters[k];
+                let cur_section_type = cur_section.section_type;
                 for(let k=0; k<this.parameter_list.length; k++){
-                    if(cur_section.section_id == this.parameter_list[k].parameter_section)
+                    if(cur_section.section_id == this.parameter_list[k].parameter_section){
+                        Object.keys(this.json_sections_data[cur_section_type]["parameters"]).forEach(key => {
+                            let arr = this.json_sections_data[cur_section_type]["parameters"];
+                            if(arr[key].name == this.parameter_list[k]["parameter_name"]){
+                                this.parameter_list[k]["parameter_display_name"] = arr[key]["display_name"];
+                            }
+                        });
                         parameter_list.push(this.parameter_list[k]);
+                    }
                 }
                 section_with_parameters[k]['parameters'] = parameter_list;
             }
@@ -127,7 +137,7 @@ let app = new Vue({
             httpRequest.open('GET', url);
             httpRequest.send();
         },
-        get_section_list: function(){
+        get_section_list: function(cb){
             let super_this = this;
             let url = '/sections/list';
             let httpRequest = new XMLHttpRequest();
@@ -135,6 +145,10 @@ let app = new Vue({
                 if(httpRequest.readyState === 4){
                     if(httpRequest.status >= 200 && httpRequest.status <= 300){
                         super_this.section_list = JSON.parse(httpRequest.responseText);
+                        Object.keys(super_this.section_list).forEach(key => {
+                            super_this.section_list[key]["section_display_name"] = super_this.json_sections_data[super_this.section_list[key]["section_type"]]["display_name"];
+                        });
+                        cb();
                     }
                 }
             };
@@ -159,20 +173,18 @@ let app = new Vue({
             httpRequest.open('GET', url);
             httpRequest.send();
         },
-        add_new_parameter: function(parameter_section){
-            this.new_parameter_section = parameter_section;
-            if(this.new_parameter_section != null && this.new_parameter_name != null && this.new_parameter_value != null){
-                let super_this = this;
+        add_new_parameter: function(parameter_section, parameter_name){
+            if(parameter_section != null && parameter_name != null){
                 let url = '/parameters/add';
-                let params = "parameter_section="+this.new_parameter_section.toString()+"&parameter_name="+this.new_parameter_name.toString()+"&parameter_value="+this.new_parameter_value.toString();
+                let params = "parameter_section="+parameter_section.toString()+"&parameter_name="+parameter_name.toString()+"&parameter_value=";
 
                 let httpRequest = new XMLHttpRequest();
-                httpRequest.onreadystatechange = function(data){
+                httpRequest.onreadystatechange = (data) => {
                     if(httpRequest.readyState === 4){
                         if(httpRequest.status >= 200 && httpRequest.status <= 300){
-                            super_this.get_parameter_list();
-                            super_this.new_parameter_name = null;
-                            super_this.new_parameter_value = null;
+                            this.get_parameter_list();
+                            this.new_parameter_name = null;
+                            this.new_parameter_value = null;
                         }
                     }
                 };
@@ -217,15 +229,21 @@ let app = new Vue({
         add_new_section: function(machine_id){
             this.new_section_machine = machine_id;
             if(this.new_section_machine != null && this.new_section_type != null){
-                let super_this = this;
+                // create the new section
                 let url = '/sections/add';
                 let params = "section_machine="+this.new_section_machine.toString()+"&section_type="+this.new_section_type.toString();
 
                 let httpRequest = new XMLHttpRequest();
-                httpRequest.onreadystatechange = function(data){
+                httpRequest.onreadystatechange = (data) => {
                     if(httpRequest.readyState === 4){
                         if(httpRequest.status >= 200 && httpRequest.status <= 300){
-                            super_this.get_section_list();
+                            // refresh the section_list
+                            this.get_section_list(() => {
+                                // then get the new section's id
+                                let new_section_id = this.section_list[this.section_list.length - 1]['section_id'];
+                                // then add corresponding parameters for the specific section
+                                this.createCorrespondingParameters(new_section_id, this.new_section_type.toString());
+                            });
                         }
                     }
                 };
@@ -235,6 +253,14 @@ let app = new Vue({
                     "application/x-www-form-urlencoded",
                 );
                 httpRequest.send(params);
+            }
+        },
+        createCorrespondingParameters: function(section_id, section_type){
+            if(this.json_sections_data.hasOwnProperty(section_type)){
+                let parameter_list = this.json_sections_data[section_type]["parameters"];
+                parameter_list.forEach((parameter) => {
+                    this.add_new_parameter(section_id, parameter["name"]);
+                })
             }
         },
         del_section: function(id){let super_this = this;
@@ -315,9 +341,18 @@ let app = new Vue({
                     return this.machine_list[k].machine_title + " " + this.machine_list[k].machine_brand + " " + this.machine_list[k].machine_reference
                 }
             }
+        },
+
+        // Get data from stored json file
+        // to handle section creation and parameters
+        getJSONSectionData: async function(){
+            let response = await fetch("../json/sections.json");
+            this.json_sections_data = await response.json();
         }
     },
-    mounted: function(){
+    mounted: async function(){
+        await this.getJSONSectionData();
+
         this.get_category_list();
         this.get_parameter_list();
         this.get_section_list();
