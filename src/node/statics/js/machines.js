@@ -25,7 +25,7 @@ let app = new Vue({
         new_section_type: "description",
         new_section_machine: "",
 
-        json_sections_data: null,
+        json_sections_data: {},
     },
     computed: {
         full_machines: function(){
@@ -137,7 +137,7 @@ let app = new Vue({
             httpRequest.open('GET', url);
             httpRequest.send();
         },
-        get_section_list: function(cb){
+        get_section_list: function(cb = () => {}){
             let url = '/sections/list';
             let httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = (data) => {
