@@ -240,7 +240,7 @@ class _MachineViewState extends State<MachineView> {
         ),
         onPressed: () {
           //TODO: add parameter of the route
-          Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(slideNumber: 0, machine: section.machine,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(machineName: machine.title, machine: section.machine,)));
         },
         child: Text(
           section.title == null ? "" : section.title,
