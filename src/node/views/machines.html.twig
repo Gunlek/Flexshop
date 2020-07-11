@@ -25,7 +25,7 @@
             </div>
             <p>${machine.machine_reference} - ${machine.machine_brand}</p>
             <draggable :list="machine.sections" @change="move_section_in_machine">
-                <div class="card align-parent" v-for="section in machine.sections" :key="section.section_id">
+                <div class="card align-parent card-hover" v-for="section in machine.sections" :key="section.section_id" @click="editCard(section)">
                     <div class="card-header align-parent">
                         <strong class="card-title">${section.section_display_name}</strong>
                         <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_section(section.section_id)"><i class="fas fa-trash"></i></button>
@@ -78,6 +78,21 @@
             <input class="content-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
             <input class="content-fluid form-control" v-model="new_machine_image" placeholder="Image de la nouvelle machine..."/>
             <button type="button" @click="add_new_machine()" class="content-fluid btn btn-outline-green">Créer</button>
+        </div>
+    </div>
+
+    <div v-if="edit_modal" class="modal">
+        <div class="bg" @click="hideEditCard()"></div>
+        <div class="modal-content">
+            <h2>${edit_data.section_display_name}</h2><br/>
+            <p class="subtitle">Edition des paramètres</p>
+            <br/><br/>
+            <div v-for="parameter in edit_data.parameters">
+                <label>${parameter.parameter_display_name}</label>
+                <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid"/>
+            </div>
+            <br/><br/>
+            <button class="btn btn-outline-green content-fluid" @click="updateSection()">Mettre à jour</button>
         </div>
     </div>
 </div>

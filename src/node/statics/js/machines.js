@@ -26,6 +26,8 @@ let app = new Vue({
         new_section_machine: "",
 
         json_sections_data: {},
+        edit_modal: false,
+        edit_data: {},
     },
     computed: {
         full_machines: function(){
@@ -90,9 +92,6 @@ let app = new Vue({
             this.get_section_list();
         },
         move_section_to_index(section_id, new_index){
-            console.log(section_id);
-            console.log(new_index);
-            console.log(" ");
             let url = '/sections/update/'+section_id.toString();
             let params = "section_sort_index="+new_index.toString();
 
@@ -350,6 +349,52 @@ let app = new Vue({
         getJSONSectionData: async function(){
             let response = await fetch("../json/sections.json");
             this.json_sections_data = await response.json();
+        },
+
+        // Handle edition, open modal and load data
+        editCard: function(section_data){
+            this.edit_data = section_data;
+            
+            document.querySelector(".horizontal-table").classList.add("modal-open");
+            this.edit_modal = true;
+        },
+
+        // Hide modal and remove overflow hidden class
+        hideEditCard: function(){
+            document.querySelector(".horizontal-table").classList.remove("modal-open");
+            this.edit_modal = false;
+        },
+
+        // Update parameters for the corresponding section
+        updateSection: function(){
+            let input_list = document.querySelectorAll(".edition_input");
+            updatedFields = 0;
+            document.querySelectorAll(".edition_input").forEach((el) => {
+                let update_id = el.getAttribute("name");
+                let update_value = el.value;
+                let url = '/parameters/update/'+update_id.toString();
+                let params = "parameter_value="+update_value.toString();
+
+                let httpRequest = new XMLHttpRequest();
+                httpRequest.onreadystatechange = (data) => {
+                    if(httpRequest.readyState === 4){
+                        if(httpRequest.status >= 200 && httpRequest.status <= 300){
+                            updatedFields += 1;
+
+                            if(input_list.length == updatedFields){
+                                this.get_parameter_list();
+                                this.hideEditCard();
+                            }
+                        }
+                    }
+                };
+                httpRequest.open('PUT', url);
+                httpRequest.setRequestHeader(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded",
+                );
+                httpRequest.send(params);
+            })
         }
     },
     mounted: async function(){
