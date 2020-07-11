@@ -88,9 +88,14 @@ class _MachineViewState extends State<MachineView> {
     List<Widget> widgetList = List<Widget>();
     if(this._sections.length < 1)
       return [
-        AspectRatio(
-          aspectRatio: 1,
-          child: CircularProgressIndicator()
+        Center(
+          child: Container(
+            width: 50,
+            height: 50,
+            child: FittedBox(
+                fit: BoxFit.contain,
+                child: CircularProgressIndicator()),
+          ),
         )
       ];
     else {
