@@ -131,7 +131,7 @@ class InterractiTutoState extends State<InterractiTutoStateful> with SingleTicke
           children: this.slideList.map((Slide slide) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SlideCard(slide: slide),
+              child: SlideCard(slide: slide, ctx: context),
             );
           }).toList(),
         ),
@@ -142,9 +142,10 @@ class InterractiTutoState extends State<InterractiTutoStateful> with SingleTicke
 
 
 class SlideCard extends StatelessWidget {
-  const SlideCard({Key key, this.slide}) : super(key: key);
+  const SlideCard({Key key, this.slide, this.ctx}) : super(key: key);
 
   final Slide slide;
+  final BuildContext ctx;
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +160,7 @@ class SlideCard extends StatelessWidget {
                     fontSize: 30)),
           ),
           isNetworkImageAvailable(
-              context: context,
+              context: ctx,
               image: this.slide.image,
               placeholder:
               "assets/images/placeholders/workshops.jpg"),
