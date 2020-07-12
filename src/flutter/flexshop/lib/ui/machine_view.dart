@@ -144,7 +144,8 @@ class _MachineViewState extends State<MachineView> {
   }
 
   Widget _buildPictos(Section section) {
-    return Container(
+    return section.pictosLinkList==null ? CircularProgressIndicator() :
+    Container(
       padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, top: _topPadding),
       height: 50 + _topPadding,
       child: ListView.builder(
@@ -181,7 +182,8 @@ class _MachineViewState extends State<MachineView> {
   }
 
   Widget _buildTutoVideo(Section section){ //carouselTutoVideo
-    return ExpansionTile(
+    return section.videoLinkList==null ? CircularProgressIndicator() :
+      ExpansionTile(
       title: Text(
         section.title == null ? "" : section.title, 
         style: GoogleFonts.pacifico(textStyle: TextStyle(
@@ -219,7 +221,8 @@ class _MachineViewState extends State<MachineView> {
   }
 
   Widget _buildImageWithTitle(Section section){
-    return             ExpansionTile(
+    return section.imageLink == null ? CircularProgressIndicator() :
+    ExpansionTile(
       title: Text(
         section.title == null ? "" : section.title, 
         style: GoogleFonts.pacifico(textStyle: TextStyle(
@@ -236,7 +239,8 @@ class _MachineViewState extends State<MachineView> {
   }
 
   Widget _buildInterractivTuto(BuildContext context, Section section){
-    return Padding(
+    return section.machine == null ? CircularProgressIndicator() :
+    Padding(
       padding: EdgeInsets.symmetric(horizontal: _leftAndRightPadding),
       child: RaisedButton(
         color: Color.fromRGBO(147, 49, 97, 1.0),
@@ -244,7 +248,6 @@ class _MachineViewState extends State<MachineView> {
             borderRadius: new BorderRadius.circular(18.0)
         ),
         onPressed: () {
-          //TODO: add parameter of the route
           Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(machineName: machine.title, machine: section.machine,)));
         },
         child: Text(
