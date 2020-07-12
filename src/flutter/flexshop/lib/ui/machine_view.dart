@@ -192,7 +192,7 @@ class _MachineViewState extends State<MachineView> {
 
   Widget _buildTutoVideo(Section section) {
     //carouselTutoVideo
-
+    if (section.videoLinkList != null) {
     List<int> imgList =
         List.generate(section.videoLinkList.length, (index) => index);
     final List<Widget> imageSliders = imgList
@@ -247,7 +247,7 @@ class _MachineViewState extends State<MachineView> {
                 ),
               ),
         ))
-        .toList();
+        .toList();}
 
     return section.videoLinkList == null
         ? CircularProgressIndicator()
