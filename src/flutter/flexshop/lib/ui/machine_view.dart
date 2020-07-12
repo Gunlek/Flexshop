@@ -247,27 +247,28 @@ class _MachineViewState extends State<MachineView> {
                 ),
               ),
         ))
-        .toList();}
+        .toList();
+    return ExpansionTile(
+      title: Text(section.title == null ? "" : section.title,
+          style: GoogleFonts.pacifico(
+              textStyle: TextStyle(
+                  color: Color.fromRGBO(147, 49, 97, 1.0),
+                  fontSize: 30))),
+      children: <Widget>[
+        CarouselSlider(
+          options: CarouselOptions(
+            autoPlay: true,
+            aspectRatio: 2.0,
+            enlargeCenterPage: true,
+          ),
+          items: imageSliders,
+        )
+      ],
+    );}
+    else {
+      return CircularProgressIndicator();
+    }
 
-    return section.videoLinkList == null
-        ? CircularProgressIndicator()
-        : ExpansionTile(
-            title: Text(section.title == null ? "" : section.title,
-                style: GoogleFonts.pacifico(
-                    textStyle: TextStyle(
-                        color: Color.fromRGBO(147, 49, 97, 1.0),
-                        fontSize: 30))),
-            children: <Widget>[
-              CarouselSlider(
-                options: CarouselOptions(
-                  autoPlay: true,
-                  aspectRatio: 2.0,
-                  enlargeCenterPage: true,
-                ),
-                items: imageSliders,
-              )
-            ],
-          );
   }
 
   Widget _buildImageWithTitle(Section section) {
