@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flexshop/widget/zoomable_image_widget.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class MachineView extends StatefulWidget {
   Machine machine;
@@ -33,16 +34,16 @@ class _MachineViewState extends State<MachineView> {
     super.initState();
     this._sections = List();
     SectionAPI.getSectionForMachineId(
-      id: widget.machine.id,
-      onDone: (data) {
-        List<Section> currentSections = [];
-        for(var section in data)
-          currentSections.add(Section.fromMapObject(section));
-        setState(() {
-          this._sections = currentSections;
+        id: widget.machine.id,
+        onDone: (data) {
+          List<Section> currentSections = [];
+          for (var section in data) {
+            currentSections.add(Section.fromMapObject(section));
+          }
+          setState(() {
+            this._sections = currentSections;
+          });
         });
-      }
-    );
   }
 
   @override
@@ -66,18 +67,19 @@ class _MachineViewState extends State<MachineView> {
               elevation: 50,
               backgroundColor: Color.fromRGBO(147, 49, 97, 1.0),
               flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: SafeArea(
-                    child: Text(this.machine.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                        )),
-                  ),
-                  background: getSliverBackground(),
+                centerTitle: true,
+                title: SafeArea(
+                  child: Text(this.machine.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                      )),
+                ),
+                background: getSliverBackground(),
               ),
             ),
-            new SliverList(delegate: new SliverChildListDelegate(_buildList(context))),
+            new SliverList(
+                delegate: new SliverChildListDelegate(_buildList(context))),
           ],
         ),
       ),
@@ -86,15 +88,14 @@ class _MachineViewState extends State<MachineView> {
 
   List<Widget> _buildList(BuildContext context) {
     List<Widget> widgetList = List<Widget>();
-    if(this._sections.length < 1)
+    if (this._sections.length < 1)
       return [
         Center(
           child: Container(
             width: 50,
             height: 50,
             child: FittedBox(
-                fit: BoxFit.contain,
-                child: CircularProgressIndicator()),
+                fit: BoxFit.contain, child: CircularProgressIndicator()),
           ),
         )
       ];
@@ -144,21 +145,26 @@ class _MachineViewState extends State<MachineView> {
   }
 
   Widget _buildPictos(Section section) {
-    return section.pictosLinkList==null ? CircularProgressIndicator() :
-    Container(
-      padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, top: _topPadding),
-      height: 50 + _topPadding,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemCount: section.pictosLinkList.length,
-          itemBuilder: (BuildContext context, int i) {
-            return Container(
-                height: 50,
-                width: 50,
-                child: Image.asset("assets/images/pictograms/"+section.pictosLinkList[i]));
-          }),
-    );
+    return section.pictosLinkList == null
+        ? CircularProgressIndicator()
+        : Container(
+            padding: EdgeInsets.only(
+                left: _leftAndRightPadding,
+                right: _leftAndRightPadding,
+                top: _topPadding),
+            height: 50 + _topPadding,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: section.pictosLinkList.length,
+                itemBuilder: (BuildContext context, int i) {
+                  return Container(
+                      height: 50,
+                      width: 50,
+                      child: Image.asset("assets/images/pictograms/" +
+                          section.pictosLinkList[i]));
+                }),
+          );
   }
 
   Widget _buildDescriptionTile(Section section) {
@@ -171,7 +177,10 @@ class _MachineViewState extends State<MachineView> {
       ),
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, bottom: _bottomPadding),
+          padding: EdgeInsets.only(
+              left: _leftAndRightPadding,
+              right: _leftAndRightPadding,
+              bottom: _bottomPadding),
           child: Text(
             section.description == null ? "" : section.description,
             style: GoogleFonts.montserrat(),
@@ -181,109 +190,181 @@ class _MachineViewState extends State<MachineView> {
     );
   }
 
-  Widget _buildTutoVideo(Section section){ //carouselTutoVideo
-    return section.videoLinkList==null ? CircularProgressIndicator() :
-      ExpansionTile(
-      title: Text(
-        section.title == null ? "" : section.title, 
-        style: GoogleFonts.pacifico(textStyle: TextStyle(
-          color: Color.fromRGBO(147, 49, 97, 1.0),
-          fontSize: 30
-        )
-      )),
-      children: <Widget>[
-        Carousel(
-            height: 350.0,
-            width: 350,
-            initialPage: 1,
-            allowWrap: false,
-            type: Types.slideSwiper,
-            onCarouselTap: (i) async {
-              String url = section.videoLinkList[i];
-              if (await canLaunch(url)) {
-              await launch(url);
-              } else {
-              throw 'Could not launch $url';
-              }
-            },
-            indicatorType: IndicatorTypes.bar,
-            arrowColor: Colors.black,
-            axis: Axis.horizontal,
-            showArrow: true,
-            children: List.generate(
-                section.videoLinkList.length,
-                    (i) => Center(
-                  child:
-                  Text(section.videoTitleList[i]),
-                ))),
-      ],
-    );
+  Widget _buildTutoVideo(Section section) {
+    //carouselTutoVideo
+
+    List<int> imgList =
+        List.generate(section.videoLinkList.length, (index) => index);
+    final List<Widget> imageSliders = imgList
+        .map((item) => GestureDetector(
+      onTap: () async {
+        String url = section.videoLinkList[item];
+        if (await canLaunch(url)) {
+        await launch(url);
+        } else {
+        throw 'Could not launch $url';
+        }
+      },
+          child: Container(
+                child: Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      child: Stack(
+                        children: <Widget>[
+                          Image.asset(
+                              "assets/images/placeholders/video_background.png",
+                              fit: BoxFit.cover,
+                              width: 1000.0),
+                          Positioned(
+                            bottom: 0.0,
+                            left: 0.0,
+                            right: 0.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromARGB(200, 0, 0, 0),
+                                    Color.fromARGB(0, 0, 0, 0)
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 20.0),
+                              child: Text(section.videoTitleList[item].toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+        ))
+        .toList();
+
+    return section.videoLinkList == null
+        ? CircularProgressIndicator()
+        : ExpansionTile(
+            title: Text(section.title == null ? "" : section.title,
+                style: GoogleFonts.pacifico(
+                    textStyle: TextStyle(
+                        color: Color.fromRGBO(147, 49, 97, 1.0),
+                        fontSize: 30))),
+            children: <Widget>[
+              Carousel(
+                  height: 350.0,
+                  width: 350,
+                  initialPage: 1,
+                  allowWrap: false,
+                  type: Types.slideSwiper,
+                  onCarouselTap: (i) async {
+                    String url = section.videoLinkList[i];
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  },
+                  indicatorType: IndicatorTypes.bar,
+                  arrowColor: Colors.black,
+                  axis: Axis.horizontal,
+                  showArrow: true,
+                  children: List.generate(
+                      section.videoLinkList.length,
+                      (i) => Center(
+                            child: Text(section.videoTitleList[i]),
+                          ))),
+              CarouselSlider(
+                options: CarouselOptions(
+                  autoPlay: true,
+                  aspectRatio: 2.0,
+                  enlargeCenterPage: true,
+                ),
+                items: imageSliders,
+              )
+            ],
+          );
   }
 
-  Widget _buildImageWithTitle(Section section){
-    return section.imageLink == null ? CircularProgressIndicator() :
-    ExpansionTile(
-      title: Text(
-        section.title == null ? "" : section.title, 
-        style: GoogleFonts.pacifico(textStyle: TextStyle(
-          color: Color.fromRGBO(147, 49, 97, 1.0),
-          fontSize: 30
-      ))),
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: _leftAndRightPadding, right: _leftAndRightPadding, bottom: _bottomPadding),
-          child: isAssetImage(section.imageLink),
-        )
-      ],
-    );
+  Widget _buildImageWithTitle(Section section) {
+    return section.imageLink == null
+        ? CircularProgressIndicator()
+        : ExpansionTile(
+            title: Text(section.title == null ? "" : section.title,
+                style: GoogleFonts.pacifico(
+                    textStyle: TextStyle(
+                        color: Color.fromRGBO(147, 49, 97, 1.0),
+                        fontSize: 30))),
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                    left: _leftAndRightPadding,
+                    right: _leftAndRightPadding,
+                    bottom: _bottomPadding),
+                child: isAssetImage(section.imageLink),
+              )
+            ],
+          );
   }
 
-  Widget _buildInterractivTuto(BuildContext context, Section section){
-    return section.machine == null ? CircularProgressIndicator() :
-    Padding(
-      padding: EdgeInsets.symmetric(horizontal: _leftAndRightPadding),
-      child: RaisedButton(
-        color: Color.fromRGBO(147, 49, 97, 1.0),
-        shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(18.0)
-        ),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => InterractivTuto(machineName: machine.title, machine: section.machine,)));
-        },
-        child: Text(
-          section.title == null ? "" : section.title,
-          style: TextStyle(color: Colors.white)
-        ),
-      ),
-    );
+  Widget _buildInterractivTuto(BuildContext context, Section section) {
+    return section.machine == null
+        ? CircularProgressIndicator()
+        : Padding(
+            padding: EdgeInsets.symmetric(horizontal: _leftAndRightPadding),
+            child: RaisedButton(
+              color: Color.fromRGBO(147, 49, 97, 1.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(18.0)),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InterractivTuto(
+                              machineName: machine.title,
+                              machine: section.machine,
+                            )));
+              },
+              child: Text(section.title == null ? "" : section.title,
+                  style: TextStyle(color: Colors.white)),
+            ),
+          );
   }
 
   getSliverBackground() {
-    if(this.machine.image.startsWith("htt")){
-      return Image.network(
-        this.machine.image,
-        fit: BoxFit.cover,
-        color: Color.fromRGBO(0, 0, 0, 0.4),
-        colorBlendMode: BlendMode.darken
-      );
-    }
-    else
+    if (this.machine.image.startsWith("htt")) {
+      return Image.network(this.machine.image,
+          fit: BoxFit.cover,
+          color: Color.fromRGBO(0, 0, 0, 0.4),
+          colorBlendMode: BlendMode.darken);
+    } else
       return Image.asset("assets/images/placeholders/machines.jpg",
-        fit: BoxFit.cover,
-        color: Color.fromRGBO(0, 0, 0, 0.4),
-        colorBlendMode: BlendMode.darken
-      );
+          fit: BoxFit.cover,
+          color: Color.fromRGBO(0, 0, 0, 0.4),
+          colorBlendMode: BlendMode.darken);
   }
 
-  isAssetImage(image){
-    if(image!=null){
-      if(image.startsWith("assets"))
+  isAssetImage(image) {
+    if (image != null) {
+      if (image.startsWith("assets"))
         return Image.asset(image, fit: BoxFit.cover);
       else
         return GestureDetector(
           onTap: () {
             print(image);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ZoomableImage(image: image,)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ZoomableImage(
+                          image: image,
+                        )));
           },
           child: Container(
               height: 300,
