@@ -258,29 +258,6 @@ class _MachineViewState extends State<MachineView> {
                         color: Color.fromRGBO(147, 49, 97, 1.0),
                         fontSize: 30))),
             children: <Widget>[
-              Carousel(
-                  height: 350.0,
-                  width: 350,
-                  initialPage: 1,
-                  allowWrap: false,
-                  type: Types.slideSwiper,
-                  onCarouselTap: (i) async {
-                    String url = section.videoLinkList[i];
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  },
-                  indicatorType: IndicatorTypes.bar,
-                  arrowColor: Colors.black,
-                  axis: Axis.horizontal,
-                  showArrow: true,
-                  children: List.generate(
-                      section.videoLinkList.length,
-                      (i) => Center(
-                            child: Text(section.videoTitleList[i]),
-                          ))),
               CarouselSlider(
                 options: CarouselOptions(
                   autoPlay: true,
