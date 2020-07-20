@@ -2,4 +2,5 @@ package-lock.json
 node_modules
 database/database.sqlite
 .env
-statics/exports/database_export.json
+statics/exports
+statics/uploads/img

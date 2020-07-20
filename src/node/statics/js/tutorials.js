@@ -72,7 +72,7 @@ let app = new Vue({
                 data.append('slide_number', slide_number);
                 data.append('slide_machine', slide_machine);
                 data.append('slide_title', slide_title);
-                data.append('slide_image', "/img/" + this.new_slide_image_name);
+                data.append('slide_image', "/uploads/img/" + this.new_slide_image_name);
                 data.append('slide_description', slide_description);
                 let entry_request = new XMLHttpRequest();
                 entry_request.open('post', '/slides/add');
@@ -122,7 +122,7 @@ let app = new Vue({
                 // Update entry
                 data = new FormData();
                 data.append('slide_title', updated_title);
-                data.append('slide_image', "/img/" + this.new_slide_image_name)
+                data.append('slide_image', "/uploads/img/" + this.new_slide_image_name)
                 data.append('slide_description', updated_description);
                 let request = new XMLHttpRequest();
                 request.addEventListener('load', (e) => {

@@ -25,9 +25,9 @@ app.use('/slides', slides_api);
 
 app.post('/upload-file', (req, res) => {
     let uploaded_file = req.files.file;
-    if(!fs.existsSync('statics/img'))
-        fs.mkdirSync('statics/img');
-    uploaded_file.mv("statics/img/"+uploaded_file.name);
+    if(!fs.existsSync('statics/uploads/img'))
+        fs.mkdirSync('statics/uploads/img', {recursive: true});
+    uploaded_file.mv("statics/uploads/img/"+uploaded_file.name);
 });
 
 let web_interface = require('./web_interface/main.js');
