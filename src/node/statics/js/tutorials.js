@@ -54,35 +54,38 @@ let app = new Vue({
             let slide_image = this.new_slide_image;
             let slide_description = this.new_slide_description;
 
-            // Upload image to server
-            let data = new FormData();
-            data.append('file', this.new_slide_image);
+            if(slide_title != "" && slide_description != "" && new_slide_image_name != ""){
 
-            let img_request = new XMLHttpRequest();
-            img_request.open('post', '/upload-file');
-            img_request.addEventListener('load', (e) => {
-            });
-            img_request.send(data);
+                // Upload image to server
+                let data = new FormData();
+                data.append('file', this.new_slide_image);
 
-            // Create entry in database
-            data = new FormData();
-            data.append('slide_number', slide_number);
-            data.append('slide_machine', slide_machine);
-            data.append('slide_title', slide_title);
-            data.append('slide_image', "/img/" + this.new_slide_image_name);
-            data.append('slide_description', slide_description);
-            let entry_request = new XMLHttpRequest();
-            entry_request.open('post', '/slides/add');
-            entry_request.addEventListener('load', (e) => {
-                this.get_machine_list();
-                this.get_slide_list();
+                let img_request = new XMLHttpRequest();
+                img_request.open('post', '/upload-file');
+                img_request.addEventListener('load', (e) => {
+                });
+                img_request.send(data);
 
-                this.new_slide_description = "";
-                this.new_slide_title = "";
-                this.new_slide_image_name = "Fichier";
-                this.new_slide_image_render = "";
-            });
-            entry_request.send(data);
+                // Create entry in database
+                data = new FormData();
+                data.append('slide_number', slide_number);
+                data.append('slide_machine', slide_machine);
+                data.append('slide_title', slide_title);
+                data.append('slide_image', "/img/" + this.new_slide_image_name);
+                data.append('slide_description', slide_description);
+                let entry_request = new XMLHttpRequest();
+                entry_request.open('post', '/slides/add');
+                entry_request.addEventListener('load', (e) => {
+                    this.get_machine_list();
+                    this.get_slide_list();
+
+                    this.new_slide_description = "";
+                    this.new_slide_title = "";
+                    this.new_slide_image_name = "Fichier";
+                    this.new_slide_image_render = "";
+                });
+                entry_request.send(data);
+            }
             
         },
 
