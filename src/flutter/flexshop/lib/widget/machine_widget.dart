@@ -19,7 +19,7 @@ class _MachineWidgetState extends State<MachineWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: machine)))},     // TODO: Open machine detail
+      onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: machine)))},
       child: Padding(
         padding: EdgeInsets.only(right: 20),
         child: Container(

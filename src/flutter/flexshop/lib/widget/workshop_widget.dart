@@ -18,7 +18,7 @@ class WorkshopWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: () => {
           Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopView(workshop: workshop)))
-        },      // TODO: Open workshop detail page
+        },
         child: Container(
           width: MediaQuery.of(context).size.width * widgetWidth / 100,
           height: widgetHeight,
