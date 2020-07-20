@@ -23,14 +23,21 @@
             <div class="align-parent" style="width: 100%">
                 <h4 class="card-title">${tutorial.machine_name}</h4>
                 <br/><br/>
-                <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button>
             </div>
             <div style="position: relative;">
                 <draggable :list="tutorial.slides" @change="" style="display: inline;">
                     <div class="card align-parent card-hover" v-for="slide in tutorial.slides" :key="slide.slide_id">
-                        <button type="button" class="btn btn-outline-red align-right del-btn" @click=""><i class="fas fa-trash"></i></button>
                         <div class="card-header align-parent" style="line-break: auto; white-space: normal;" @click="editCard(slide)">
-                            <strong class="card-title">${slide.slide_title}</strong>
+                            <div class="row">
+                                <div class="col-11">
+                                    <strong class="card-title">${slide.slide_title}</strong>
+                                </div>
+
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-outline-red align-right del-btn" @click="delete_slide(slide.slide_id)"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <br/>
                             <br/>
                             <img v-bind:src="slide.slide_image" style="width: 100%; height: auto;"/>
                             <br/>

@@ -86,6 +86,16 @@ let app = new Vue({
             
         },
 
+        delete_slide: function(slide_id){
+            let request = new XMLHttpRequest();
+            request.open('delete', "/slides/delete/"+slide_id.toString());
+            request.addEventListener('load', (e) => {
+                this.get_machine_list();
+                this.get_slide_list();
+            });
+            request.send();
+        },
+
         add_new_tutorial: function(){
             this.add_slide(this.new_tutorial_machine, true);
         },
