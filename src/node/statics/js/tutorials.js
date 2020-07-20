@@ -13,6 +13,7 @@ let app = new Vue({
         new_slide_image_name: "Fichier",
         new_slide_description: "",
         new_tutorial_machine: -1,
+        updateImage: false,
 
         edit_modal: false,
         edit_data: {},
@@ -83,6 +84,7 @@ let app = new Vue({
                     this.new_slide_title = "";
                     this.new_slide_image_name = "Fichier";
                     this.new_slide_image_render = "";
+                    this.updateImage = false;
                 });
                 entry_request.send(data);
             }
@@ -104,10 +106,28 @@ let app = new Vue({
         },
 
         update_slide: function(slide_id){
-            
+            let updated_title = document.querySelector('input[name="update_slide_title"]').value;
+            let updated_description = document.querySelector('textarea[name="update_slide_description"]').value;
+            if(this.updateImage){
+                // TODO
+            }
+            else {
+                let data = new FormData();
+                data.append('slide_title', updated_title);
+                data.append('slide_description', updated_description);
+                let request = new XMLHttpRequest();
+                request.addEventListener('load', (e) => {
+                    this.get_machine_list();
+                    this.get_slide_list();
+                    this.hideEditCard();
+                });
+                request.open('put', '/slides/update/'+slide_id.toString());
+                request.send(data);
+            }
         },
 
         processFile: function(event){
+            this.updateImage = true;
             this.new_slide_image = event.target.files[0];
             this.new_slide_image_name = this.new_slide_image.name;
 
@@ -155,14 +175,15 @@ let app = new Vue({
         hideEditCard: function(){
             document.querySelector(".table-body").classList.remove("modal-open");
             document.querySelector("footer").classList.remove("modal-open");
+
+            this.new_slide_description = "";
+            this.new_slide_title = "";
+            this.new_slide_image_name = "Fichier";
+            this.new_slide_image_render = "";
+            this.updateImage = false;
+
             this.edit_modal = false;
         },
-
-        updateSlide: function(){
-            let updateSlideTitle = document.querySelector('input[name="update_slide_title"]');
-            let updateSlideDescription = document.querySelector('input[name="update_slide_description]');
-            // TODO
-        }
     },
 
     computed: {

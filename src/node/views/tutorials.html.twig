@@ -111,16 +111,16 @@
                 <input type="text" class="form-control" v-bind:value="edit_data.slide_title" name="update_slide_title"></div>
             <div class="form-group">
                 <label>Image associée</label>
-                <img v-bind:src="edit_data.slide_image" style="width: 100%; height: auto;" />
+                <img v-if="!updateImage" v-bind:src="edit_data.slide_image" style="width: 100%; height: auto;" />
                 <div class="file-selector">
-                    <label v-bind:for="edit_data_slide_img" class="btn btn-outline-blue">Fichier</label>
-                    <input type="file" name="new_slide_image" v-bind:id="edit_data_slide_img" class="form-control" />
+                    <label v-bind:for="edit_data_slide_img" class="btn btn-outline-blue">${new_slide_image_name}</label>
+                    <input type="file" @change="processFile" v-bind:id="edit_data_slide_img" class="form-control" />
                 </div>
             <div class="form-group">
                 <label></label>
                 <textarea rows="5" class="form-control" name="update_slide_description">${edit_data.slide_description}</textarea>
             <br/><br/>
-            <button class="btn btn-outline-green content-fluid" @click="updateSlide(edit_data.slide_id)">Mettre à jour</button>
+            <button class="btn btn-outline-green content-fluid" @click="update_slide(edit_data.slide_id)">Mettre à jour</button>
         </div>
     </div>
 </div>
