@@ -109,7 +109,35 @@ let app = new Vue({
             let updated_title = document.querySelector('input[name="update_slide_title"]').value;
             let updated_description = document.querySelector('textarea[name="update_slide_description"]').value;
             if(this.updateImage){
-                // TODO
+                // Upload image to server
+                let data = new FormData();
+                data.append('file', this.new_slide_image);
+
+                let img_request = new XMLHttpRequest();
+                img_request.open('post', '/upload-file');
+                img_request.addEventListener('load', (e) => {
+                });
+                img_request.send(data);
+
+                // Update entry
+                data = new FormData();
+                data.append('slide_title', updated_title);
+                data.append('slide_image', "/img/" + this.new_slide_image_name)
+                data.append('slide_description', updated_description);
+                let request = new XMLHttpRequest();
+                request.addEventListener('load', (e) => {
+                    this.get_machine_list();
+                    this.get_slide_list();
+                    this.hideEditCard();
+
+                    this.new_slide_description = "";
+                    this.new_slide_title = "";
+                    this.new_slide_image_name = "Fichier";
+                    this.new_slide_image_render = "";
+                    this.updateImage = false;
+                });
+                request.open('put', '/slides/update/'+slide_id.toString());
+                request.send(data);
             }
             else {
                 let data = new FormData();
@@ -120,6 +148,12 @@ let app = new Vue({
                     this.get_machine_list();
                     this.get_slide_list();
                     this.hideEditCard();
+
+                    this.new_slide_description = "";
+                    this.new_slide_title = "";
+                    this.new_slide_image_name = "Fichier";
+                    this.new_slide_image_render = "";
+                    this.updateImage = false;
                 });
                 request.open('put', '/slides/update/'+slide_id.toString());
                 request.send(data);
