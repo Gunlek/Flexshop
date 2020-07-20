@@ -1,0 +1,148 @@
+{% extends 'libs/template.html.twig' %}
+
+{% block links %}
+    <a href="/workshops"><li>Ateliers</li></a>
+    <a href="/machines"><li>Machines</li></a>
+    <a href="/tutorials"><li class="active">Tutoriels</li></a>
+{% endblock %}
+
+{% block content %}
+<div id="tutorials">
+    <div class="table-body vertical-table">
+        <div class="row">
+            <div class="col-4"><h1 class="table-title">Gestion des tutoriels</h1></div>
+            <div class="col-2" style="position: relative;">
+                <button type="button" id="enableDelete" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
+            </div>
+            <div class="col-2" style="position: relative;">
+                <button type="button" id="enableAdd" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div v-for="tutorial in machine_tutorials" :key="tutorial.machine_id" class="table-card">
+            <div class="align-parent" style="width: 100%">
+                <h4 class="card-title">${tutorial.machine_name}</h4>
+                <br/><br/>
+                <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button>
+            </div>
+            <div style="position: relative;">
+                <draggable :list="tutorial.slides" @change="" style="display: inline;">
+                    <div class="card align-parent card-hover" v-for="slide in tutorial.slides" :key="slide.slide_id">
+                        <button type="button" class="btn btn-outline-red align-right del-btn" @click=""><i class="fas fa-trash"></i></button>
+                        <div class="card-header align-parent" style="line-break: auto; white-space: normal;" @click="editCard(slide)">
+                            <strong class="card-title">${slide.slide_title}</strong>
+                            <br/>
+                            <img v-bind:src="slide.slide_image" style="width: 100%; height: auto;"/>
+                            <br/>
+                            <p>${slide.slide_description}</p>
+                        </div>
+                    </div>
+                </draggable>
+
+                <div class="card add-slide">
+                    <div class="card-header align-parent">
+                        <strong class="card-title">Ajouter une slide</strong>
+                    </div>
+                    <div class="form-group">
+                        <label>Titre de la slide</label>
+                        <input type="text" class="form-control" v-model="new_slide_title"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Image associée</label>
+                        <!-- <img :src="new_slide_image_render" style="width: 100%; height: auto;"/> -->
+                        <div class="file-selector">
+                            <label v-bind:for="tutorial.machine_id" class="btn btn-outline-blue">${new_slide_image_name}</label>
+                            <input type="file" @change="processFile" v-bind:id="tutorial.machine_id" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" rows="5" v-model="new_slide_description"></textarea>
+                    </div>
+                    <button type="button" @click="add_slide(tutorial.machine_id)" class="content-fluid btn btn-outline-green">Ajouter</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-card add-section full-parent-height" id="add_machine">
+            <h4>Créer un nouveau tutoriel</h4>
+            <div class="form-group">
+                <select v-model="new_tutorial_machine" class="form-control">
+                    <option value="-1" selected disabled>Choisissez une machine</option>
+                    <option v-for="machine in machine_list" v-bind:value="machine.machine_id">${machine.machine_brand} ${machine.machine_reference}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Titre de la slide</label>
+                <input type="text" class="form-control" v-model="new_slide_title"/>
+            </div>
+            <div class="form-group">
+                <label>Image associée</label>
+                <div class="file-selector">
+                    <label for="new_slide_image" class="btn btn-outline-blue">${new_slide_image_name}</label>
+                    <input type="file" name="new_slide_image" @change="processFile" id="new_slide_image" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" rows="5" v-model="new_slide_description"></textarea>
+            </div>
+
+            <button type="button" @click="add_new_tutorial()" class="content-fluid btn btn-outline-green">Créer</button>
+        </div>
+    </div>
+
+    <div v-if="edit_modal" class="modal">
+        <div class="bg" @click="hideEditCard()"></div>
+        <div class="modal-content">
+            <h2>${edit_data.slide_title}</h2><br/>
+            <p class="subtitle">Edition de la slide</p>
+            <br/><br/>
+            <div class="form-group">
+                <label>Titre de la slide:</label>
+                <input type="text" class="form-control" v-bind:value="edit_data.slide_title" name="update_slide_title"></div>
+            <div class="form-group">
+                <label>Image associée</label>
+                <img v-bind:src="edit_data.slide_image" style="width: 100%; height: auto;" />
+                <div class="file-selector">
+                    <label v-bind:for="edit_data_slide_img" class="btn btn-outline-blue">Fichier</label>
+                    <input type="file" name="new_slide_image" v-bind:id="edit_data_slide_img" class="form-control" />
+                </div>
+            <div class="form-group">
+                <label></label>
+                <textarea rows="5" class="form-control" name="update_slide_description">${edit_data.slide_description}</textarea>
+            <br/><br/>
+            <button class="btn btn-outline-green content-fluid" @click="updateSlide(edit_data.slide_id)">Mettre à jour</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+    <script src="/js/tutorials.js"></script>
+    <script>
+        $(document).ready(function(){
+            let delEnabled=false;
+            $('#enableDelete').click(function(e){
+                e.preventDefault();
+                if(delEnabled)
+                    $('.del-btn').fadeOut(function(){delEnabled=!delEnabled;});
+                else
+                    $('.del-btn').fadeIn(function(){delEnabled=!delEnabled;});
+            });
+
+            let addEnabled = true;
+            $('#enableAdd').click(function(e){
+                e.preventDefault();
+                if(addEnabled)
+                    $('.add-section').slideUp(function(){addEnabled=false;});
+                else
+                    $('.add-section').slideDown(function(){addEnabled=true;});
+            });
+        });
+    </script>
+{% endblock %}

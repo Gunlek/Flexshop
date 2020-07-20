@@ -31,6 +31,10 @@ router.get('/credits', (req, res) => {
 
 router.get('/settings', (req, res) => {
     res.render('settings.html.twig');
+});
+
+router.get('/tutorials', (req, res) => {
+    res.render('tutorials.html.twig');
 })
 
 router.get('/export-json', (req, res) => {

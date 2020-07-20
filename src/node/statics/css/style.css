@@ -29,7 +29,7 @@ h1, h2, h3, h4, h5, h6, p {
  * Navbar style
  */
 nav {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
@@ -138,10 +138,14 @@ footer {
     z-index: 0;
 }
 
+footer.modal-open {
+    position: fixed;
+}
+
 /*
  * Horizontal table system and cards
  */
-.horizontal-table
+.horizontal-table, .vertical-table
 {
     white-space: nowrap;
     position: absolute;
@@ -152,7 +156,7 @@ footer {
     overflow: auto;
 }
 
-.horizontal-table .table-title {
+.horizontal-table .table-title, .vertical-table .table-title {
     margin: 20px 10px;
     display: block;
 }
@@ -168,6 +172,29 @@ footer {
     white-space:normal;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
     vertical-align: top;
+}
+
+.vertical-table .table-card {
+    display: block;
+    background-color: #fff;
+    margin: 20px 20px;
+    padding: 10px;
+    word-break: normal;
+    white-space:normal;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.vertical-table .card {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 15px;
+    max-width: 450px;
+}
+
+.vertical-table .add-slide {
+    width: 450px;
 }
 
 /*
@@ -239,6 +266,18 @@ footer {
     transition: 0.2s background-color;
 }
 
+.btn-outline-blue {
+    border: 2px solid #2980b9;
+    color: #2980b9;
+    transition: 0.2s background-color;
+}
+
+.btn-outline-blue:hover {
+    background-color: #2980b9;
+    color: #eee;
+    transition: 0.2s background-color;
+}
+
 .btn-outline-red {
     border: 2px solid #c0392b;
     color: #c0392b;
@@ -281,6 +320,15 @@ footer {
 /*
  * Form styling
  */
+.form-group {
+    width: 100%;
+}
+
+
+.form-group > label {
+    display: block;
+}
+
 .form-control {
     height: 35px;
     border: 1px solid #333;
@@ -288,6 +336,26 @@ footer {
     box-shadow: none;
     transition: 0.2s box-shadow;
     margin: 10px 0;
+    width: 100%;
+}
+
+textarea[class="form-control"] {
+    height: auto;
+    min-height: 35px;
+}
+
+.file-selector label {
+    display: block;
+    margin: 5px 0;
+}
+
+.file-selector input[type="file"].form-control {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
 }
 
 .form-control:focus {
@@ -314,7 +382,9 @@ footer {
 }
 
 .modal .bg {
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
     background-color: rgba(33, 33, 33, 0.4);
     width: 100%;
     height: 100%;
@@ -327,12 +397,14 @@ footer {
     transform: translateX(-50%);
     width: 60%;
     background-color: #eee;
-
+    
     padding: 10px;
+    z-index: 1;
 }
 
-.horizontal-table.modal-open {
+.table-body.modal-open {
     overflow: hidden;
+    position: fixed;
 }
 
 /*

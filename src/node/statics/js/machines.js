@@ -355,13 +355,13 @@ let app = new Vue({
         editCard: function(section_data){
             this.edit_data = section_data;
             
-            document.querySelector(".horizontal-table").classList.add("modal-open");
+            document.querySelector(".table-body").classList.add("modal-open");
             this.edit_modal = true;
         },
 
         // Hide modal and remove overflow hidden class
         hideEditCard: function(){
-            document.querySelector(".horizontal-table").classList.remove("modal-open");
+            document.querySelector(".table-body").classList.remove("modal-open");
             this.edit_modal = false;
         },
 
