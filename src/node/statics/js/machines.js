@@ -294,7 +294,7 @@ let app = new Vue({
          * Machines handlers
          */
         add_new_machine: function(){
-            if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.image_name != null && this.new_machine_reference != null){
+            if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.image_name != "Fichier" && this.new_machine_reference != null){
                 let super_this = this;
                 let url = '/machines/add';
                 let params = "machine_title="+this.new_machine_title.toString()+"&machine_category="+this.new_machine_category.toString()+"&machine_brand="+this.new_machine_brand.toString()+"&machine_image=/uploads/img/"+this.image_name+"&machine_reference="+this.new_machine_reference.toString();
@@ -307,7 +307,9 @@ let app = new Vue({
                             this.new_machine_title = null;
                             this.new_machine_category = "";
                             this.new_machine_brand = null;
-                            this.new_machine_image = null;
+                            this.image_name = "Fichier";
+                            this.image_render = null;
+                            this.updateImage = false;
                             this.new_machine_reference = null;
                         }
                     }
@@ -388,8 +390,12 @@ let app = new Vue({
                 let update_id = el.getAttribute("name");
                 let update_value = el.value;
                 
-                if(this.updateImage && el.classList.contains("image_editor"))
+                if(this.updateImage && el.classList.contains("image_editor")){
                     update_value = '/uploads/img/' + this.image_name;
+                    this.image_name = "Fichier";
+                    this.image_render = null;
+                    this.updateImage = false;
+                }
                 
                 let url = '/parameters/update/'+update_id.toString();
                 let params = "parameter_value="+update_value.toString();
