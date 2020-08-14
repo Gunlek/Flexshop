@@ -13,6 +13,7 @@ import 'package:flexshop/api/machine_api.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class WorkshopView extends StatelessWidget {
   final Workshop workshop;
@@ -39,6 +40,7 @@ class WorkshopViewStateful extends StatefulWidget {
 
 class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerProviderStateMixin {
 //class WorkshopView extends StatelessWidget {
+  static var globalApiPrefix = DotEnv().env['BASE_API_URL'];
 
   final double _spaceBetweenTwoCategory = 40;
 
@@ -271,15 +273,26 @@ class WorkshopViewState extends State<WorkshopViewStateful> with SingleTickerPro
   }
 
   Widget isNetworkImageAvailable({String image, String placeholder}) {
-    if(!image.startsWith("http"))
+    if(!image.startsWith("http") && !image.startsWith('/uploads'))
       return Image.asset(
         placeholder,
         fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
       );
-    else
-      return Image.network(
-        image,
-        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
-      );
+    else {
+      if(image.startsWith('/uploads'))
+        return Image.network(
+            globalApiPrefix + image,
+            fit: BoxFit.cover,
+            color: Color.fromRGBO(0, 0, 0, 0.5),
+            colorBlendMode: BlendMode.darken
+        );
+      else
+        return Image.network(
+            image,
+            fit: BoxFit.cover,
+            color: Color.fromRGBO(0, 0, 0, 0.5),
+            colorBlendMode: BlendMode.darken
+        );
+    }
   }
 }

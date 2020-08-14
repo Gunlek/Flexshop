@@ -1,6 +1,7 @@
 import 'package:flexshop/model/machine.dart';
 import 'package:flexshop/ui/machine_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MachineWidget extends StatefulWidget {
 
@@ -12,6 +13,8 @@ class MachineWidget extends StatefulWidget {
 }
 
 class _MachineWidgetState extends State<MachineWidget> {
+
+  static var globalApiPrefix = DotEnv().env['BASE_API_URL'];
 
   Machine machine;
   _MachineWidgetState(this.machine);
@@ -51,15 +54,26 @@ class _MachineWidgetState extends State<MachineWidget> {
   }
 
   Widget isNetworkImageAvailable({String image, String placeholder}) {
-    if(!image.startsWith("http"))
+    if(!image.startsWith("http") && !image.startsWith('/uploads'))
       return Image.asset(
-        placeholder,
-        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
+          placeholder,
+          fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
       );
-    else
-      return Image.network(
-        image,
-        fit: BoxFit.cover, color: Color.fromRGBO(0, 0, 0, 0.5), colorBlendMode: BlendMode.darken
-      );
+    else {
+      if(image.startsWith('/uploads'))
+        return Image.network(
+            globalApiPrefix + image,
+            fit: BoxFit.cover,
+            color: Color.fromRGBO(0, 0, 0, 0.5),
+            colorBlendMode: BlendMode.darken
+        );
+      else
+        return Image.network(
+            image,
+            fit: BoxFit.cover,
+            color: Color.fromRGBO(0, 0, 0, 0.5),
+            colorBlendMode: BlendMode.darken
+        );
+    }
   }
 }
