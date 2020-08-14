@@ -349,7 +349,7 @@ footer.modal-open {
     width: 100%;
 }
 
-input[type="text"].form-control, select.form-control {
+input[type="text"].form-control, select.form-control, input.form-control {
     height: 35px;
 }
 
