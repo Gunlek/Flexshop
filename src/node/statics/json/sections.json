@@ -5,7 +5,8 @@
         "parameters": [
             {
                 "name": "section_pictosLinkList",
-                "display_name": "Liste des pictogrames"
+                "display_name": "Liste des pictogrames",
+                "type": "picto_list"
             }
         ]
     },
@@ -16,7 +17,8 @@
         "parameters": [
             {
                 "name": "section_title",
-                "display_name": "Titre de la section"
+                "display_name": "Titre de la section",
+                "type": "text"
             }
         ]
     },
@@ -27,11 +29,13 @@
         "parameters": [
             {
                 "name": "section_title",
-                "display_name": "Titre de la section"
+                "display_name": "Titre de la section",
+                "type": "text"
             },
             {
                 "name": "section_description",
-                "display_name": "Description"
+                "display_name": "Description",
+                "type": "block_text"
             }
         ]
     },
@@ -42,15 +46,18 @@
         "parameters": [
             {
                 "name": "section_title",
-                "display_name": "Titre de la section"
+                "display_name": "Titre de la section",
+                "type": "text"
             },
             {
                 "name": "section_videoLinkList",
-                "display_name": "Liste des liens"
+                "display_name": "Liste des liens",
+                "type": "link_list"
             },
             {
                 "name": "section_videoTitleList",
-                "display_name": "Liste des titres"
+                "display_name": "Liste des titres",
+                "type": "text_list"
             }
         ]
     },
@@ -61,11 +68,13 @@
         "parameters": [
             {
                 "name": "section_title",
-                "display_name": "Titre de la section"
+                "display_name": "Titre de la section",
+                "type": "text"
             },
             {
                 "name": "section_imageLink",
-                "display_name": "Lien vers l'image"
+                "display_name": "Lien vers l'image",
+                "type:": "image"
             }
         ]
     }

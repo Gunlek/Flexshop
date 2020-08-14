@@ -34,25 +34,31 @@
                     <div class="align-parent" style="margin: 5px 10px;word-wrap:normal;" v-for="parameter in section.parameters" :key="parameter.parameter_id">
                         <div class="row">
                             <div class="col-11">
-                                <strong>${parameter.parameter_display_name}:</strong> ${parameter.parameter_value}
-                            </div>
-
-                            <div class="col-1">
-                                <button type="button" class="btn btn-outline-red btn-xs align-right del-btn" @click="del_parameter(parameter.parameter_id)"><i class="fas fa-trash"></i></button>
+                                <strong>${parameter.parameter_display_name}:</strong>
+                                <div v-if="parameter.parameter_type == 'picto_list'">
+                                    <span v-for="picto in (parameter.parameter_value.split(';'))">
+                                        <img :src="'/img/pictograms/' + picto" width="30px" />
+                                    </span>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'block_text'" class="pre-text">
+                                    <pre>${parameter.parameter_value}</pre>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'text_list'" class="pre-text">
+                                    <ul v-for="text in (parameter.parameter_value.split(';'))">
+                                        <li>${text}</li>
+                                    </ul>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'link_list'" class="pre-text">
+                                    <ul v-for="text in (parameter.parameter_value.split(';'))">
+                                        <li><a :href="text">${text}</a></li>
+                                    </ul>
+                                </div>
+                                <div v-else>
+                                    ${parameter.parameter_value}
+                                </div>
                             </div>
                         </div>            
                     </div>
-                    <!-- <div class="add-section">
-                        <div class="row">
-                            <div class="col-6" style="padding: 0 5px;">
-                                <input type="text" class="form-control content-fluid" v-model="new_parameter_name" placeholder="Nom du paramètre..."/>
-                            </div>
-                            <div class="col-6" style="padding: 0 5px;">
-                                <input type="text" class="form-control content-fluid" v-model="new_parameter_value" placeholder="Valeur du paramètre..."/>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline-green content-fluid" @click="add_new_parameter(section.section_id)">Ajouter le paramètre</button>
-                    </div> -->
                 </div>
             </draggable>
 
@@ -70,14 +76,14 @@
 
         <div class="table-card add-section" id="add_machine">
             <h4>Créer une nouvelle machine</h4>
-            <input class="content-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
             <select v-model="new_machine_category" class="form-control content-fluid">
                 <option disabled value="">Choisissez une catégorie</option>
                 <option v-for="category in category_list" v-bind:value="category.category_id">${category.category_title}</option>
             </select>
-            <input class="content-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
-            <input class="content-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
-            <input class="content-fluid form-control" v-model="new_machine_image" placeholder="Image de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_image" placeholder="Image de la nouvelle machine..."/>
             <button type="button" @click="add_new_machine()" class="content-fluid btn btn-outline-green">Créer</button>
         </div>
     </div>
@@ -90,10 +96,114 @@
             <br/><br/>
             <div v-for="parameter in edit_data.parameters">
                 <label>${parameter.parameter_display_name}</label>
-                <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid"/>
+                <div v-if="parameter.parameter_type=='picto_list'">
+                    <picto-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></picto-list>
+                    <!-- <span>
+                        <input type="checkbox" name="pictos" value="picto_general.png" id="picto_general"/>
+                        <label for="picto_general">
+                            <img src="/img/pictograms/picto_general.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_glasses.png" id="picto_glasses"/>
+                        <label for="picto_glasses">
+                            <img src="/img/pictograms/picto_glasses.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_gloves.png" id="picto_gloves"/>
+                        <label for="picto_gloves">
+                            <img src="/img/pictograms/picto_gloves.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_harness.png" id="picto_harness"/>
+                        <label for="picto_harness">
+                            <img src="/img/pictograms/picto_harness.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_helmet.png" id="picto_helmet"/>
+                        <label for="picto_helmet">
+                            <img src="/img/pictograms/picto_helmet.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_mask.png" id="picto_mask"/>
+                        <label for="picto_mask">
+                            <img src="/img/pictograms/picto_mask.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_noise.png" id="picto_noise"/>
+                        <label for="picto_noise">
+                            <img src="/img/pictograms/picto_noise.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_notice.png" id="picto_notice"/>
+                        <label for="picto_notice">
+                            <img src="/img/pictograms/picto_notice.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_pedestrian.png" id="picto_pedestrian"/>
+                        <label for="picto_pedestrian">
+                            <img src="/img/pictograms/picto_pedestrian.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_shoes.png" id="picto_shoes"/>
+                        <label for="picto_shoes">
+                            <img src="/img/pictograms/picto_shoes.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_suit.png" id="picto_suit"/>
+                        <label for="picto_suit">
+                            <img src="/img/pictograms/picto_suit.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span>
+
+                    <span>
+                        <input type="checkbox" name="pictos" value="picto_visor.png" id="picto_visor"/>
+                        <label for="picto_visor">
+                            <img src="/img/pictograms/picto_visor.png" style="width: 30px; vertical-align: middle;"/>
+                        </label>
+                    </span> -->
+                </div>
+
+                <div v-if="parameter.parameter_type=='text'">
+                    <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid" />
+                </div>
+
+                <div v-if="parameter.parameter_type=='block_text'" class="form-group">
+                    <textarea  v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid" rows="10"></textarea>
+                </div>
+
+                <div v-if="parameter.parameter_type=='text_list'" id="text_list">
+                    <text-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></text-list>
+                </div>
+
+                <div v-if="parameter.parameter_type=='link_list'" id="text_list">
+                    <link-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></link-list>
+                </div>
+
             </div>
-            <br/><br/>
+                
             <button class="btn btn-outline-green content-fluid" @click="updateSection()">Mettre à jour</button>
+            <!-- <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid"/> -->
+            <br/><br/>
         </div>
     </div>
 </div>
