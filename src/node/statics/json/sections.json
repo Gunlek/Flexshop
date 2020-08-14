@@ -73,8 +73,8 @@
             },
             {
                 "name": "section_imageLink",
-                "display_name": "Lien vers l'image",
-                "type:": "image"
+                "display_name": "Image",
+                "type": "image"
             }
         ]
     }

@@ -53,6 +53,9 @@
                                         <li><a :href="text">${text}</a></li>
                                     </ul>
                                 </div>
+                                <div v-else-if="parameter.parameter_type == 'image'">
+                                    <img v-bind:src="parameter.parameter_value" style="width: 100%; height: auto;" />
+                                </div>
                                 <div v-else>
                                     ${parameter.parameter_value}
                                 </div>
@@ -98,105 +101,31 @@
                 <label>${parameter.parameter_display_name}</label>
                 <div v-if="parameter.parameter_type=='picto_list'">
                     <picto-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></picto-list>
-                    <!-- <span>
-                        <input type="checkbox" name="pictos" value="picto_general.png" id="picto_general"/>
-                        <label for="picto_general">
-                            <img src="/img/pictograms/picto_general.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_glasses.png" id="picto_glasses"/>
-                        <label for="picto_glasses">
-                            <img src="/img/pictograms/picto_glasses.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_gloves.png" id="picto_gloves"/>
-                        <label for="picto_gloves">
-                            <img src="/img/pictograms/picto_gloves.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_harness.png" id="picto_harness"/>
-                        <label for="picto_harness">
-                            <img src="/img/pictograms/picto_harness.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_helmet.png" id="picto_helmet"/>
-                        <label for="picto_helmet">
-                            <img src="/img/pictograms/picto_helmet.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_mask.png" id="picto_mask"/>
-                        <label for="picto_mask">
-                            <img src="/img/pictograms/picto_mask.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_noise.png" id="picto_noise"/>
-                        <label for="picto_noise">
-                            <img src="/img/pictograms/picto_noise.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_notice.png" id="picto_notice"/>
-                        <label for="picto_notice">
-                            <img src="/img/pictograms/picto_notice.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_pedestrian.png" id="picto_pedestrian"/>
-                        <label for="picto_pedestrian">
-                            <img src="/img/pictograms/picto_pedestrian.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_shoes.png" id="picto_shoes"/>
-                        <label for="picto_shoes">
-                            <img src="/img/pictograms/picto_shoes.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_suit.png" id="picto_suit"/>
-                        <label for="picto_suit">
-                            <img src="/img/pictograms/picto_suit.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span>
-
-                    <span>
-                        <input type="checkbox" name="pictos" value="picto_visor.png" id="picto_visor"/>
-                        <label for="picto_visor">
-                            <img src="/img/pictograms/picto_visor.png" style="width: 30px; vertical-align: middle;"/>
-                        </label>
-                    </span> -->
                 </div>
 
-                <div v-if="parameter.parameter_type=='text'">
+                <div v-else-if="parameter.parameter_type=='text'">
                     <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid" />
                 </div>
 
-                <div v-if="parameter.parameter_type=='block_text'" class="form-group">
+                <div v-else-if="parameter.parameter_type=='block_text'" class="form-group">
                     <textarea  v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid" rows="10"></textarea>
                 </div>
 
-                <div v-if="parameter.parameter_type=='text_list'" id="text_list">
+                <div v-else-if="parameter.parameter_type=='text_list'" id="text_list">
                     <text-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></text-list>
                 </div>
 
-                <div v-if="parameter.parameter_type=='link_list'" id="text_list">
+                <div v-else-if="parameter.parameter_type=='link_list'" id="text_list">
                     <link-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></link-list>
+                </div>
+
+                <div v-else-if="parameter.parameter_type=='image'">
+                    <div class="file-selector">
+                        <img :src="image_render" style="width: 100%; height: auto;"/>
+                        <label for="edit_image" class="btn btn-outline-blue">${image_name}</label>
+                        <input type="file" @change="processFile" id="edit_image" class="form-control"/>
+                        <input type="hidden" class="edition_input image_editor" v-bind:value="parameter.parameter_value" v-bind:name="parameter.parameter_id" />
+                    </div>
                 </div>
 
             </div>

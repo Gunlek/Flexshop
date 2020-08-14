@@ -25,6 +25,11 @@ let app = new Vue({
         new_section_type: "description",
         new_section_machine: "",
 
+        image: "",
+        image_render: "",
+        image_name: "Fichier",
+        updateImage: false,
+
         json_sections_data: {},
         edit_modal: false,
         edit_data: {},
@@ -43,7 +48,7 @@ let app = new Vue({
                                 let arr = this.json_sections_data[cur_section_type]["parameters"];
                                 if(arr[key].name == this.parameter_list[k]["parameter_name"]){
                                     this.parameter_list[k]["parameter_display_name"] = arr[key]["display_name"];
-                                    this.parameter_list[k]["parameter_type"] = arr[key]["type"];
+                                    this.parameter_list[k]["parameter_type"] = arr[key].type;
                                 }
                             });
                             parameter_list.push(this.parameter_list[k]);
@@ -368,12 +373,24 @@ let app = new Vue({
 
         // Update parameters for the corresponding section
         updateSection: function(){
-            console.log("update");
+            let data = new FormData();
+            data.append('file', this.image);
+
+            let img_request = new XMLHttpRequest();
+            img_request.open('post', '/upload-file');
+            img_request.addEventListener('load', (e) => {
+            });
+            img_request.send(data);
+
             let input_list = document.querySelectorAll(".edition_input");
             updatedFields = 0;
             document.querySelectorAll(".edition_input").forEach((el) => {
                 let update_id = el.getAttribute("name");
                 let update_value = el.value;
+                
+                if(this.updateImage && el.classList.contains("image_editor"))
+                    update_value = '/uploads/img/' + this.image_name;
+                
                 let url = '/parameters/update/'+update_id.toString();
                 let params = "parameter_value="+update_value.toString();
 
@@ -397,7 +414,19 @@ let app = new Vue({
                 );
                 httpRequest.send(params);
             })
-        }
+        },
+
+        processFile: function(event){
+            this.updateImage = true;
+            this.image = event.target.files[0];
+            this.image_name = this.image.name;
+
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                this.image_render = e.target.result;
+            };
+            reader.readAsDataURL(this.image);
+        },
     },
 
     components: {
@@ -526,7 +555,6 @@ let app = new Vue({
             mounted: function(){
                 this.picto_str = this.value;
                 this.picto_list = this.picto_str.split(';');
-                console.log(this.picto_list);
             },
             template: "<div><input type='hidden' v-bind:name='name' v-bind:value='picto_str' class='edition_input' /><span v-for='picto in pictograms'><input v-model='picto_list' v-bind:checked='checked(picto)' @change='update_list()' type='checkbox' name='pictos' v-bind:value='picto' v-bind:id='picto' /><label v-bind:for='picto'><img v-bind:src='\"/img/pictograms/\" + picto' style='width: 30px; vertical-align: middle;'/></label></span></div>"
         }
