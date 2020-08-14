@@ -294,10 +294,10 @@ let app = new Vue({
          * Machines handlers
          */
         add_new_machine: function(){
-            if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.new_machine_image != null && this.new_machine_reference != null){
+            if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.image_name != null && this.new_machine_reference != null){
                 let super_this = this;
                 let url = '/machines/add';
-                let params = "machine_title="+this.new_machine_title.toString()+"&machine_category="+this.new_machine_category.toString()+"&machine_brand="+this.new_machine_brand.toString()+"&machine_image="+this.new_machine_image.toString()+"&machine_reference="+this.new_machine_reference.toString();
+                let params = "machine_title="+this.new_machine_title.toString()+"&machine_category="+this.new_machine_category.toString()+"&machine_brand="+this.new_machine_brand.toString()+"&machine_image=/uploads/img/"+this.image_name+"&machine_reference="+this.new_machine_reference.toString();
 
                 let httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function(data){
