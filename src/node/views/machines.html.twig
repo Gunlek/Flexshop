@@ -90,7 +90,7 @@
                 <img :src="image_render" style="width: 100%; height: auto;"/>
                 <label for="add_image" class="btn btn-outline-blue">${image_name}</label>
                 <input type="file" @change="processFile" id="add_image" class="form-control"/>
-                <input type="hidden" class="edition_input image_editor" />
+                <input type="hidden" class="image_editor" />
             </div>
             <button type="button" @click="add_new_machine()" class="content-fluid btn btn-outline-green">Créer</button>
         </div>
