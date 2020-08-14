@@ -3,6 +3,8 @@ let sqlite3 = require('sqlite3');
 let Promise = require('bluebird').Promise;
 let fs = require('fs');
 
+if(!fs.existsSync("./database"))
+    fs.mkdirSync("./database", {recursive: true});
 
 sqlite.open({
     filename: './database/database.sqlite',
