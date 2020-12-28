@@ -17,6 +17,9 @@ let app = new Vue({
 
         edit_modal: false,
         edit_data: {},
+
+        enableDelete: false,
+        enableAdding: false
     },
     methods: {
         get_machine_list: function(){
@@ -215,6 +218,14 @@ let app = new Vue({
 
             this.edit_modal = false;
         },
+
+        updateDelete: function(){
+            this.enableDelete = !this.enableDelete;
+        },
+
+        updateAdding: function(){
+            this.enableAdding = !this.enableAdding;
+        }
     },
 
     computed: {
