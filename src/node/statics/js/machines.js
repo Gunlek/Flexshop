@@ -25,9 +25,17 @@ let app = new Vue({
         new_section_type: "description",
         new_section_machine: "",
 
+        image: "",
+        image_render: "",
+        image_name: "Fichier",
+        updateImage: false,
+
         json_sections_data: {},
         edit_modal: false,
         edit_data: {},
+
+        enableDelete: false,
+        enableAdding: false
     },
     computed: {
         full_machines: function(){
@@ -43,6 +51,7 @@ let app = new Vue({
                                 let arr = this.json_sections_data[cur_section_type]["parameters"];
                                 if(arr[key].name == this.parameter_list[k]["parameter_name"]){
                                     this.parameter_list[k]["parameter_display_name"] = arr[key]["display_name"];
+                                    this.parameter_list[k]["parameter_type"] = arr[key].type;
                                 }
                             });
                             parameter_list.push(this.parameter_list[k]);
@@ -288,10 +297,10 @@ let app = new Vue({
          * Machines handlers
          */
         add_new_machine: function(){
-            if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.new_machine_image != null && this.new_machine_reference != null){
+            if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.image_name != "Fichier" && this.new_machine_reference != null){
                 let super_this = this;
                 let url = '/machines/add';
-                let params = "machine_title="+this.new_machine_title.toString()+"&machine_category="+this.new_machine_category.toString()+"&machine_brand="+this.new_machine_brand.toString()+"&machine_image="+this.new_machine_image.toString()+"&machine_reference="+this.new_machine_reference.toString();
+                let params = "machine_title="+this.new_machine_title.toString()+"&machine_category="+this.new_machine_category.toString()+"&machine_brand="+this.new_machine_brand.toString()+"&machine_image=/uploads/img/"+this.image_name+"&machine_reference="+this.new_machine_reference.toString();
 
                 let httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function(data){
@@ -301,7 +310,9 @@ let app = new Vue({
                             this.new_machine_title = null;
                             this.new_machine_category = "";
                             this.new_machine_brand = null;
-                            this.new_machine_image = null;
+                            this.image_name = "Fichier";
+                            this.image_render = null;
+                            this.updateImage = false;
                             this.new_machine_reference = null;
                         }
                     }
@@ -367,11 +378,28 @@ let app = new Vue({
 
         // Update parameters for the corresponding section
         updateSection: function(){
+            let data = new FormData();
+            data.append('file', this.image);
+
+            let img_request = new XMLHttpRequest();
+            img_request.open('post', '/upload-file');
+            img_request.addEventListener('load', (e) => {
+            });
+            img_request.send(data);
+
             let input_list = document.querySelectorAll(".edition_input");
             updatedFields = 0;
             document.querySelectorAll(".edition_input").forEach((el) => {
                 let update_id = el.getAttribute("name");
                 let update_value = el.value;
+                
+                if(this.updateImage && el.classList.contains("image_editor")){
+                    update_value = '/uploads/img/' + this.image_name;
+                    this.image_name = "Fichier";
+                    this.image_render = null;
+                    this.updateImage = false;
+                }
+                
                 let url = '/parameters/update/'+update_id.toString();
                 let params = "parameter_value="+update_value.toString();
 
@@ -395,8 +423,160 @@ let app = new Vue({
                 );
                 httpRequest.send(params);
             })
+        },
+
+        processFile: function(event){
+            this.updateImage = true;
+            this.image = event.target.files[0];
+            this.image_name = this.image.name;
+
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                this.image_render = e.target.result;
+            };
+            reader.readAsDataURL(this.image);
+        },
+
+        updateDelete: function(){
+            this.enableDelete = !this.enableDelete;
+        },
+
+        updateAdding: function(){
+            this.enableAdding = !this.enableAdding;
         }
     },
+
+    components: {
+        'text-list': {
+            data: function() {
+                return {
+                new_text: "",
+                text_list: [],
+                list_value: ""
+                };
+            },
+            props: ['name', 'value'],
+            methods: {
+                insert_value: function(){
+                    if(this.new_text != ""){
+                        this.text_list.push(this.new_text);
+                        this.new_text = "";
+
+                        this.list_value = "";
+                        for(let k=0; k < this.text_list.length; k++){
+                            if(k < this.text_list.length - 1) {
+                                this.list_value += this.text_list[k];
+                                this.list_value += ";";
+                            }
+                            else
+                                this.list_value += this.text_list[k];
+                        }
+                    }
+                },
+                remove_value: function(index){
+                    this.text_list.splice(index, 1);
+                    
+                    this.list_value = "";
+                    for(let k=0; k < this.text_list.length; k++){
+                        if(k < this.text_list.length - 1) {
+                            this.list_value += this.text_list[k];
+                            this.list_value += ";";
+                        }
+                        else
+                            this.list_value += this.text_list[k];
+                    }
+                }
+            },
+            mounted: function(){
+                this.list_value = this.value;
+                this.text_list = this.list_value.split(';');
+            },
+            template: "<div><input type='hidden' v-bind:name='name' v-bind:value='list_value' class='edition_input'/><div class='row'><div class='col-8' style='padding-right: 5px;'><input type='text' v-model='new_text' class='form-control content-fluid' style='margin: 0;' placeholder='Ajouter à la liste...'/></div> <div class='col-4' style='padding-left: 5px;'><button class='content-fluid btn btn-outline-green' @click='insert_value()'>Ajouter</button></div></div> <div><ul v-for='(text, index) in text_list'><li>{{text}}&nbsp;&nbsp;<button class='btn btn-outline-red' @click='remove_value(index)'><i class='fa fa-trash' /></button></li></ul></div></div>"
+        },
+
+        'link-list': {
+            data: function() {
+                return {
+                new_text: "",
+                text_list: [],
+                list_value: ""
+                };
+            },
+            props: ['name', 'value'],
+            methods: {
+                insert_value: function(){
+                    if(this.new_text != ""){
+                        this.text_list.push(this.new_text);
+                        this.new_text = "";
+
+                        this.list_value = "";
+                        for(let k=0; k < this.text_list.length; k++){
+                            if(k < this.text_list.length - 1) {
+                                this.list_value += this.text_list[k];
+                                this.list_value += ";";
+                            }
+                            else
+                                this.list_value += this.text_list[k];
+                        }
+                    }
+                },
+                remove_value: function(index){
+                    this.text_list.splice(index, 1);
+                    
+                    this.list_value = "";
+                    for(let k=0; k < this.text_list.length; k++){
+                        if(k < this.text_list.length - 1) {
+                            this.list_value += this.text_list[k];
+                            this.list_value += ";";
+                        }
+                        else
+                            this.list_value += this.text_list[k];
+                    }
+                }
+            },
+            mounted: function(){
+                this.list_value = this.value;
+                this.text_list = this.list_value.split(';');
+            },
+            template: "<div><input type='hidden' v-bind:name='name' v-bind:value='list_value' class='edition_input'/><div class='row'><div class='col-8' style='padding-right: 5px;'><input type='text' v-model='new_text' class='form-control content-fluid' style='margin: 0;' placeholder='Ajouter à la liste...'/></div> <div class='col-4' style='padding-left: 5px;'><button class='content-fluid btn btn-outline-green' @click='insert_value()'>Ajouter</button></div></div> <div><ul v-for='(text, index) in text_list'><li><a v-bind:href='text' target='_blank'>{{text}}</a>&nbsp;&nbsp;<button class='btn btn-outline-red' @click='remove_value(index)'><i class='fa fa-trash' /></button></li></ul></div></div>"
+        },
+
+        'picto-list': {
+            data: function(){
+                return {
+                    pictograms: ["picto_general.png", "picto_glasses.png", "picto_gloves.png", "picto_harness.png", "picto_helmet.png", "picto_mask.png", "picto_noise.png", "picto_notice.png", "picto_pedestrian.png", "picto_shoes.png", "picto_suit.png", "picto_visor.png"],
+                    picto_list: [],
+                    picto_str: ""
+                };
+            },
+            props: ['name', 'value'],
+            methods: {
+                update_list: function(){
+                    this.picto_str = "";
+                    for(let k = 0; k < this.picto_list.length; k++){
+                        if(k < this.picto_list.length - 1){
+                            this.picto_str += this.picto_list[k];
+                            this.picto_str += ";";
+                        }
+                        else
+                            this.picto_str += this.picto_list[k];
+                    }
+                },
+                checked: function(picto){
+                    if(this.picto_list.indexOf(picto) >= 0)
+                        return true;
+                    else
+                        return false;
+                }
+            },
+            mounted: function(){
+                this.picto_str = this.value;
+                this.picto_list = this.picto_str.split(';');
+            },
+            template: "<div><input type='hidden' v-bind:name='name' v-bind:value='picto_str' class='edition_input' /><span v-for='picto in pictograms'><input v-model='picto_list' v-bind:checked='checked(picto)' @change='update_list()' type='checkbox' name='pictos' v-bind:value='picto' v-bind:id='picto' /><label v-bind:for='picto'><img v-bind:src='\"/img/pictograms/\" + picto' style='width: 30px; vertical-align: middle;'/></label></span></div>"
+        }
+    },
+
     mounted: async function(){
         await this.getJSONSectionData();
 

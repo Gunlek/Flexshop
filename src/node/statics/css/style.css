@@ -121,11 +121,22 @@ main {
     height: 100%;
 }
 
+a {
+    color: #3498db;
+    transition: 0.2s color;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #2980b9;
+    transition: 0.2s color;
+}
+
 /*
  * Footer style
  */
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 30px;
     line-height: 30px;
@@ -330,7 +341,6 @@ footer.modal-open {
 }
 
 .form-control {
-    height: 35px;
     border: 1px solid #333;
     border-radius: 5px;
     box-shadow: none;
@@ -339,9 +349,16 @@ footer.modal-open {
     width: 100%;
 }
 
+input[type="text"].form-control, select.form-control, input.form-control {
+    height: 35px;
+}
+
 textarea[class="form-control"] {
-    height: auto;
     min-height: 35px;
+}
+
+pre {
+    overflow-y: auto
 }
 
 .file-selector label {
@@ -379,6 +396,7 @@ textarea[class="form-control"] {
     position: absolute;
     min-height: 100%;
     width: 100%;
+    z-index: 2;
 }
 
 .modal .bg {
@@ -391,8 +409,9 @@ textarea[class="form-control"] {
 }
 
 .modal-content {
-    position: absolute;
-    top: 25%;
+    position: relative;
+    margin-top: 10%;
+    margin-bottom: 10%;
     left: 50%;
     transform: translateX(-50%);
     width: 60%;
@@ -405,6 +424,7 @@ textarea[class="form-control"] {
 .table-body.modal-open {
     overflow: hidden;
     position: fixed;
+    left: 15%;
 }
 
 /*

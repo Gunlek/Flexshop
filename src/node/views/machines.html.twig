@@ -12,51 +12,60 @@
         <div class="row">
             <div class="col-4"><h1 class="table-title">Gestion des machines</h1></div>
             <div class="col-2" style="position: relative;">
-                <button type="button" id="enableDelete" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
+                <button type="button" @click="updateDelete()" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
             </div>
             <div class="col-2" style="position: relative;">
-                <button type="button" id="enableAdd" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
+                <button type="button" @click="updateAdding()" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
             </div>
             <div class="col-4"></div>
         </div>
         <div v-for="machine in full_machines" :key="machine.machine_id" class="table-card">
             <div class="align-parent" style="width: 100%">
                 <h4 class="card-title">${machine.machine_title}</h4>
-                <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button>
+                <button type="button" class="btn btn-outline-red align-right" v-if="enableDelete"><i class="fas fa-trash"></i></button>
             </div>
             <p>${machine.machine_reference} - ${machine.machine_brand}</p>
             <draggable :list="machine.sections" @change="move_section_in_machine">
-                <div class="card align-parent card-hover" v-for="section in machine.sections" :key="section.section_id" @click="editCard(section)">
+                <div class="card align-parent card-hover" v-for="(section, section_index) in machine.sections" :key="section.section_id" @click="editCard(section)">
                     <div class="card-header align-parent">
                         <strong class="card-title">${section.section_display_name}</strong>
-                        <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_section(section.section_id)"><i class="fas fa-trash"></i></button>
+                        <button v-bind:key="section_index" type="button" class="btn btn-outline-red align-right" v-if="enableDelete" @click="del_section(section.section_id)"><i class="fas fa-trash"></i></button>
                     </div>
                     <div class="align-parent" style="margin: 5px 10px;word-wrap:normal;" v-for="parameter in section.parameters" :key="parameter.parameter_id">
                         <div class="row">
                             <div class="col-11">
-                                <strong>${parameter.parameter_display_name}:</strong> ${parameter.parameter_value}
-                            </div>
-
-                            <div class="col-1">
-                                <button type="button" class="btn btn-outline-red btn-xs align-right del-btn" @click="del_parameter(parameter.parameter_id)"><i class="fas fa-trash"></i></button>
+                                <strong>${parameter.parameter_display_name}:</strong>
+                                <div v-if="parameter.parameter_type == 'picto_list'">
+                                    <span v-for="picto in (parameter.parameter_value.split(';'))">
+                                        <img :src="'/img/pictograms/' + picto" width="30px" />
+                                    </span>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'block_text'" class="pre-text">
+                                    <pre>${parameter.parameter_value}</pre>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'text_list'" class="pre-text">
+                                    <ul v-for="text in (parameter.parameter_value.split(';'))">
+                                        <li>${text}</li>
+                                    </ul>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'link_list'" class="pre-text">
+                                    <ul v-for="text in (parameter.parameter_value.split(';'))">
+                                        <li><a :href="text">${text}</a></li>
+                                    </ul>
+                                </div>
+                                <div v-else-if="parameter.parameter_type == 'image'">
+                                    <img v-bind:src="parameter.parameter_value" style="width: 100%; height: auto;" />
+                                </div>
+                                <div v-else>
+                                    ${parameter.parameter_value}
+                                </div>
                             </div>
                         </div>            
                     </div>
-                    <!-- <div class="add-section">
-                        <div class="row">
-                            <div class="col-6" style="padding: 0 5px;">
-                                <input type="text" class="form-control content-fluid" v-model="new_parameter_name" placeholder="Nom du paramètre..."/>
-                            </div>
-                            <div class="col-6" style="padding: 0 5px;">
-                                <input type="text" class="form-control content-fluid" v-model="new_parameter_value" placeholder="Valeur du paramètre..."/>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline-green content-fluid" @click="add_new_parameter(section.section_id)">Ajouter le paramètre</button>
-                    </div> -->
                 </div>
             </draggable>
 
-            <div class="card align-parent add-section">
+            <div class="card align-parent" v-if="enableAdding">
                 <div class="card-header align-parent">
                     <strong class="card-title">Ajouter une section</strong>
                 </div>
@@ -68,16 +77,21 @@
             </div>
         </div>
 
-        <div class="table-card add-section" id="add_machine">
+        <div class="table-card" v-if="enableAdding" id="add_machine">
             <h4>Créer une nouvelle machine</h4>
-            <input class="content-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
             <select v-model="new_machine_category" class="form-control content-fluid">
                 <option disabled value="">Choisissez une catégorie</option>
                 <option v-for="category in category_list" v-bind:value="category.category_id">${category.category_title}</option>
             </select>
-            <input class="content-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
-            <input class="content-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
-            <input class="content-fluid form-control" v-model="new_machine_image" placeholder="Image de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
+            <input type="text" class="content-fluid form-control" v-model="new_machine_reference" placeholder="Référence de la nouvelle machine..."/>
+            <div class="file-selector">
+                <img :src="image_render" style="width: 100%; height: auto;"/>
+                <label for="add_image" class="btn btn-outline-blue">${image_name}</label>
+                <input type="file" @change="processFile" id="add_image" class="form-control"/>
+                <input type="hidden" class="image_editor" />
+            </div>
             <button type="button" @click="add_new_machine()" class="content-fluid btn btn-outline-green">Créer</button>
         </div>
     </div>
@@ -90,10 +104,41 @@
             <br/><br/>
             <div v-for="parameter in edit_data.parameters">
                 <label>${parameter.parameter_display_name}</label>
-                <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid"/>
+                <div v-if="parameter.parameter_type=='picto_list'">
+                    <picto-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></picto-list>
+                </div>
+
+                <div v-else-if="parameter.parameter_type=='text'">
+                    <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid" />
+                </div>
+
+                <div v-else-if="parameter.parameter_type=='block_text'" class="form-group">
+                    <textarea  v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid" rows="10"></textarea>
+                </div>
+
+                <div v-else-if="parameter.parameter_type=='text_list'" id="text_list">
+                    <text-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></text-list>
+                </div>
+
+                <div v-else-if="parameter.parameter_type=='link_list'" id="text_list">
+                    <link-list v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value"></link-list>
+                </div>
+
+                <div v-else-if="parameter.parameter_type=='image'">
+                    <div class="file-selector">
+                        <img v-if="updateImage" :src="image_render" style="width: 100%; height: auto;"/>
+                        <img v-else :src="parameter.parameter_value" style="width: 100%; height: auto;"/>
+                        <label for="edit_image" class="btn btn-outline-blue">${image_name}</label>
+                        <input type="file" @change="processFile" id="edit_image" class="form-control"/>
+                        <input type="hidden" class="edition_input image_editor" v-bind:value="parameter.parameter_value" v-bind:name="parameter.parameter_id" />
+                    </div>
+                </div>
+
             </div>
-            <br/><br/>
+                
             <button class="btn btn-outline-green content-fluid" @click="updateSection()">Mettre à jour</button>
+            <!-- <input type="text" v-bind:name="parameter.parameter_id" v-bind:value="parameter.parameter_value" class="edition_input form-control content-fluid"/> -->
+            <br/><br/>
         </div>
     </div>
 </div>
@@ -104,25 +149,4 @@
     <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
     <script src="/js/machines.js"></script>
-    <script>
-        $(document).ready(function(){
-            let delEnabled=false;
-            $('#enableDelete').click(function(e){
-                e.preventDefault();
-                if(delEnabled)
-                    $('.del-btn').fadeOut(function(){delEnabled=!delEnabled;});
-                else
-                    $('.del-btn').fadeIn(function(){delEnabled=!delEnabled;});
-            });
-
-            let addEnabled = true;
-            $('#enableAdd').click(function(e){
-                e.preventDefault();
-                if(addEnabled)
-                    $('.add-section').slideUp(function(){addEnabled=false;});
-                else
-                    $('.add-section').slideDown(function(){addEnabled=true;});
-            });
-        });
-    </script>
 {% endblock %}

@@ -17,6 +17,9 @@ let app = new Vue({
 
         edit_modal: false,
         edit_data: {},
+
+        enableDelete: false,
+        enableAdding: false
     },
     methods: {
         get_machine_list: function(){
@@ -26,6 +29,7 @@ let app = new Vue({
                 if(httpRequest.readyState === 4){
                     if(httpRequest.status >= 200 && httpRequest.status <= 300){
                         this.machine_list = JSON.parse(httpRequest.responseText);
+                        this.get_slide_list();
                     }
                 }
             };
@@ -78,7 +82,6 @@ let app = new Vue({
                 entry_request.open('post', '/slides/add');
                 entry_request.addEventListener('load', (e) => {
                     this.get_machine_list();
-                    this.get_slide_list();
 
                     this.new_slide_description = "";
                     this.new_slide_title = "";
@@ -96,7 +99,6 @@ let app = new Vue({
             request.open('delete', "/slides/delete/"+slide_id.toString());
             request.addEventListener('load', (e) => {
                 this.get_machine_list();
-                this.get_slide_list();
             });
             request.send();
         },
@@ -127,7 +129,6 @@ let app = new Vue({
                 let request = new XMLHttpRequest();
                 request.addEventListener('load', (e) => {
                     this.get_machine_list();
-                    this.get_slide_list();
                     this.hideEditCard();
 
                     this.new_slide_description = "";
@@ -146,7 +147,6 @@ let app = new Vue({
                 let request = new XMLHttpRequest();
                 request.addEventListener('load', (e) => {
                     this.get_machine_list();
-                    this.get_slide_list();
                     this.hideEditCard();
 
                     this.new_slide_description = "";
@@ -218,6 +218,14 @@ let app = new Vue({
 
             this.edit_modal = false;
         },
+
+        updateDelete: function(){
+            this.enableDelete = !this.enableDelete;
+        },
+
+        updateAdding: function(){
+            this.enableAdding = !this.enableAdding;
+        }
     },
 
     computed: {
@@ -228,6 +236,5 @@ let app = new Vue({
 
     mounted: function(){
         this.get_machine_list();
-        this.get_slide_list();
     }
 })

@@ -10,6 +10,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flexshop/widget/zoomable_image_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MachineView extends StatefulWidget {
   Machine machine;
@@ -21,6 +22,9 @@ class MachineView extends StatefulWidget {
 }
 
 class _MachineViewState extends State<MachineView> {
+
+  static var globalApiPrefix = DotEnv().env['BASE_API_URL'];
+
   final double _leftAndRightPadding = 16.0;
   final double _bottomPadding = 12.0;
   final double _topPadding = 6.0;
@@ -317,11 +321,17 @@ class _MachineViewState extends State<MachineView> {
   }
 
   getSliverBackground() {
-    if (this.machine.image.startsWith("htt")) {
-      return Image.network(this.machine.image,
-          fit: BoxFit.cover,
-          color: Color.fromRGBO(0, 0, 0, 0.4),
-          colorBlendMode: BlendMode.darken);
+    if (this.machine.image.startsWith("htt") || this.machine.image.startsWith('/uploads')) {
+      if(this.machine.image.startsWith('/uploads'))
+        return Image.network(globalApiPrefix + this.machine.image,
+            fit: BoxFit.cover,
+            color: Color.fromRGBO(0, 0, 0, 0.4),
+            colorBlendMode: BlendMode.darken);
+      else
+        return Image.network(this.machine.image,
+            fit: BoxFit.cover,
+            color: Color.fromRGBO(0, 0, 0, 0.4),
+            colorBlendMode: BlendMode.darken);
     } else
       return Image.asset("assets/images/placeholders/machines.jpg",
           fit: BoxFit.cover,
