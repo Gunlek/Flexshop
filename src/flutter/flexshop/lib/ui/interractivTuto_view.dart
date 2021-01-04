@@ -175,12 +175,13 @@ class SlideCard extends StatelessWidget {
   }
 
   Widget isNetworkImageAvailable({BuildContext context, String image, String placeholder}) {
-    if (!image.startsWith("http"))
+    if (!image.startsWith("/uploads"))
       return Image.asset(placeholder,
           fit: BoxFit.fitWidth,
           color: Color.fromRGBO(0, 0, 0, 0.5),
           colorBlendMode: BlendMode.darken);
     else
+      image = 'http://ftp.simple-duino.com:58/' + image;
       return GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ZoomableImage(image: image,)));
