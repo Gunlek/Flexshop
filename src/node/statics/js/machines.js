@@ -295,6 +295,15 @@ let app = new Vue({
          */
         add_new_machine: function(){
             if(this.new_machine_title != null && this.new_machine_category != null && this.new_machine_brand != null && this.image_name != "Fichier" && this.new_machine_reference != null){
+                let data = new FormData();
+                data.append('file', this.image);
+
+                let img_request = new XMLHttpRequest();
+                img_request.open('post', '/upload-file');
+                img_request.addEventListener('load', (e) => {
+                });
+                img_request.send(data);
+                
                 let super_this = this;
                 let url = '/machines/add';
                 let params = "machine_title="+this.new_machine_title.toString()+"&machine_category="+this.new_machine_category.toString()+"&machine_brand="+this.new_machine_brand.toString()+"&machine_image=/uploads/img/"+this.image_name+"&machine_reference="+this.new_machine_reference.toString();
