@@ -33,6 +33,9 @@ let app = new Vue({
         json_sections_data: {},
         edit_modal: false,
         edit_data: {},
+
+        enableDelete: false,
+        enableAdding: false
     },
     computed: {
         full_machines: function(){
@@ -442,6 +445,14 @@ let app = new Vue({
             };
             reader.readAsDataURL(this.image);
         },
+
+        updateDelete: function(){
+            this.enableDelete = !this.enableDelete;
+        },
+
+        updateAdding: function(){
+            this.enableAdding = !this.enableAdding;
+        }
     },
 
     components: {

@@ -12,22 +12,22 @@
         <div class="row">
             <div class="col-4"><h1 class="table-title">Gestion des ateliers</h1></div>
             <div class="col-2" style="position: relative;">
-                <button type="button" id="enableDelete" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
+                <button type="button" @click="updateDelete()" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
             </div>
             <div class="col-2" style="position: relative;">
-                <button type="button" id="enableAdd" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
+                <button type="button" @click="updateAdding()" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
             </div>
             <div class="col-4"></div>
         </div>
         <div v-for="workshop in full_workshops" :key="workshop.workshop_id" class="table-card">
             <div class="align-parent" style="width: 100%">
                 <h4 class="card-title">${workshop.workshop_title}</h4>
-                <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_workshop(workshop.workshop_id)"><i class="fas fa-trash"></i></button>
+                <button type="button" class="btn btn-outline-red align-right" v-if="enableDelete" @click="del_workshop(workshop.workshop_id)"><i class="fas fa-trash"></i></button>
             </div>
             <div class="card align-parent" v-for="category in workshop.categories" :key="category.category_id">
                 <div class="card-header align-parent">
                     <strong class="card-title">${category.category_title}</strong>
-                    <button type="button" class="btn btn-outline-red align-right del-btn" @click="del_category(category.category_id)"><i class="fas fa-trash"></i></button>
+                    <button type="button" class="btn btn-outline-red align-right" v-if="enableDelete" @click="del_category(category.category_id)"><i class="fas fa-trash"></i></button>
                 </div>
                 <div class="align-parent" style="margin: 5px 10px;word-wrap:normal;" v-for="machine in category.machines" :key="machine.machine_id">
                     <div class="row">
@@ -37,11 +37,11 @@
                         </div>
 
                         <div class="col-1">
-                            <button type="button" class="btn btn-outline-red btn-xs align-right del-btn" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="btn btn-outline-red btn-xs align-right" v-if="enableDelete" @click="del_machine(machine.machine_id)"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>            
                 </div>
-                <div class="add-section">
+                <div v-if="enableAdding">
                     <h4>Créer une nouvelle machine</h4>
                     <input class="content-fluid form-control" v-model="new_machine_title" placeholder="Nom de la nouvelle machine..."/>
                     <input class="content-fluid form-control" v-model="new_machine_brand" placeholder="Marque de la nouvelle machine..."/>
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="card align-parent add-section">
+            <div class="card align-parent" v-if="enableAdding">
                 <div class="card-header align-parent">
                     <strong class="card-title">Ajouter une catégorie</strong>
                 </div>
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="table-card add-section" id="add_machine">
+        <div class="table-card" v-if="enableAdding" id="add_machine">
             <h4>Créer un nouvel atelier</h4>
             <input class="content-fluid form-control" v-model="new_workshop_name" placeholder="Nom du nouvel atelier..."/>
             <input class="content-fluid form-control" v-model="new_workshop_image" placeholder="Image du nouvel atelier..."/>
@@ -73,25 +73,4 @@
 {% block scripts %}
     <script src="/js/workshops.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            let delEnabled=false;
-            $('#enableDelete').click(function(e){
-                e.preventDefault();
-                if(delEnabled)
-                    $('.del-btn').fadeOut(function(){delEnabled=!delEnabled;});
-                else
-                    $('.del-btn').fadeIn(function(){delEnabled=!delEnabled;});
-            });
-
-            let addEnabled = true;
-            $('#enableAdd').click(function(e){
-                e.preventDefault();
-                if(addEnabled)
-                    $('.add-section').slideUp(function(){addEnabled=false;});
-                else
-                    $('.add-section').slideDown(function(){addEnabled=true;});
-            });
-        });
-    </script>
 {% endblock %}

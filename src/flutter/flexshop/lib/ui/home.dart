@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:flexshop/model/machine.dart';
 import 'package:flexshop/ui/machine_view.dart';
+import 'package:flexshop/api/machine_api.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,12 +15,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-
   AnimationController controller;
   Animation animation;
 
   @override
-  void initState(){
+  void initState() {
     this.controller = AnimationController(
       duration: Duration(milliseconds: 250),
       vsync: this,
@@ -29,7 +29,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       end: 1.0,
     ).animate(controller);
 
-    Future.delayed(Duration(milliseconds: 100)).then((value) => this.controller.forward());
+    Future.delayed(Duration(milliseconds: 100))
+        .then((value) => this.controller.forward());
 
     super.initState();
   }
@@ -44,12 +45,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     String barcodeScanRes;
     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", "Cancel", true, ScanMode.BARCODE);
-    print(barcodeScanRes);
-    Map machineMap = json.decode(barcodeScanRes);
-    Machine machine = Machine.fromMapObject(machineMap);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MachineView(machine: machine)));
+    print(barcodeScanRes); // eg : http://flexshop.com/1 where 1 is a machine id
+
+    MachineAPI.getMachineFromId(
+        id: int.parse(barcodeScanRes.replaceFirst('http://flexshop.com/', '')),
+        onDone: (int status, dynamic data) {
+          Machine machine = Machine.fromMapObject(data);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MachineView(machine: machine)));
+        });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,28 +66,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       bottomNavigationBar: FadeTransition(
         opacity: this.animation,
         child: BottomAppBar(
-          color: Color.fromRGBO(33, 33, 33, 1.0),
-          shape: CircularNotchedRectangle(),
-          notchMargin: 7.0,
-          child: SizedBox(
-            height: 45,
-          )
-        ),
+            color: Color.fromRGBO(33, 33, 33, 1.0),
+            shape: CircularNotchedRectangle(),
+            notchMargin: 7.0,
+            child: SizedBox(
+              height: 45,
+            )),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FadeTransition(
         opacity: this.animation,
         child: FloatingActionButton(
-          onPressed: () => {
-            scanBarcodeNormal()
-          },
+          onPressed: () => {scanBarcodeNormal()},
           child: FaIcon(FontAwesomeIcons.qrcode),
         ),
       ),
-      body: FadeTransition(
-        opacity: this.animation,
-        child: WorkshopList()
-      ),
+      body: FadeTransition(opacity: this.animation, child: WorkshopList()),
     );
   }
 }

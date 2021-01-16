@@ -346,17 +346,17 @@ class _MachineViewState extends State<MachineView> {
       else
         return GestureDetector(
           onTap: () {
-            print(image);
+            print(DotEnv().env['BASE_API_URL']+image);
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => ZoomableImage(
-                          image: image,
+                          image: DotEnv().env['BASE_API_URL']+image,
                         )));
           },
           child: Container(
               height: 300,
-              child: Image(image: CachedNetworkImageProvider(image))),
+              child: Image(image: CachedNetworkImageProvider(DotEnv().env['BASE_API_URL']+image))),
         );
     }
   }

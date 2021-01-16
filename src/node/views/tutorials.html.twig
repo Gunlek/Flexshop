@@ -12,10 +12,10 @@
         <div class="row">
             <div class="col-4"><h1 class="table-title">Gestion des tutoriels</h1></div>
             <div class="col-2" style="position: relative;">
-                <button type="button" id="enableDelete" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
+                <button type="button" @click="updateDelete()" class="btn btn-outline-red" style="position: absolute;top:50%;transform: translateY(-50%);">Activer la suppresion</button>
             </div>
             <div class="col-2" style="position: relative;">
-                <button type="button" id="enableAdd" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
+                <button type="button" @click="updateAdding()" class="btn btn-outline-green" style="position: absolute;top:50%;transform: translateY(-50%);">Activer l'ajout</button>
             </div>
             <div class="col-4"></div>
         </div>
@@ -34,7 +34,7 @@
                                 </div>
 
                                 <div class="col-1">
-                                    <button type="button" class="btn btn-outline-red align-right del-btn" @click="delete_slide(slide.slide_id)"><i class="fas fa-trash"></i></button>
+                                    <button type="button" class="btn btn-outline-red align-right" v-if="enableDelete" @click="delete_slide(slide.slide_id)"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                             <br/>
@@ -46,7 +46,7 @@
                     </div>
                 </draggable>
 
-                <div class="card add-slide">
+                <div class="card" v-if="enableAdding">
                     <div class="card-header align-parent">
                         <strong class="card-title">Ajouter une slide</strong>
                     </div>
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div class="table-card add-section full-parent-height" id="add_machine">
+        <div class="table-card full-parent-height" id="add_machine" v-if="enableAdding">
             <h4>Créer un nouveau tutoriel</h4>
             <div class="form-group">
                 <select v-model="new_tutorial_machine" class="form-control">
@@ -131,25 +131,4 @@
     <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
     <script src="/js/tutorials.js"></script>
-    <script>
-        $(document).ready(function(){
-            let delEnabled=false;
-            $('#enableDelete').click(function(e){
-                e.preventDefault();
-                if(delEnabled)
-                    $('.del-btn').fadeOut(function(){delEnabled=!delEnabled;});
-                else
-                    $('.del-btn').fadeIn(function(){delEnabled=!delEnabled;});
-            });
-
-            let addEnabled = true;
-            $('#enableAdd').click(function(e){
-                e.preventDefault();
-                if(addEnabled)
-                    $('.add-section').slideUp(function(){addEnabled=false;});
-                else
-                    $('.add-section').slideDown(function(){addEnabled=true;});
-            });
-        });
-    </script>
 {% endblock %}

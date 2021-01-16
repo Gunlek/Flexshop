@@ -28,7 +28,10 @@ let app = new Vue({
          * Workshop variables
          */
         new_workshop_name: null,
-        new_workshop_image: null
+        new_workshop_image: null,
+
+        enableDelete: false,
+        enableAdding: false
     },
     computed: {
         full_workshops: function(){
@@ -260,6 +263,14 @@ let app = new Vue({
             };
             httpRequest.open('DELETE', url);
             httpRequest.send();
+        },
+
+        updateDelete: function(){
+            this.enableDelete = !this.enableDelete;
+        },
+
+        updateAdding: function(){
+            this.enableAdding = !this.enableAdding;
         }
     },
     mounted: function(){
