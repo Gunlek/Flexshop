@@ -194,12 +194,14 @@ class Database {
      */
     async getSectionById(id, callback){
         let sections = await this.db.get('SELECT * FROM sections WHERE section_id = ?', [id]);
-        let parameters = this.db.all('SELECT * FROM parameters WHERE parameter_section = ?', [id]);
+        let parameters = await this.db.all('SELECT * FROM parameters WHERE parameter_section = ?', [id]);
         let return_value = sections;
+        let parameterList = {};
         for(let keyvalue in parameters) {
             let current_param = parameters[keyvalue];
-            return_value[current_param.parameter_name] = current_param.parameter_value;
+            parameterList[current_param.parameter_name]= current_param;
         }
+        return_value['parameters'] = parameterList;
         callback(return_value);
     }
 
