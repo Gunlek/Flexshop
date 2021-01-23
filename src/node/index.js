@@ -1,10 +1,12 @@
 let express = require('express');
 let fileUpload = require('express-fileupload');
 let fs = require('fs');
+let cors = require('cors');
 
 require('dotenv').config()
 
 let app = express();
+app.use(cors());
 
 app.use(fileUpload());
 app.use(express.static('./statics/'));
