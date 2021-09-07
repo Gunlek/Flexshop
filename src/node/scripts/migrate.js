@@ -1,5 +1,5 @@
 let sqlite = require('sqlite');
-let sqlite3 = require('sqlite3');
+let sqlite3 = require('sqlite3-offline');
 let Promise = require('bluebird').Promise;
 let fs = require('fs');
 
