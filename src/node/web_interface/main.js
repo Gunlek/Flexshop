@@ -7,9 +7,20 @@ let db = new database().getInstance();
 
 let multer  = require('multer')
 let fs = require('fs');
-if(!fs.existsSync('statics/upload'))
-    fs.mkdirSync('statics/upload');
-let upload = multer({dest: 'statics/upload' });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        if(!fs.existsSync('./statics/uploads/'))
+            fs.mkdirSync('./statics/uploads/', {recursive: true});
+        cb(null, './statics/uploads/')
+    },
+    filename: (req, file, cb) => {
+        const name = file.originalname.split(' ').join('_');
+        cb(null, name + ".json");
+    }
+});
+let upload = multer({
+    storage: storage
+});
 
 router.get('/', (req, res) => {res.redirect('/workshops')});
 
@@ -66,7 +77,8 @@ router.get('/export-json', (req, res) => {
 });
 
 router.post('/import-json', upload.single('import_file'), async (req, res) => {
-    let uploaded = req.file.path;
+    let uploaded = "statics/uploads/" + req.files.import_file.name;
+    await req.files["import_file"].mv(uploaded);
     let file_content = fs.readFileSync(uploaded, {encoding: 'utf-8'});
     let json_data = JSON.parse(file_content);
     for(let key in json_data){
